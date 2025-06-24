@@ -1,5 +1,5 @@
 
-            /* Tailwind Alias Classes - Vereinfachte Klassennamen */
+/* Tailwind Alias Classes - Vereinfachte Klassennamen */
         .card {
             @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 rounded-lg shadow-lg transition-all duration-300;
         }
