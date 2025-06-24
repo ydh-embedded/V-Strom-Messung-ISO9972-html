@@ -1,0 +1,14 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Open iso9972.html",
+            "file": "/run/media/y/610757af-4666-4500-9ef8-bf76283f8d91/home/y/Dokumente/Working-Directory/VS-Code/V-Strom Messung ISO9972 html/iso9972.html"
+        }
+    ]
+}
