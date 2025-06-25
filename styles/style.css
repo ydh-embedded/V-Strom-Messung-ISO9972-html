@@ -89,3 +89,31 @@
             color: #374151;
             transition: all 0.3s ease;
         }
+                .container-main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        input[type="range"] {
+            background: linear-gradient(to right, #3b82f6 0%, #3b82f6 var(--value, 0%), #e5e7eb var(--value, 0%), #e5e7eb 100%);
+        }
+
+        .dark input[type="range"] {
+            background: linear-gradient(to right, #3b82f6 0%, #3b82f6 var(--value, 0%), #4b5563 var(--value, 0%), #4b5563 100%);
+        }
+
+        .measurement-input {
+            width: 80px;
+            text-align: center;
+        }
+
+        .measurement-row.invalid {
+            background-color: #fef2f2;
+        }
+
+        .dark .measurement-row.invalid {
+            background-color: #7f1d1d;
+        }
