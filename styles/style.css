@@ -1,10 +1,10 @@
 /* ===================================
-   STYLE.CSS - FINAL BEREINIGTE VERSION
+   STYLE.CSS - BEREINIGTE VERSION
    
-   ✅ ALLE Duplikate entfernt (auch die neuen am Ende!)
-   ✅ Konsistente Werte überall
+   ✅ Alle Duplikate entfernt
+   ✅ Konsistente Werte
    ✅ Optimiert für Tailwind-Migration
-   ✅ Saubere Struktur ohne Konflikte
+   ✅ Kommentare für bessere Wartung
    
    Datei erstellt: Juni 2025
    =================================== */
@@ -14,7 +14,7 @@
    Tailwind Alternative: bg-gradient-to-br from-slate-50 to-slate-300 min-h-screen font-sans transition-all duration-300
    =================================== */
 body {
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    background: linear-gradient(135deg, #fffffff1 0%, #e2e8f0 100%);
     min-height: 100vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     transition: all 0.3s ease;
@@ -102,17 +102,17 @@ h1 {
 
 /* Verbesserte Karten-Styles */
 .bg-white {
-    background: rgba(255, 255, 255, 0.95);
+    background: #ffffffe3;
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(226, 232, 240, 0.8);
-    box-shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(213, 236, 246, 0.123);
+    box-shadow: 0 8px 32px rgba(60, 148, 255, 0.139);
 }
 
 .dark .bg-white {
-    background: rgba(30, 41, 59, 0.95);
+    background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(71, 85, 105, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(46, 133, 255, 0.937);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.217);
 }
 
 /* Chart Container */
@@ -394,12 +394,16 @@ input[type="range"]::-moz-range-thumb {
 }
 
 @keyframes float {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translateY(0px) rotate(0deg);
     }
+
     33% {
         transform: translateY(-20px) rotate(120deg);
     }
+
     66% {
         transform: translateY(20px) rotate(240deg);
     }
@@ -454,6 +458,49 @@ input[type="range"]::-moz-range-thumb {
     }
 }
 
+
+.glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.container-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Dark mode styles */
+.dark {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+/* Custom slider styles */
+input[type="range"] {
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #3b82f6;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #3b82f6;
+}
+
 /* ===================================
    ENDE DER CSS-DATEI
    
@@ -463,7 +510,4 @@ input[type="range"]::-moz-range-thumb {
      Browser-spezifische Styles, komplexe Hover-Effekte
    - Nutzen Sie Tailwind für: Layout, Spacing, Farben, 
      einfache Transitions, Responsive Design
-   
-   ⚠️ WARNUNG: Keine weiteren CSS-Regeln nach diesem Kommentar hinzufügen!
-   Alle Duplikate wurden entfernt. Diese Datei ist final bereinigt.
    =================================== */
