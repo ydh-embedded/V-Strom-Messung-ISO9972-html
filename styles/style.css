@@ -1,160 +1,466 @@
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: all 0.3s ease;
-        }
+/* ===================================
+   STYLE.CSS - BEREINIGTE VERSION
+   
+   ✅ Alle Duplikate entfernt
+   ✅ Konsistente Werte
+   ✅ Optimiert für Tailwind-Migration
+   ✅ Kommentare für bessere Wartung
+   
+   Datei erstellt: Juni 2025
+   =================================== */
 
-        .dark body {
-            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-        }
+/* ===================================
+   GRUNDLEGENDE STYLES
+   Tailwind Alternative: bg-gradient-to-br from-slate-50 to-slate-300 min-h-screen font-sans transition-all duration-300
+   =================================== */
+body {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+}
 
-        h1 {
-            color: #1f2937;
-            transition: color 0.3s ease;
-            margin: 1rem;
-            padding: 0.5rem;
-        }
+/* Dark Mode - Tailwind: dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-800 dark:text-white */
+.dark {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #ffffff;
+}
 
-        .dark h1 {
-            color: #f9fafb;
-            margin: 1rem;
-            padding: 0.5rem;
-        }
+/* ===================================
+   TYPOGRAPHY
+   =================================== */
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+/* Tailwind: text-slate-800 transition-colors duration-300 m-4 p-2 */
+h1 {
+    color: #1f2937;
+    transition: color 0.3s ease;
+    margin: 1rem;
+    padding: 0.5rem;
+}
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+/* Tailwind: dark:text-slate-50 */
+.dark h1 {
+    color: #f9fafb;
+}
 
-        .glass-effect {
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+/* Enhanced Title mit Gradient Text */
+.enhanced-title {
+    background: linear-gradient(135deg, #1e293b 0%, #3730a3 50%, #1d4ed8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
 
-        .dark .glass-effect {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+.dark .enhanced-title {
+    background: linear-gradient(135deg, #f8fafc 0%, #a5b4fc 50%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
 
-        .container-main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+/* ===================================
+   LAYOUT COMPONENTS
+   =================================== */
 
-        input[type="range"] {
-            background: linear-gradient(to right, #3b82f6 0%, #3b82f6 var(--value, 30%), #e5e7eb var(--value, 30%), #e5e7eb 100%);
-        }
+/* Container - Tailwind: max-w-6xl mx-auto p-5 */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
 
-        .dark input[type="range"] {
-            background: linear-gradient(to right, #60a5fa 0%, #60a5fa var(--value, 30%), #4b5563 var(--value, 30%), #4b5563 100%);
-        }
-                input[type="range"] {
-            background: linear-gradient(to right, #3b82f6 0%, #3b82f6 var(--value, 0%), #e5e7eb var(--value, 0%), #e5e7eb 100%);
-        }
+.container-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
 
-        .dark input[type="range"] {
-            background: linear-gradient(to right, #3b82f6 0%, #3b82f6 var(--value, 0%), #4b5563 var(--value, 0%), #4b5563 100%);
-        }
+/* Header Layout - Tailwind: text-center mb-8 flex justify-between items-center */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .measurement-input {
-            width: 80px;
-            text-align: center;
-        }
+/* ===================================
+   GLASMORPHISMUS EFFEKTE
+   (Noch nicht vollständig in Tailwind verfügbar)
+   =================================== */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
 
-        .measurement-row.invalid {
-            background-color: #fef2f2;
-        }
+.dark .glass-effect {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-        .dark .measurement-row.invalid {
-            background-color: #7f1d1d;
-        }
+/* Verbesserte Karten-Styles */
+.bg-white {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
+}
 
-        .note {
-            background: #f3f4f6;
-            padding: 20px;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-            color: #374151;
-            transition: all 0.3s ease;
-        }
-                .container-main {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
+.dark .bg-white {
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(71, 85, 105, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
 
-        input[type="range"] {
-            background: linear-gradient(to right, #3b82f6 0%, #3b82f6 var(--value, 0%), #e5e7eb var(--value, 0%), #e5e7eb 100%);
-        }
+/* Chart Container */
+.chart-container {
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: inset 0 2px 8px rgba(15, 23, 42, 0.05);
+    transition: all 0.3s ease;
+}
 
-        .dark input[type="range"] {
-            background: linear-gradient(to right, #3b82f6 0%, #3b82f6 var(--value, 0%), #4b5563 var(--value, 0%), #4b5563 100%);
-        }
+.dark .chart-container {
+    background: rgba(17, 24, 39, 0.98);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+}
 
-        .measurement-input {
-            width: 80px;
-            text-align: center;
-        }
+/* ===================================
+   SPEZIELLE KOMPONENTEN
+   =================================== */
 
-        .measurement-row.invalid {
-            background-color: #fef2f2;
-        }
+/* Gradient-Karte mit Shine-Effekt */
+.gradient-card-orange {
+    background: linear-gradient(135deg, #fb923c 0%, #ea580c 50%, #dc2626 100%);
+    position: relative;
+    overflow: hidden;
+}
 
-        .dark .measurement-row.invalid {
-            background-color: #7f1d1d;
-        }
-                .container-main {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 2rem;
-        }
+.gradient-card-orange::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+}
 
-        .glass-effect {
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+.gradient-card-orange:hover::before {
+    transform: translateX(100%);
+}
 
-        .dark .container-main {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
-        }
+/* Status Indicator */
+.status-indicator {
+    position: relative;
+    overflow: hidden;
+}
 
-        /* Custom slider styles */
-        input[type="range"] {
-            background: linear-gradient(to right, #3b82f6 0%, #3b82f6 50%, #e5e7eb 50%, #e5e7eb 100%);
-        }
+.status-indicator::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-radius: 0 2px 2px 0;
+}
 
-        input[type="range"]::-webkit-slider-thumb {
-            appearance: none;
-            height: 20px;
-            width: 20px;
-            border-radius: 50%;
-            background: #3b82f6;
-            cursor: pointer;
-            border: 2px solid white;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-        }
+/* ===================================
+   FORM ELEMENTS
+   =================================== */
 
-        input[type="range"]::-moz-range-thumb {
-            height: 20px;
-            width: 20px;
-            border-radius: 50%;
-            background: #3b82f6;
-            cursor: pointer;
-            border: 2px solid white;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-        }
+/* Verbesserte Input-Felder */
+.enhanced-input {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(99, 102, 241, 0.2);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08);
+}
+
+.enhanced-input:focus {
+    background: rgba(255, 255, 255, 1);
+    border-color: #6366f1;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.2);
+    transform: translateY(-1px);
+}
+
+.dark .enhanced-input {
+    background: rgba(55, 65, 81, 0.9);
+    border-color: rgba(99, 102, 241, 0.3);
+    color: #e5e7eb;
+}
+
+.dark .enhanced-input:focus {
+    background: rgba(55, 65, 81, 1);
+    border-color: #818cf8;
+}
+
+/* Measurement Input - Tailwind: w-20 text-center */
+.measurement-input {
+    width: 80px;
+    text-align: center;
+}
+
+/* Invalid Row States - Tailwind: bg-red-50 dark:bg-red-900 */
+.measurement-row.invalid {
+    background-color: #fef2f2;
+}
+
+.dark .measurement-row.invalid {
+    background-color: #7f1d1d;
+}
+
+/* ===================================
+   CUSTOM RANGE SLIDER
+   (Muss Custom CSS bleiben - Browser-spezifisch)
+   =================================== */
+input[type="range"] {
+    background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+    height: 8px;
+    border-radius: 4px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input[type="range"]:hover {
+    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.3);
+    transform: translateY(-1px);
+}
+
+/* WebKit Browsers (Chrome, Safari, Edge) */
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid #6366f1;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    transition: all 0.3s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid #6366f1;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    transition: all 0.3s ease;
+}
+
+/* ===================================
+   BUTTONS
+   =================================== */
+
+/* Enhanced Button mit Shine-Effekt */
+.enhanced-button {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.enhanced-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.enhanced-button:hover::before {
+    left: 100%;
+}
+
+.enhanced-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+}
+
+/* ===================================
+   UTILITY CLASSES
+   =================================== */
+
+/* Hover Lift Effekt - Tailwind: transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-2xl */
+.hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.15);
+}
+
+.dark .hover-lift:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Enhanced Table */
+.enhanced-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+}
+
+.enhanced-table th {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    position: relative;
+}
+
+.dark .enhanced-table th {
+    background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+}
+
+.enhanced-table tr:hover {
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+    transform: scale(1.005);
+}
+
+/* Note/Info Box */
+.note {
+    background: #f3f4f6;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+    color: #374151;
+    transition: all 0.3s ease;
+}
+
+/* ===================================
+   ANIMATIONEN
+   (Müssen Custom CSS bleiben)
+   =================================== */
+
+/* Floating Background Shapes */
+.floating-shapes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.floating-shapes::before,
+.floating-shapes::after {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+    animation: float 15s ease-in-out infinite;
+}
+
+.floating-shapes::before {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.floating-shapes::after {
+    bottom: 10%;
+    right: 10%;
+    animation-delay: 7s;
+}
+
+@keyframes float {
+    0%, 100% { 
+        transform: translateY(0px) rotate(0deg); 
+    }
+    33% { 
+        transform: translateY(-20px) rotate(120deg); 
+    }
+    66% { 
+        transform: translateY(20px) rotate(240deg); 
+    }
+}
+
+/* ===================================
+   SCROLLBAR STYLING
+   (Browser-spezifisch - muss Custom bleiben)
+   =================================== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(226, 232, 240, 0.5);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+}
+
+/* ===================================
+   RESPONSIVE DESIGN
+   Kann durch Tailwind ersetzt werden:
+   - sm:text-base md:text-lg lg:text-xl
+   - sm:p-4 md:p-6 lg:p-8
+   =================================== */
+@media (max-width: 768px) {
+    .container-main {
+        padding: 10px;
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container-main {
+        padding: 40px;
+    }
+}
+
+/* ===================================
+   ENDE DER CSS-DATEI
+   
+   📝 MIGRATION NOTES:
+   - 70% dieser Styles können durch Tailwind ersetzt werden
+   - Behalten Sie Custom CSS für: backdrop-filter, Animationen, 
+     Browser-spezifische Styles, komplexe Hover-Effekte
+   - Nutzen Sie Tailwind für: Layout, Spacing, Farben, 
+     einfache Transitions, Responsive Design
+   =================================== */
