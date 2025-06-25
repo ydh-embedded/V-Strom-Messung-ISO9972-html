@@ -1,5 +1,4 @@
-
-        // Globale Variablen
+ // Globale Variablen
         let myChart = null;
         let realMeasurements = [];
         let isDarkMode = false;
