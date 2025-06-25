@@ -8,49 +8,8 @@
     <!-- Wichtig: UMD-Version von Chart.js verwenden -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .container-main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        /* Dark mode styles */
-        .dark {
-            background-color: #1a1a1a;
-            color: #ffffff;
-        }
-        
-        /* Custom slider styles */
-        input[type="range"] {
-            background: linear-gradient(to right, #3b82f6, #8b5cf6);
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #ffffff;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid #3b82f6;
-        }
-        
-        input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            background: #ffffff;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid #3b82f6;
-        }
-    </style>
+    <link href="/styles/style.css" rel="stylesheet">
+
 </head>
 
 <body class="transition-colors duration-300 bg-gray-50 dark:bg-gray-900">
