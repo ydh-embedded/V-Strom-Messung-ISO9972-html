@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISO 9972 - Luftdurchlässigkeitsmessung</title>
+    <!-- Wichtig: UMD-Version von Chart.js verwenden -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .container-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Dark mode styles */
+        .dark {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        
+        /* Custom slider styles */
+        input[type="range"] {
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #3b82f6;
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #3b82f6;
+        }
+    </style>
+</head>
+
+<body class="transition-colors duration-300 bg-gray-50 dark:bg-gray-900">
+    <div class="container-main">
+        <!-- Header -->
+        <div class="text-center mb-8 relative">
+            <!-- Optionen Card -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-200 dark:border-gray-700 mb-8">
+                <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200 flex items-center justify-center">
+                    <span class="w-3 h-3 bg-indigo-500 rounded-full mr-3"></span>
+                    Anzeigeoptionen
+                </h3>
+                <div class="flex items-center justify-center space-x-6 flex-wrap">
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="showTheoretical" checked
+                            class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                        <label for="showTheoretical"
+                            class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+                            Theoretische Kurve anzeigen
+                        </label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="showSimulated"
+                            class="w-5 h-5 text-amber-600 bg-gray-100 border-gray-300 rounded focus:ring-amber-500">
+                        <label for="showSimulated"
+                            class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+                            Simulierte Messpunkte anzeigen
+                        </label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="showReal" checked
+                            class="w-5 h-5 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500">
+                        <label for="showReal"
+                            class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+                            Reale Messpunkte anzeigen
+                        </label>
+                    </div>
+                </div>
+
+                <h1 class="text-5xl font-bold mb-4 bg-gradient-to-r from-gray-800 to-blue-600 dark:from-white dark:to-blue-200 bg-clip-text text-transparent mt-6">
+                    ISO 9972 - Luftdurchlässigkeitsmessung
+                </h1>
+                <p class="text-gray-600 dark:text-gray-300 text-lg mb-6">
+                    Interaktives Diagramm zur Darstellung der Beziehung zwischen Differenzdruck und Volumenstrom
+                </p>
+                <!-- Dark Mode Toggle -->
+                <button id="theme-toggle"
+                    class="absolute top-4 right-4 glass-effect rounded-full p-3 text-gray-800 dark:text-white hover:bg-white/20 transition-all duration-300">
+                    <span id="theme-icon" class="text-2xl">🌙</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Grid für Eingabeparameter -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-200 dark:border-gray-700 transform hover:scale-105 transition-transform duration-300">
+                <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200 flex items-center">
+                    <span class="w-3 h-3 bg-blue-500 rounded-full mr-3"></span>
+                    n₅₀-Wert
+                </h3>
+                <label for="n50" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">n₅₀-Wert [1/h]</label>
+                <input type="range" id="n50" min="0.5" max="10" step="0.1" value="3.0"
+                    class="w-full h-3 rounded-lg appearance-none cursor-pointer mb-4">
+                <div class="text-center bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3">
+                    <span class="text-3xl font-bold text-blue-600 dark:text-blue-400" id="n50-value">3.0</span>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-200 dark:border-gray-700 transform hover:scale-105 transition-transform duration-300">
+                <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200 flex items-center">
+                    <span class="w-3 h-3 bg-green-500 rounded-full mr-3"></span>
+                    Gebäudevolumen
+                </h3>
+                <label for="volume" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Gebäudevolumen [m³]</label>
+                <input type="range" id="volume" min="100" max="2000" step="50" value="500"
+                    class="w-full h-3 rounded-lg appearance-none cursor-pointer mb-4">
+                <div class="text-center bg-green-50 dark:bg-green-900/20 rounded-lg p-3">
+                    <span class="text-3xl font-bold text-green-600 dark:text-green-400" id="volume-value">500</span>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-200 dark:border-gray-700 transform hover:scale-105 transition-transform duration-300">
+                <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200 flex items-center">
+                    <span class="w-3 h-3 bg-purple-500 rounded-full mr-3"></span>
+                    Max. Druck
+                </h3>
+                <label for="pressure" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Max. Druck [Pa]</label>
+                <input type="range" id="pressure" min="50" max="200" step="10" value="100"
+                    class="w-full h-3 rounded-lg appearance-none cursor-pointer mb-4">
+                <div class="text-center bg-purple-50 dark:bg-purple-900/20 rounded-lg p-3">
+                    <span class="text-3xl font-bold text-purple-600 dark:text-purple-400" id="pressure-value">100</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messpunkte Eingabe -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-200 dark:border-gray-700 mb-8">
+            <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
+                <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center">
+                    <span class="w-3 h-3 bg-red-500 rounded-full mr-3"></span>
+                    Reale Messpunkte eingeben
+                </h3>
+                <div class="flex space-x-2">
+                    <button id="clearMeasurements"
+                        class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200">
+                        Alle löschen
+                    </button>
+                    <button id="addMeasurementRow"
+                        class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200">
+                        + Zeile hinzufügen
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 dark:bg-gray-700">
+                            <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left text-gray-700 dark:text-gray-300 font-semibold">
+                                Differenzdruck [Pa]
+                            </th>
+                            <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left text-gray-700 dark:text-gray-300 font-semibold">
+                                Volumenstrom [m³/h]
+                            </th>
+                            <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-center text-gray-700 dark:text-gray-300 font-semibold">
+                                Aktionen
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="measurementTable">
+                        <!-- Initial rows -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">
+                <p><strong>Hinweis:</strong> Geben Sie Ihre gemessenen Werte ein. Leere Zeilen werden ignoriert.</p>
+                <p><strong>Tipp:</strong> Drücken Sie Tab, um zwischen den Feldern zu wechseln.</p>
+            </div>
+        </div>
+
+        <!-- Berechnete Werte -->
+        <div class="bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 dark:from-orange-500 dark:to-orange-700 rounded-xl shadow-2xl p-8 mb-8 relative overflow-hidden">
+            <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+            <div class="relative z-10">
+                <h2 class="text-3xl font-bold text-white mb-8 text-center flex items-center justify-center">
+                    <span class="w-4 h-4 bg-white rounded-full mr-3"></span>
+                    Berechnete Werte
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 hover:bg-white/30 transition-all duration-300">
+                        <div class="text-4xl font-bold text-white mb-3" id="calc-n50">3.0</div>
+                        <div class="text-white/90 text-sm font-medium">n₅₀-Wert [1/h]</div>
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 hover:bg-white/30 transition-all duration-300">
+                        <div class="text-4xl font-bold text-white mb-3" id="calc-q50">1.20</div>
+                        <div class="text-white/90 text-sm font-medium">q₅₀-Wert [m³/(h·m²)]</div>
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 hover:bg-white/30 transition-all duration-300">
+                        <div class="text-4xl font-bold text-white mb-3" id="calc-v50">1500</div>
+                        <div class="text-white/90 text-sm font-medium">V₅₀ [m³/h]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diagramm Card -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 mb-8">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200 flex items-center">
+                <span class="w-4 h-4 bg-blue-500 rounded-full mr-3"></span>
+                Diagramm: Volumenstrom vs. Differenzdruck
+            </h2>
+            <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-700" style="height: 450px;">
+                <canvas id="chart" style="width: 100%; height: 100%;"></canvas>
+            </div>
+            <div id="chart-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4">
+                <p><strong>Fehler:</strong> Das Diagramm konnte nicht geladen werden. Bitte überprüfen Sie die Konsole für weitere Details.</p>
+            </div>
+        </div>
+
+        <!-- Erläuterungen Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl shadow-xl p-6 border border-blue-200 dark:border-blue-800">
+                <h3 class="text-xl font-bold mb-4 text-blue-800 dark:text-blue-200 flex items-center">
+                    <span class="w-4 h-4 bg-blue-500 rounded-full mr-3"></span>
+                    Grundlegende Definitionen
+                </h3>
+                <div class="space-y-4 text-sm text-blue-700 dark:text-blue-300">
+                    <div class="p-3 bg-white/50 dark:bg-blue-900/30 rounded-lg">
+                        <strong>n₅₀-Wert:</strong> Luftwechselrate bei 50 Pa Druckdifferenz
+                    </div>
+                    <div class="p-3 bg-white/50 dark:bg-blue-900/30 rounded-lg">
+                        <strong>q₅₀-Wert:</strong> Spezifischer Leckagestrom pro m² Hüllfläche
+                    </div>
+                    <div class="p-3 bg-white/50 dark:bg-blue-900/30 rounded-lg">
+                        <strong>V₅₀:</strong> Volumenstrom bei 50 Pa Druckdifferenz
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl shadow-xl p-6 border border-green-200 dark:border-green-800">
+                <h3 class="text-xl font-bold mb-4 text-green-800 dark:text-green-200 flex items-center">
+                    <span class="w-4 h-4 bg-green-500 rounded-full mr-3"></span>
+                    Technische Parameter
+                </h3>
+                <div class="space-y-4 text-sm text-green-700 dark:text-green-300">
+                    <div class="p-3 bg-white/50 dark:bg-green-900/30 rounded-lg">
+                        <strong>Potenzfunktion:</strong> V = C × ΔP^n
+                    </div>
+                    <div class="p-3 bg-white/50 dark:bg-green-900/30 rounded-lg">
+                        <strong>Typischer n-Wert:</strong> 0,65 (für turbulente Strömung)
+                    </div>
+                    <div class="p-3 bg-white/50 dark:bg-green-900/30 rounded-lg">
+                        <strong>Messbereich:</strong> 10-100 Pa (nach ISO 9972)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Globale Variablen
+        let myChart = null;
+        let realMeasurements = [];
+        let isDarkMode = false;
+
+        // Warten bis DOM und Chart.js geladen sind
+        document.addEventListener('DOMContentLoaded', function() {
+            // Überprüfen ob Chart.js verfügbar ist
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js ist nicht verfügbar!');
+                document.getElementById('chart-error').classList.remove('hidden');
+                return;
+            }
+
+            console.log('Chart.js erfolgreich geladen, Version:', Chart.version);
+            
+            // Initialisierung
+            initializeApp();
+        });
+
+        function initializeApp() {
+            try {
+                // Event Listeners hinzufügen
+                setupEventListeners();
+                
+                // Initiale Messpunkt-Zeilen hinzufügen
+                addMeasurementRow();
+                addMeasurementRow();
+                addMeasurementRow();
+                
+                // Chart initialisieren
+                initializeChart();
+                
+                // Initiale Berechnung
+                updateCalculations();
+                
+                console.log('App erfolgreich initialisiert');
+            } catch (error) {
+                console.error('Fehler bei der App-Initialisierung:', error);
+                document.getElementById('chart-error').classList.remove('hidden');
+            }
+        }
+
+        function setupEventListeners() {
+            // Slider Event Listeners
+            document.getElementById('n50').addEventListener('input', function() {
+                document.getElementById('n50-value').textContent = this.value;
+                updateCalculations();
+            });
+
+            document.getElementById('volume').addEventListener('input', function() {
+                document.getElementById('volume-value').textContent = this.value;
+                updateCalculations();
+            });
+
+            document.getElementById('pressure').addEventListener('input', function() {
+                document.getElementById('pressure-value').textContent = this.value;
+                updateCalculations();
+            });
+
+            // Checkbox Event Listeners
+            document.getElementById('showTheoretical').addEventListener('change', updateChart);
+            document.getElementById('showSimulated').addEventListener('change', updateChart);
+            document.getElementById('showReal').addEventListener('change', updateChart);
+
+            // Button Event Listeners
+            document.getElementById('addMeasurementRow').addEventListener('click', addMeasurementRow);
+            document.getElementById('clearMeasurements').addEventListener('click', clearMeasurements);
+
+            // Dark Mode Toggle
+            document.getElementById('theme-toggle').addEventListener('click', toggleDarkMode);
+        }
+
+        function initializeChart() {
+            const ctx = document.getElementById('chart').getContext('2d');
+            
+            myChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: []
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            title: {
+                                display: true,
+                                text: 'Differenzdruck [Pa]'
+                            },
+                            min: 0,
+                            max: 120
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Volumenstrom [m³/h]'
+                            },
+                            min: 0
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            mode: 'point',
+                            intersect: false
+                        }
+                    }
+                }
+            });
+
+            updateChart();
+        }
+
+        function updateCalculations() {
+            const n50 = parseFloat(document.getElementById('n50').value);
+            const volume = parseFloat(document.getElementById('volume').value);
+            const pressure = parseFloat(document.getElementById('pressure').value);
+
+            // Angenommene Gebäudehülle (vereinfacht)
+            const assumedEnvelopeArea = Math.pow(volume, 2/3) * 6; // Vereinfachte Annahme für kubisches Gebäude
+            
+            // V50 berechnen
+            const v50 = n50 * volume;
+            
+            // q50 berechnen
+            const q50 = v50 / assumedEnvelopeArea;
+
+            // Werte anzeigen
+            document.getElementById('calc-n50').textContent = n50.toFixed(1);
+            document.getElementById('calc-q50').textContent = q50.toFixed(2);
+            document.getElementById('calc-v50').textContent = Math.round(v50);
+
+            updateChart();
+        }
+
+        function updateChart() {
+            if (!myChart) return;
+
+            const n50 = parseFloat(document.getElementById('n50').value);
+            const volume = parseFloat(document.getElementById('volume').value);
+            const pressure = parseFloat(document.getElementById('pressure').value);
+            const v50 = n50 * volume;
+
+            // Theoretische Daten generieren
+            const theoreticalData = [];
+            const n = 0.65; // Typischer Exponent für turbulente Strömung
+            for (let p = 10; p <= pressure; p += 5) {
+                const flow = v50 * Math.pow(p / 50, n);
+                theoreticalData.push({ x: p, y: flow });
+            }
+
+            // Simulierte Messpunkte (mit etwas Rauschen)
+            const simulatedData = [];
+            for (let p = 15; p <= pressure; p += 10) {
+                const theoreticalFlow = v50 * Math.pow(p / 50, n);
+                const noise = (Math.random() - 0.5) * theoreticalFlow * 0.1; // 10% Rauschen
+                simulatedData.push({ x: p, y: Math.max(0, theoreticalFlow + noise) });
+            }
+
+            // Reale Messpunkte sammeln
+            const realData = [];
+            const rows = document.querySelectorAll('#measurementTable tr');
+            rows.forEach(row => {
+                const pressureInput = row.querySelector('input[placeholder="z.B. 50"]');
+                const flowInput = row.querySelector('input[placeholder="z.B. 1500"]');
+                
+                if (pressureInput && flowInput) {
+                    const p = parseFloat(pressureInput.value);
+                    const f = parseFloat(flowInput.value);
+                    
+                    if (!isNaN(p) && !isNaN(f) && p > 0 && f > 0) {
+                        realData.push({ x: p, y: f });
+                    }
+                }
+            });
+
+            // Datasets für Chart
+            const datasets = [];
+
+            if (document.getElementById('showTheoretical').checked) {
+                datasets.push({
+                    label: 'Theoretische Kurve',
+                    data: theoreticalData,
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    type: 'line',
+                    tension: 0.4,
+                    pointRadius: 0,
+                    borderWidth: 2
+                });
+            }
+
+            if (document.getElementById('showSimulated').checked) {
+                datasets.push({
+                    label: 'Simulierte Messpunkte',
+                    data: simulatedData,
+                    borderColor: 'rgb(245, 158, 11)',
+                    backgroundColor: 'rgba(245, 158, 11, 0.8)',
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    showLine: false
+                });
+            }
+
+            if (document.getElementById('showReal').checked && realData.length > 0) {
+                datasets.push({
+                    label: 'Reale Messpunkte',
+                    data: realData,
+                    borderColor: 'rgb(34, 197, 94)',
+                    backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                    pointRadius: 8,
+                    pointHoverRadius: 10,
+                    showLine: false
+                });
+            }
+
+            myChart.data.datasets = datasets;
+            myChart.update();
+        }
+
+        function addMeasurementRow() {
+            const tbody = document.getElementById('measurementTable');
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-gray-50 dark:hover:bg-gray-700';
+            
+            row.innerHTML = `
+                <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                    <input type="number" placeholder="z.B. 50" min="0" max="200" 
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md 
+                                  focus:outline-none focus:ring-2 focus:ring-blue-500 
+                                  bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                           oninput="validateInput(this); updateChart();">
+                </td>
+                <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                    <input type="number" placeholder="z.B. 1500" min="0" 
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md 
+                                  focus:outline-none focus:ring-2 focus:ring-blue-500 
+                                  bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                           oninput="validateInput(this); updateChart();">
+                </td>
+                <td class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-center">
+                    <button onclick="removeRow(this)" 
+                            class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors">
+                        Löschen
+                    </button>
+                </td>
+            `;
+            
+            tbody.appendChild(row);
+        }
+
+        function removeRow(button) {
+            button.closest('tr').remove();
+            updateChart();
+        }
+
+        function clearMeasurements() {
+            document.getElementById('measurementTable').innerHTML = '';
+            updateChart();
+        }
+
+        function validateInput(input) {
+            const value = parseFloat(input.value);
+            if (isNaN(value) || value <= 0) {
+                input.style.borderColor = '#ef4444';
+                input.style.backgroundColor = '#fef2f2';
+            } else {
+                input.style.borderColor = '#10b981';
+                input.style.backgroundColor = '#f0fdf4';
+            }
+        }
+
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark');
+            
+            // Icon ändern
+            const icon = document.getElementById('theme-icon');
+            icon.textContent = isDarkMode ? '☀️' : '🌙';
+            
+            // Chart Theme aktualisieren
+            if (myChart) {
+                const textColor = isDarkMode ? '#e5e7eb' : '#374151';
+                const gridColor = isDarkMode ? '#374151' : '#e5e7eb';
+                
+                myChart.options.scales.x.ticks = { color: textColor };
+                myChart.options.scales.y.ticks = { color: textColor };
+                myChart.options.scales.x.title.color = textColor;
+                myChart.options.scales.y.title.color = textColor;
+                myChart.options.scales.x.grid = { color: gridColor };
+                myChart.options.scales.y.grid = { color: gridColor };
+                myChart.options.plugins.legend.labels = { color: textColor };
+                
+                myChart.update();
+            }
+        }
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Strg + Enter für neue Zeile
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                addMeasurementRow();
+            }
+            
+            // Escape für Dark Mode Toggle
+            if (e.key === 'Escape') {
+                toggleDarkMode();
+            }
+        });
+
+        // Error Handling für Chart.js
+        window.addEventListener('error', function(e) {
+            if (e.message.includes('Chart')) {
+                console.error('Chart.js Fehler:', e);
+                document.getElementById('chart-error').classList.remove('hidden');
+            }
+        });
+
+        // Responsive Chart Resize
+        window.addEventListener('resize', function() {
+            if (myChart) {
+                myChart.resize();
+            }
+        });
+    </script>
+</body>
+</html>
