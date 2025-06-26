@@ -35,8 +35,8 @@ body {
 
 .container-main {
     max-width: 1200px;
-    margin: 0 auto;
-    padding: clamp(1rem, 5vw, 2rem);
+    margin: 0 auto ;
+    padding: clamp(1rem, 3vw, 1rem);
 }
 
 .header {
@@ -81,7 +81,7 @@ body {
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(213, 236, 246, 0.2);
     box-shadow: 0 8px 32px rgba(60, 148, 255, 0.1);
-    border-radius: 12px;
+    border-radius: 22px;
 }
 
 .dark .bg-white {
