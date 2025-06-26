@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISO 9972 - Luftdurchlässigkeitsmessung</title>
+    <!-- Wichtig: UMD-Version von Chart.js verwenden -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/javascript.js"></script>
+    <link href="/styles/style.css" rel="stylesheet">
+    <link href="/styles/tailwind.css" rel="stylesheet">
+    <!-- Ihre Aliase direkt im HTML -->
+    <style type="text/tailwindcss">
+
+    </Style>
+</head>
+
+<body class="transition-colors duration-300 bg-gray-50 dark:bg-gray-900">
+    <div class="container-main">
+        <!-- Header -->
+        <div class="section-center">
+            <!-- Optionen Card -->
+            <div class="card-primary mb-8">
+       
+                <div class="flex-options">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="showTheoretical" checked class="checkbox-primary">
+                        <label for="showTheoretical" class="text-description-sm cursor-pointer">
+                            Theoretische Kurve anzeigen
+                        </label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="showSimulated" class="checkbox-orange">
+                        <label for="showSimulated" class="text-description-sm cursor-pointer">
+                            Simulierte Messpunkte anzeigen
+                        </label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="showReal" checked class="checkbox-green">
+                        <label for="showReal" class="text-description-sm cursor-pointer">
+                            Reale Messpunkte anzeigen
+                        </label>
+                    </div>
+                </div>
+
+                <h1 class="heading-hero mt-6">
+                    ISO 9972 - Luftdurchlässigkeitsmessung
+                </h1>
+                <p class="text-description">
+                    Interaktives Diagramm zur Darstellung der Beziehung zwischen Differenzdruck und Volumenstrom
+                </p>
+                <!-- Dark Mode Toggle -->
+                <button id="theme-toggle" class="dark-toggle">
+                    <span id="theme-icon" class="text-2xl">🌙</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Grid für Eingabeparameter -->
+        <div class="grid-responsive-3">
+            <div class="card-hover">
+                <h3 class="heading-primary">
+                    <span class="status-dot-blue"></span>
+                    n₅₀-Wert
+                </h3>
+                <label for="n50" class="text-label">n₅₀-Wert [1/h]</label>
+                <input type="range" id="n50" min="0.5" max="10" step="0.1" value="3.0" class="input-range">
+                <div class="value-box-blue">
+                    <span class="value-text-large" id="n50-value">3.0</span>
+                </div>
+            </div>
+
+            <div class="card-hover">
+                <h3 class="heading-primary">
+                    <span class="status-dot-green"></span>
+                    Gebäudevolumen
+                </h3>
+                <label for="volume" class="text-label">Gebäudevolumen [m³]</label>
+                <input type="range" id="volume" min="100" max="2000" step="50" value="500" class="input-range">
+                <div class="value-box-green">
+                    <span class="value-text-green" id="volume-value">500</span>
+                </div>
+            </div>
+
+            <div class="card-hover">
+                <h3 class="heading-primary">
+                    <span class="status-dot-purple"></span>
+                    Max. Druck
+                </h3>
+                <label for="pressure" class="text-label">Max. Druck [Pa]</label>
+                <input type="range" id="pressure" min="50" max="200" step="10" value="100" class="input-range">
+                <div class="value-box-purple">
+                    <span class="value-text-purple" id="pressure-value">100</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messpunkte Eingabe -->
+        <div class="card-primary mb-8">
+            <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
+                <h3 class="heading-primary">
+                    <span class="status-dot-red"></span>
+                    Reale Messpunkte eingeben
+                </h3>
+                <div class="button-group">
+                    <button id="clearMeasurements" class="btn-danger">
+                        Alle löschen
+                    </button>
+                    <button id="addMeasurementRow" class="btn-success">
+                        + Zeile hinzufügen
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="table-header">
+                            <th class="table-th">
+                                Differenzdruck [Pa]
+                            </th>
+                            <th class="table-th">
+                                Volumenstrom [m³/h]
+                            </th>
+                            <th class="table-th text-center">
+                                Aktionen
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="measurementTable">
+                        <!-- Initial rows -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 text-description-sm">
+                <p><strong>Hinweis:</strong> Geben Sie Ihre gemessenen Werte ein. Leere Zeilen werden ignoriert.</p>
+                <p><strong>Tipp:</strong> Drücken Sie Tab, um zwischen den Feldern zu wechseln.</p>
+            </div>
+        </div>
+
+        <!-- Berechnete Werte -->
+        <div class="gradient-orange mb-8">
+            <div class="glass-overlay"></div>
+            <div class="content-overlay">
+                <h2 class="text-3xl font-bold text-white mb-8 text-center flex items-center justify-center">
+                    <span class="status-dot-white"></span>
+                    Berechnete Werte
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 hover:bg-white/30 transition-smooth">
+                        <div class="text-4xl font-bold text-white mb-3" id="calc-n50">3.0</div>
+                        <div class="text-white/90 text-sm font-medium">n₅₀-Wert [1/h]</div>
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 hover:bg-white/30 transition-smooth">
+                        <div class="text-4xl font-bold text-white mb-3" id="calc-q50">1.20</div>
+                        <div class="text-white/90 text-sm font-medium">q₅₀-Wert [m³/(h·m²)]</div>
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 hover:bg-white/30 transition-smooth">
+                        <div class="text-4xl font-bold text-white mb-3" id="calc-v50">1500</div>
+                        <div class="text-white/90 text-sm font-medium">V₅₀ [m³/h]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diagramm Card -->
+        <div class="card-large mb-8">
+            <h2 class="heading-secondary">
+                <span class="status-dot-blue"></span>
+                Diagramm: Volumenstrom vs. Differenzdruck
+            </h2>
+            <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-700" style="height: 450px;">
+                <canvas id="chart" style="width: 100%; height: 100%;"></canvas>
+            </div>
+            <div id="chart-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4">
+                <p><strong>Fehler:</strong> Das Diagramm konnte nicht geladen werden. Bitte überprüfen Sie die Konsole für weitere Details.</p>
+            </div>
+        </div>
+
+        <!-- Erläuterungen Grid -->
+        <div class="grid-responsive-2">
+            <div class="section-blue">
+                <h3 class="heading-primary text-blue-section">
+                    <span class="status-dot-blue"></span>
+                    Grundlegende Definitionen
+                </h3>
+                <div class="space-y-4 text-sm text-blue-content">
+                    <div class="p-3 bg-white/50 dark:bg-blue-900/30 rounded-lg">
+                        <strong>n₅₀-Wert:</strong> Luftwechselrate bei 50 Pa Druckdifferenz
+                    </div>
+                    <div class="p-3 bg-white/50 dark:bg-blue-900/30 rounded-lg">
+                        <strong>q₅₀-Wert:</strong> Spezifischer Leckagestrom pro m² Hüllfläche
+                    </div>
+                    <div class="p-3 bg-white/50 dark:bg-blue-900/30 rounded-lg">
+                        <strong>V₅₀:</strong> Volumenstrom bei 50 Pa Druckdifferenz
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-green">
+                <h3 class="heading-primary text-green-section">
+                    <span class="status-dot-green"></span>
+                    Technische Parameter
+                </h3>
+                <div class="space-y-4 text-sm text-green-content">
+                    <div class="p-3 bg-white/50 dark:bg-green-900/30 rounded-lg">
+                        <strong>Potenzfunktion:</strong> V = C × ΔP^n
+                    </div>
+                    <div class="p-3 bg-white/50 dark:bg-green-900/30 rounded-lg">
+                        <strong>Typischer n-Wert:</strong> 0,65 (für turbulente Strömung)
+                    </div>
+                    <div class="p-3 bg-white/50 dark:bg-green-900/30 rounded-lg">
+                        <strong>Messbereich:</strong> 10-100 Pa (nach ISO 9972)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
