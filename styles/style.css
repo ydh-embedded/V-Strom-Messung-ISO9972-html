@@ -114,12 +114,12 @@ body {
 .container-main {
     max-width: 1200px;
     margin: 0 auto;
-    padding: clamp(1rem, 3vw, 1rem);
+    padding: 0 clamp(0.25rem, 0.5vw, 0.5rem);
 }
 
 .header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
