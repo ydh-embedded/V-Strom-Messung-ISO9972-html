@@ -40,8 +40,6 @@
                         class="text-2xl font-bold bg-gradient-to-r from-gray-800 to-blue-600 dark:from-orange-400 dark:to-orange-500 bg-clip-text text-transparent">
                         Messung & Eingabe
                     </h2>
-
-
                 </div>
 
                 <!-- Rechter Bereich: Theme Toggle und Navigation-->
@@ -55,6 +53,11 @@
                         class="nav-link px-6 py-2 rounded-full font-medium text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                         onclick="showPage('analysis')">
                         Analyse
+                    </button>
+                    <button
+                        class="nav-link px-6 py-2 rounded-full font-medium text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                        onclick="printOverview()">
+                        <span>🖨️</span>
                     </button>
 
                     <button id="theme-toggle"
@@ -103,7 +106,7 @@
                     </div>
                 </div>
             </div>
-
+            <div class="page-break">Dieser Inhalt startet auf einer neuen Seite</div>
             <!-- Eingabeparameter -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                 <div
@@ -153,7 +156,7 @@
                     </div>
                 </div>
             </div>
-
+            <div class="page-break">Dieser Inhalt startet auf einer neuen Seite</div>
             <!-- Messpunkte Eingabe -->
             <div
                 class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-200 dark:border-gray-700 mb-8">
@@ -208,7 +211,7 @@
         <!-- Seite 2: Analyse -->
         <div id="analysis" class="page">
             <!-- Header - jetzt in der Navigation -->
-
+            <div class="page-break">Dieser Inhalt startet auf einer neuen Seite</div>
 
             <!-- Diagramm -->
             <div
@@ -228,7 +231,7 @@
                         Konsole für weitere Details.</p>
                 </div>
             </div>
-
+            <div class="page-break">Dieser Inhalt startet auf einer neuen Seite</div>
             <!-- Berechnete Werte -->
             <div
                 class="bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 dark:from-orange-500 dark:to-orange-700 rounded-xl shadow-2xl p-8 mb-8 relative overflow-hidden">
@@ -254,7 +257,7 @@
                     </div>
                 </div>
             </div>
-
+            <div class="page-break">Dieser Inhalt startet auf einer neuen Seite</div>
             <!-- Erläuterungen -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div
