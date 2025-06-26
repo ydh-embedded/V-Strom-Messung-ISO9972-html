@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISO 9972 - Luftdurchlässigkeitsmessung</title>
+    <!-- Wichtig: UMD-Version von Chart.js verwenden -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .nav-item {
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-item.active {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+        
+        /* Custom slider styles */
+        input[type="range"] {
+            background: linear-gradient(to right, #3b82f6 0%, #3b82f6 50%, #e5e7eb 50%, #e5e7eb 100%);
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body class="transition-colors duration-300 bg-gray-50 dark:bg-gray-900">
+    <!-- Navigation Bar -->
+    <nav class="bg-white dark:bg-gray-800 shadow-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo/Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">ISO</span>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800 dark:text-white">ISO 9972</h1>
+                </div>
+                
+                <!-- Navigation Items -->
+                <div class="flex space-x-4">
+                    <button class="nav-item active px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300" 
+                            onclick="showPage('page1')" id="nav-page1">
+                        📊 Eingabe & Parameter
+                    </button>
+                    <button class="nav-item px-4 py-2 rounded-lg font-medium text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300" 
+                            onclick="showPage('page2')" id="nav-page2">
+                        📈 Analyse & Ergebnisse
+                    </button>
+                </div>
+                
+                <!-- Dark Mode Toggle -->
+                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">
+                    <span id="theme-icon" class="text-xl">🌙</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page 1: Input & Parameters -->
+    <div id="page1" class="page active animate-fade-in">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-200 dark:border-gray-700">
+                    <h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-gray-800 to-blue-600 dark:from-orange-400 dark:to-orange-500 bg-clip-text text-transparent">
+                        Eingabe & Parameter
+                    </h1>
+                    <p class="text-gray-600 dark:text-gray-300 text-lg">
+                        Definieren Sie die Grundparameter für Ihre Luftdurchlässigkeitsmessung
+                    </p>
+                </div>
+            </div>
+
+            <!-- Options Card -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-200 dark:border-gray-700 mb-8">
+                <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Anzeigeoptionen</h3>
+                <div class="flex items-center justify-center space-x-6 flex-wrap">
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="showTheoretical" checked
+                            class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                        <label for="showTheoretical" class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+                            Theoretische Kurve anzeigen
+                        </label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="showSimulated"
+                            class="w-5 h-5 text-amber-600 bg-gray-100 border-gray-300 rounded focus:ring-amber-500">
+                        <label for="showSimulated" class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+                            Simulierte Messpunkte anzeigen
+                        </label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="showReal" checked
+                            class="w-5 h-5 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500">
+                        <label for="showReal" class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+                            Reale Messpunkte anzeigen
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parameter Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-200 dark:border-gray-700 transform hover:scale-105 transition-transform duration-300">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200 flex items-center">
+                        <span class="w-3 h-3 bg-blue-500 rounded-full mr-3"></span>
+                        n₅₀-Wert
+                    </h3>
+                    <label for="n50" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">n₅₀-Wert [1/h]</label>
+                    <input type="range" id="n50" min="0.5" max="10" step="0.1" value="3.0"
+                        class="w-full h-3 rounded-lg appearance-none cursor-pointer mb-4">
+                    <div class="text-center bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3">
+                        <span class="text-3xl font-bold text-blue-600 dark:text-blue-400" id="n50-value">3.0</span>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-200 dark:border-gray-700 transform hover:scale-105 transition-transform duration-300">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200 flex items-center">
+                        <span class="w-3 h-3 bg-green-500 rounded-full mr-3"></span>
+                        Gebäudevolumen
+                    </h3>
+                    <label for="volume" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Gebäudevolumen [m³]</label>
+                    <input type="range" id="volume" min="100" max="2000" step="50" value="500"
+                        class="w-full h-3 rounded-lg appearance-none cursor-pointer mb-4">
+                    <div class="text-center bg-green-50 dark:bg-green-900/20 rounded-lg p-3">
+                        <span class="text-3xl font-bold text-green-600 dark:text-green-400" id="volume-value">500</span>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-200 dark:border-gray-700 transform hover:scale-105 transition-transform duration-300">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200 flex items-center">
+                        <span class="w-3 h-3 bg-purple-500 rounded-full mr-3"></span>
+                        Max. Druck
+                    </h3>
+                    <label for="pressure" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Max. Druck [Pa]</label>
+                    <input type="range" id="pressure" min="50" max="200" step="10" value="100"
+                        class="w-full h-3 rounded-lg appearance-none cursor-pointer mb-4">
+                    <div class="text-center bg-purple-50 dark:bg-purple-900/20 rounded-lg p-3">
+                        <span class="text-3xl font-bold text-purple-600 dark:text-purple-400" id="pressure-value">100</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Measurement Points Input -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-200 dark:border-gray-700 mb-8">
+                <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center">
+                        <span class="w-3 h-3 bg-red-500 rounded-full mr-3"></span>
+                        Reale Messpunkte eingeben
+                    </h3>
+                    <div class="flex space-x-2">
+                        <button id="clearMeasurements"
+                            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200">
+                            Alle löschen
+                        </button>
+                        <button id="addMeasurementRow"
+                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200">
+                            + Zeile hinzufügen
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 dark:bg-gray-700">
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left text-gray-700 dark:text-gray-300 font-semibold">
+                                    Differenzdruck [Pa]
+                                </th>
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left text-gray-700 dark:text-gray-300 font-semibold">
+                                    Volumenstrom [m³/h]
+                                </th>
+                                <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-center text-gray-700 dark:text-gray-300 font-semibold">
+                                    Aktionen
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="measurementTable">
+                            <!-- Initial rows will be added by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">
+                    <p><strong>Hinweis:</strong> Geben Sie Ihre gemessenen Werte ein. Leere Zeilen werden ignoriert.</p>
+                    <p><strong>Tipp:</strong> Drücken Sie Tab, um zwischen den Feldern zu wechseln.</p>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="text-center">
+                <button onclick="showPage('page2')" 
+                        class="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold text-lg">
+                    📈 Zur Analyse & Ergebnissen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 2: Analysis & Results -->
+    <div id="page2" class="page">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-200 dark:border-gray-700">
+                    <h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-blue-600 dark:from-orange-400 dark:to-orange-500 bg-clip-text text-transparent">
+                        Analyse & Ergebnisse
+                    </h1>
+                    <p class="text-gray-600 dark:text-gray-300 text-lg">
+                        Visualisierung und Auswertung der Luftdurchlässigkeitsmessung
+                    </p>
+                </div>
+            </div>
+
+            <!-- Chart Card -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 mb-8">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200 flex items-center">
+                    <span class="w-4 h-4 bg-blue-500 rounded-full mr-3"></span>
+                    Diagramm: Volumenstrom vs. Differenzdruck
+                </h2>
+                <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-700" style="height: 450px;">
+                    <canvas id="chart" style="width: 100%; height: 100%;"></canvas>
+                </div>
+                <div id="chart-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4">
+                    <p><strong>Fehler:</strong> Das Diagramm konnte nicht geladen werden. Bitte überprüfen Sie die Konsole für weitere Details.</p>
+                </div>
+            </div>
+
+            <!-- Calculated Values -->
+            <div class="bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 dark:from-orange-500 dark:to-orange-700 rounded-xl shadow-2xl p-8 mb-8 relative overflow-hidden">
+                <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+                <div class="relative z-10">
+                    <h2 class="text-3xl font-bold text-white mb-8 text-center flex items-center justify-center">
+                        <span class="w-4 h-4 bg-white rounded-full mr-3"></span>
+                        Berechnete Werte
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 hover:bg-white/30 transition-all duration-300">
+                            <div class="text-4xl font-bold text-white mb-3" id="calc-n50">3.0</div>
+                            <div class="text-white/90 text-sm font-medium">n₅₀-Wert [1/h]</div>
+                        </div>
+                        <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 hover:bg-white/30 transition-all duration-300">
+                            <div class="text-4xl font-bold text-white mb-3" id="calc-q50">1.20</div>
+                            <div class="text-white/90 text-sm font-medium">q₅₀-Wert [m³/(h·m²)]</div>
+                        </div>
+                        <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 hover:bg-white/30 transition-all duration-300">
+                            <div class="text-4xl font-bold text-white mb-3" id="calc-v50">1500</div>
+                            <div class="text-white/90 text-sm font-medium">V₅₀ [m³/h]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Explanations Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl shadow-xl p-6 border border-blue-200 dark:border-blue-800">
+                    <h3 class="text-xl font-bold mb-4 text-blue-800 dark:text-blue-200 flex items-center">
+                        <span class="w-4 h-4 bg-blue-500 rounded-full mr-3"></span>
+                        Grundlegende Definitionen
+                    </h3>
+                    <div class="space-y-4 text-sm text-blue-700 dark:text-blue-300">
+                        <div class="p-3 bg-white/50 dark:bg-blue-900/30 rounded-lg">
+                            <strong>n₅₀-Wert:</strong> Luftwechselrate bei 50 Pa Druckdifferenz
+                        </div>
+                        <div class="p-3 bg-white/50 dark:bg-blue-900/30 rounded-lg">
+                            <strong>q₅₀-Wert:</strong> Spezifischer Leckagestrom pro m² Hüllfläche
+                        </div>
+                        <div class="p-3 bg-white/50 dark:bg-blue-900/30 rounded-lg">
+                            <strong>V₅₀:</strong> Volumenstrom bei 50 Pa Druckdifferenz
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl shadow-xl p-6 border border-green-200 dark:border-green-800">
+                    <h3 class="text-xl font-bold mb-4 text-green-800 dark:text-green-200 flex items-center">
+                        <span class="w-4 h-4 bg-green-500 rounded-full mr-3"></span>
+                        Technische Parameter
+                    </h3>
+                    <div class="space-y-4 text-sm text-green-700 dark:text-green-300">
+                        <div class="p-3 bg-white/50 dark:bg-green-900/30 rounded-lg">
+                            <strong>Potenzfunktion:</strong> V = C × ΔP^n
+                        </div>
+                        <div class="p-3 bg-white/50 dark:bg-green-900/30 rounded-lg">
+                            <strong>Typischer n-Wert:</strong> 0,65 (für turbulente Strömung)
+                        </div>
+                        <div class="p-3 bg-white/50 dark:bg-green-900/30 rounded-lg">
+                            <strong>Messbereich:</strong> 10-100 Pa (nach ISO 9972)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="text-center">
+                <button onclick="showPage('page1')" 
+                        class="px-8 py-4 bg-gradient-to-r from-purple-500 to-blue-600 text-white rounded-xl hover:from-purple-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold text-lg">
+                    📊 Zurück zu Eingabe & Parameter
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let chart = null;
+        let measurementData = [];
+        let isDarkMode = false;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initMeasurementTable();
+            setupEventListeners();
+            updateParameterValues();
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Theme toggle
+            document.getElementById('theme-toggle').addEventListener('click', toggleDarkMode);
+
+            // Parameter sliders
+            document.getElementById('n50').addEventListener('input', updateParameterValues);
+            document.getElementById('volume').addEventListener('input', updateParameterValues);
+            document.getElementById('pressure').addEventListener('input', updateParameterValues);
+
+            // Checkbox listeners
+            document.getElementById('showTheoretical').addEventListener('change', updateChart);
+            document.getElementById('showSimulated').addEventListener('change', updateChart);
+            document.getElementById('showReal').addEventListener('change', updateChart);
+
+            // Button listeners
+            document.getElementById('clearMeasurements').addEventListener('click', clearMeasurements);
+            document.getElementById('addMeasurementRow').addEventListener('click', addMeasurementRow);
+        }
+
+        // Page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                item.classList.add('text-gray-600', 'dark:text-gray-300', 'hover:bg-gray-100', 'dark:hover:bg-gray-700');
+            });
+            
+            const activeNav = document.getElementById('nav-' + pageId);
+            activeNav.classList.add('active');
+            activeNav.classList.remove('text-gray-600', 'dark:text-gray-300', 'hover:bg-gray-100', 'dark:hover:bg-gray-700');
+            
+            // If showing page 2, update chart
+            if (pageId === 'page2') {
+                setTimeout(updateChart, 100);
+            }
+        }
+
+        // Dark mode toggle
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            document.documentElement.classList.toggle('dark');
+            
+            const themeIcon = document.getElementById('theme-icon');
+            themeIcon.textContent = isDarkMode ? '☀️' : '🌙';
+            
+            // Update chart if it exists
+            if (chart) {
+                updateChart();
+            }
+        }
+
+        // Initialize measurement table
+        function initMeasurementTable() {
+            const tbody = document.getElementById('measurementTable');
+            // Add 5 initial rows
+            for (let i = 0; i < 5; i++) {
+                addMeasurementRow();
+            }
+        }
+
+        // Add measurement row
+        function addMeasurementRow() {
+            const tbody = document.getElementById('measurementTable');
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200';
+            
+            row.innerHTML = `
+                <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                    <input type="number" step="0.1" placeholder="z.B. 50"
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                           oninput="updateMeasurements()">
+                </td>
+                <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                    <input type="number" step="0.1" placeholder="z.B. 1500"
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                           oninput="updateMeasurements()">
+                </td>
+                <td class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-center">
+                    <button onclick="removeRow(this)" 
+                            class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200 text-sm">
+                        Löschen
+                    </button>
+                </td>
+            `;
+            
+            tbody.appendChild(row);
+        }
+
+        // Remove measurement row
+        function removeRow(button) {
+            const row = button.closest('tr');
+            row.remove();
+            updateMeasurements();
+        }
+
+        // Clear all measurements
+        function clearMeasurements() {
+            document.getElementById('measurementTable').innerHTML = '';
+            measurementData = [];
+            updateChart();
+        }
+
+        // Update measurements data
+        function updateMeasurements() {
+            measurementData = [];
+            const rows = document.querySelectorAll('#measurementTable tr');
+            
+            rows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const pressure = parseFloat(inputs[0].value);
+                const flow = parseFloat(inputs[1].value);
+                
+                if (!isNaN(pressure) && !isNaN(flow) && pressure > 0 && flow > 0) {
+                    measurementData.push({ x: pressure, y: flow });
+                }
+            });
+            
+            updateChart();
+        }
+
+        // Update parameter values
+        function updateParameterValues() {
+            const n50 = document.getElementById('n50').value;
+            const volume = document.getElementById('volume').value;
+            const pressure = document.getElementById('pressure').value;
+            
+            document.getElementById('n50-value').textContent = n50;
+            document.getElementById('volume-value').textContent = volume;
+            document.getElementById('pressure-value').textContent = pressure;
+            
+            // Update calculated values
+            const v50 = (parseFloat(n50) * parseFloat(volume)).toFixed(0);
+            const q50 = (parseFloat(n50) * parseFloat(volume) / 1250).toFixed(2); // Assuming 1250 m² envelope area
+            
+            document.getElementById('calc-n50').textContent = n50;
+            document.getElementById('calc-q50').textContent = q50;
+            document.getElementById('calc-v50').textContent = v50;
+            
+            updateChart();
+        }
+
+        // Generate theoretical curve data
+        function generateTheoreticalData() {
+            const n50 = parseFloat(document.getElementById('n50').value);
+            const volume = parseFloat(document.getElementById('volume').value);
+            const maxPressure = parseFloat(document.getElementById('pressure').value);
+            
+            const data = [];
+            const C = (n50 * volume) / Math.pow(50, 0.65); // Coefficient for power law
+            
+            for (let p = 10; p <= maxPressure; p += 5) {
+                const flow = C * Math.pow(p, 0.65);
+                data.push({ x: p, y: flow });
+            }
+            
+            return data;
+        }
+
+        // Generate simulated measurement points
+        function generate
