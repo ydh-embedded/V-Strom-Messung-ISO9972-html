@@ -113,13 +113,14 @@ body {
 
 .container-main {
     max-width: 1200px;
+    min-width: 320px;
     margin: 0 auto;
-    padding: 0 clamp(0.25rem, 1.5vw, 2.5rem);
+    padding: 0 clamp(2.5rem, 2.5vw, 2.5rem);
 }
 
 .header {
     text-align: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -566,7 +567,7 @@ input[type="range"]::-moz-range-thumb {
 
 @media (min-width: 1200px) {
     .container-main {
-        padding: 3rem;
+        padding: 0.1rem;
     }
 }
 
