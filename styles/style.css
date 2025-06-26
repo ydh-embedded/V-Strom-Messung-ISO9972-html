@@ -409,6 +409,18 @@ input[type="range"]::-moz-range-thumb {
     }
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* ===================================
    SCROLLBAR STYLING
    (Browser-spezifisch - muss Custom bleiben)
