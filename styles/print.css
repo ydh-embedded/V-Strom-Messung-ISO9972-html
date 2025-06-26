@@ -1,0 +1,315 @@
+/* Print Styles für ISO 9972 - A4 Horizontal Layout */
+
+@media print {
+    /* Page Setup für A4 Querformat */
+    @page {
+        size: A4 landscape;
+        margin: 15mm 20mm 15mm 20mm;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    /* Global Print Resets */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    /* Body und Container */
+    body {
+        font-family: Arial, sans-serif !important;
+        font-size: 10pt !important;
+        line-height: 1.3 !important;
+        color: #000 !important;
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .container-main {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Navigation verstecken */
+    nav {
+        display: none !important;
+    }
+
+    /* Nur die aktive Seite anzeigen */
+    .page {
+        display: block !important;
+        page-break-after: always;
+    }
+
+    .page:not(.active) {
+        display: none !important;
+    }
+
+    .page:last-child {
+        page-break-after: avoid;
+    }
+
+    /* Print Header für jede Seite */
+    .page::before {
+        content: "ISO 9972 - Luftdurchlässigkeitsmessung";
+        display: block;
+        font-size: 16pt;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #333;
+    }
+
+    /* Measurement Page spezifisch */
+    #measurement::before {
+        content: "ISO 9972 - Messung & Eingabe";
+    }
+
+    #analysis::before {
+        content: "ISO 9972 - Analyse & Auswertung";
+    }
+
+    /* Karten Layout für Druck optimieren */
+    .bg-white,
+    .dark\\:bg-gray-800 {
+        background: white !important;
+        border: 1.5pt solid #333 !important;
+        margin-bottom: 15px !important;
+        padding: 10px !important;
+        border-radius: 5px !important;
+        break-inside: avoid;
+    }
+
+    /* Grid Layouts für Druck anpassen */
+    .grid {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 10px !important;
+        margin-bottom: 15px !important;
+    }
+
+    .grid-cols-1,
+    .lg\\:grid-cols-3,
+    .md\\:grid-cols-3 {
+        display: flex !important;
+        width: 100% !important;
+    }
+
+    .grid > div {
+        flex: 1 !important;
+        min-width: 200px !important;
+        break-inside: avoid;
+    }
+
+    /* Überschriften */
+    h1, h2, h3, h4 {
+        color: #000 !important;
+        break-after: avoid;
+        margin-top: 15px !important;
+        margin-bottom: 8px !important;
+    }
+
+    h3 {
+        font-size: 12pt !important;
+        font-weight: bold !important;
+    }
+
+    h4 {
+        font-size: 11pt !important;
+        font-weight: bold !important;
+    }
+
+    /* Parameter Werte hervorheben */
+    #n50-value,
+    #volume-value,
+    #pressure-value,
+    #calc-n50,
+    #calc-q50,
+    #calc-v50 {
+        font-size: 14pt !important;
+        font-weight: bold !important;
+        color: #000 !important;
+        background: #f0f0f0 !important;
+        padding: 5px !important;
+        border-radius: 3px !important;
+        display: inline-block !important;
+        min-width: 60px !important;
+        text-align: center !important;
+    }
+
+    /* Tabellen */
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin: 10px 0 !important;
+        break-inside: avoid;
+        font-size: 9pt !important;
+    }
+
+    th, td {
+        border: 1pt solid #333 !important;
+        padding: 6px !important;
+        text-align: left !important;
+        background: white !important;
+    }
+
+    th {
+        background: #f0f0f0 !important;
+        font-weight: bold !important;
+    }
+
+    /* Input Felder für Tabelle */
+    input[type="number"] {
+        border: none !important;
+        background: transparent !important;
+        width: 100% !important;
+        font-size: 9pt !important;
+    }
+
+    /* Buttons verstecken */
+    button {
+        display: none !important;
+    }
+
+    /* Checkboxen und Labels */
+    input[type="checkbox"] {
+        display: inline-block !important;
+        margin-right: 5px !important;
+    }
+
+    label {
+        font-size: 9pt !important;
+        color: #000 !important;
+    }
+
+    /* Sliders verstecken, nur Werte anzeigen */
+    input[type="range"] {
+        display: none !important;
+    }
+
+    /* Chart Container */
+    .chart-container {
+        width: 100% !important;
+        height: 300px !important;
+        border: 1pt solid #333 !important;
+        background: white !important;
+        break-inside: avoid;
+    }
+
+    #chart {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    /* Gradient Bereiche für bessere Lesbarkeit */
+    .bg-gradient-to-br {
+        background: #f8f9fa !important;
+        border: 2pt solid #333 !important;
+    }
+
+    /* Spezielle Bereiche */
+    .bg-blue-50,
+    .bg-green-50,
+    .bg-purple-50 {
+        background: #f8f9fa !important;
+    }
+
+    /* Erläuterungen */
+    .space-y-4 > div {
+        margin-bottom: 8px !important;
+        padding: 5px !important;
+        background: #f8f9fa !important;
+        border: 1pt solid #ddd !important;
+        border-radius: 3px !important;
+    }
+
+    /* Text Größen anpassen */
+    .text-sm {
+        font-size: 9pt !important;
+    }
+
+    .text-xs {
+        font-size: 8pt !important;
+    }
+
+    /* Versteckte Elemente für Druck */
+    .hidden,
+    .transform,
+    .hover\\:scale-105,
+    .transition-transform,
+    .duration-300,
+    .glass-effect {
+        display: none !important;
+    }
+
+    /* Overflow für Tabellen */
+    .overflow-x-auto {
+        overflow: visible !important;
+    }
+
+    /* Flex Layouts vereinfachen */
+    .flex {
+        display: block !important;
+    }
+
+    .flex.justify-between {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
+    .flex.items-center {
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    /* Spacing */
+    .mb-8 {
+        margin-bottom: 15px !important;
+    }
+
+    .mb-6 {
+        margin-bottom: 10px !important;
+    }
+
+    .mb-4 {
+        margin-bottom: 8px !important;
+    }
+
+    /* Print Footer */
+    .page::after {
+        content: "Seite " counter(page);
+        position: fixed;
+        bottom: 10mm;
+        right: 20mm;
+        font-size: 9pt;
+        color: #666;
+    }
+
+    /* Spezielle Anpassungen für Messwerttabelle */
+    #measurementTable input {
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+    }
+
+    /* Dark mode Klassen überschreiben */
+    .dark\\:bg-gray-800,
+    .dark\\:bg-gray-900,
+    .dark\\:text-white,
+    .dark\\:text-gray-200,
+    .dark\\:text-gray-300 {
+        background: white !important;
+        color: #000 !important;
+    }
+
+    .dark\\:border-gray-700,
+    .dark\\:border-gray-600 {
+        border-color: #333 !important;
+    }
+}
