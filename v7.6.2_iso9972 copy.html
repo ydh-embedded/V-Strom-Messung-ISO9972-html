@@ -16,9 +16,11 @@
 </head>
 
 <body class="transition-colors duration-300 bg-gray-50 dark:bg-gray-900">
+
+
     <!-- Navigation -->
-    <nav class="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-50">
-        <div class="container-main">
+    <div class="container-main">
+        <nav class="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-50">
             <div class="flex justify-between items-center py-4">
                 <!-- Linker Bereich: Logo und Titel -->
                 <div class="flex items-center space-x-4">
@@ -43,17 +45,17 @@
 
                 <!-- Rechter Bereich: Theme Toggle und Navigation-->
 
-                    <div class="flex space-x-2">
-                        <button
-                            class="nav-link active px-6 py-2 rounded-full font-medium text-sm transition-all duration-300"
-                            onclick="showPage('measurement')">
-                            Messung
-                        </button>
-                        <button
-                            class="nav-link px-6 py-2 rounded-full font-medium text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                            onclick="showPage('analysis')">
-                            Analyse
-                        </button>
+                <div class="flex space-x-2">
+                    <button
+                        class="nav-link active px-6 py-2 rounded-full font-medium text-sm transition-all duration-300"
+                        onclick="showPage('measurement')">
+                        Messung
+                    </button>
+                    <button
+                        class="nav-link px-6 py-2 rounded-full font-medium text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        onclick="showPage('analysis')">
+                        Analyse
+                    </button>
 
                     <button id="theme-toggle"
                         class="glass-effect rounded-full p-2 text-gray-800 dark:text-white hover:bg-white/20 transition-all duration-300">
@@ -61,7 +63,7 @@
                     </button>
                 </div>
             </div>
-        </div>
+    </div>
     </nav>
 
     <div class="container-main">
