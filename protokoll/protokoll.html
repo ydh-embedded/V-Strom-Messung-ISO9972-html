@@ -10,7 +10,7 @@
             theme: {
                 extend: {
                     maxHeight: {
-                        '45': '11.25rem', // 180px
+                        'a4-section': '180mm', // 180mm für A4 Querformat Bereiche
                     },
                     width: {
                         'a4-landscape': '297mm',
@@ -103,9 +103,9 @@
         
         .diagram-placeholder {
             border: 2px dashed #3498db;
-            height: 200px;
+            height: 150px;
             text-align: center;
-            line-height: 200px;
+            line-height: 150px;
             color: #3498db;
             font-weight: bold;
             margin: 20px 0;
@@ -127,7 +127,7 @@
         <button onclick="drucken()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">🖨️ Drucken</button>
         <span class="bg-gray-200 px-4 py-2 rounded">Aktuelles Datum: <span class="auto-datum font-bold"></span></span>
     </div>
-</body>
+</div>
 
 <!-- Seite 1 -->
 <div class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
@@ -139,7 +139,7 @@
 
     <h1 class="text-2xl text-blue-900 text-center mb-8">Blower door Messung nach ISO 9972</h1>
 
-    <div class="grid grid-cols-2 gap-5 my-5 max-h-45 avoid-break">
+    <div class="grid grid-cols-2 gap-5 my-5 max-h-a4-section avoid-break">
         <div class="border border-gray-300 p-4 bg-gray-50">
             <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Geprüftes Objekt</h2>
             <p class="my-2 text-xs"><strong>Objektbezeichnung:</strong> <span class="input-field"></span></p>
@@ -191,10 +191,10 @@
     <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
         <span>Seite 2 von 8</span>
         <span>Blower Door Messprotokoll</span>
-        <span><strong>Datum:</strong> <span class="input-field"></span></span>
+        <span><strong>Datum:</strong> <span class="auto-datum bg-yellow-100 px-2 py-1 rounded"></span></span>
     </div>
 
-    <div class="grid grid-cols-2 gap-5 my-5 max-h-45 avoid-break">
+    <div class="grid grid-cols-2 gap-5 my-5 max-h-a4-section avoid-break">
         <div class="border border-gray-300 p-4 bg-gray-50">
             <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Zweck der Messung</h2>
             <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Überprüfung der Anforderungen nach KfW-Richtlinien</p>
@@ -269,10 +269,10 @@
     <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
         <span>Seite 3 von 8</span>
         <span>Blower Door Messprotokoll</span>
-        <span><strong>Datum:</strong> <span class="input-field"></span></span>
+        <span><strong>Datum:</strong> <span class="auto-datum bg-yellow-100 px-2 py-1 rounded"></span></span>
     </div>
 
-    <div class="grid grid-cols-2 gap-5 my-5 max-h-45 avoid-break">
+    <div class="grid grid-cols-2 gap-5 my-5 max-h-a4-section avoid-break">
         <div class="border border-gray-300 p-4 bg-gray-50">
             <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Auftraggeber Kontakt</h2>
             <div class="bg-gray-100 border border-gray-300 p-3 my-2 font-mono text-xs">
@@ -323,10 +323,10 @@
     <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
         <span>Seite 4 von 8</span>
         <span>Blower Door Messprotokoll</span>
-        <span><strong>Datum:</strong> <span class="input-field"></span></span>
+        <span><strong>Datum:</strong> <span class="auto-datum bg-yellow-100 px-2 py-1 rounded"></span></span>
     </div>
 
-    <div class="grid grid-cols-1 gap-5 my-5 max-h-45 avoid-break">
+    <div class="grid grid-cols-1 gap-5 my-5 max-h-a4-section avoid-break">
         <div class="border border-gray-300 p-4 bg-gray-50">
             <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Eingesetzte Messtechnik</h2>
             <table class="w-full border-collapse my-2 text-xs">
@@ -350,7 +350,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-5 my-5 max-h-45 avoid-break">
+    <div class="grid grid-cols-2 gap-5 my-5 max-h-a4-section avoid-break">
         <div class="border border-gray-300 p-4 bg-gray-50">
             <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Einbauort der Messeinrichtung</h2>
             <p class="my-2 text-xs"><strong>Einbauposition:</strong> <span class="input-field"></span></p>
@@ -373,7 +373,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-5 my-5 max-h-45 avoid-break">
+    <div class="grid grid-cols-2 gap-5 my-5 max-h-a4-section avoid-break">
         <div class="border border-gray-300 p-4 bg-gray-50">
             <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Bauzustand zum Messzeitpunkt</h2>
             <p class="my-2 text-xs"><strong>Baufortschritt:</strong> <span class="input-field"></span></p>
@@ -400,32 +400,4 @@
 <!-- Seite 5 -->
 <div class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
     <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
-        <span>Seite 5 von 8</span>
-        <span>Blower Door Messprotokoll</span>
-        <span><strong>Datum:</strong> <span class="input-field"></span></span>
-    </div>
-
-    <div class="grid grid-cols-2 gap-5 my-5 max-h-45 avoid-break">
-        <div class="border border-gray-300 p-4 bg-gray-50">
-            <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Leckagen</h2>
-            <p class="my-2 text-xs"><strong>Leckageortung durchgeführt:</strong></p>
-            <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Ja</p>
-            <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Nein</p>
-
-            <p class="my-2 text-xs"><strong>Detektierte Leckagen:</strong></p>
-            <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Es wurden keine großen Leckagen detektiert</p>
-            <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Folgende Leckagen wurden festgestellt:</p>
-
-            <table class="w-full border-collapse my-2 text-xs">
-                <thead>
-                    <tr class="bg-gray-200">
-                        <th class="border border-gray-800 p-2 text-left font-bold">Leckage-Nr.</th>
-                        <th class="border border-gray-800 p-2 text-left font-bold">Ort der Leckage</th>
-                        <th class="border border-gray-800 p-2 text-left font-bold">Beschreibung</th>
-                        <th class="border border-gray-800 p-2 text-left font-bold">Schweregrad</th>
-                        <th class="border border-gray-800 p-2 text-left font-bold">Behoben</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td class="border border-gray-800 p-2">1</td><td class="border border-gray-800 p-2"></td><td class="border border-gray-800 p-2"></td><td class="border border-gray-800 p-2">☐ gering ☐ mittel ☐ schwer</td><td class="border border-gray-800 p-2">☐ Ja ☐ Nein</td></tr>
-                    <tr><td class="border border-gray-800 p-2">2</td><td class="border border-gray-800 p-2"></td><td class="border border-gray-800 p-2"></td><td class="border border-gray-800 p-2">☐ gering ☐ mittel ☐ schwer</td><td class="border border-gray-800 p-2">☐
+        
