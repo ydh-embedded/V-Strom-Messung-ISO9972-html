@@ -41,3 +41,26 @@ Logische Neuordnung
 - Charts → Diagramme
 - Spacing → Abstände
 - Dark Mode → Überschreibungen
+
+
+## Gebäude-Enenergie-Gesetz
+
+Ab dem 1. November 2020 gilt in Deutschland das GEG (Gebäude-Enenergie-Gesetz) und somit tritt auch eine neue Norm für „Bestimmung der Luftdurchlässigkeit von Gebäuden – Differenzdruckverfahren“ in Kraft. Die alte DIN EN 13829 wir dann durch die DIN EN ISO 9972 abgelöst.
+
+Das bedeutet erhebliche, Änderungen im Ablauf der Blowerdoor-Messung und besonders auch Veränderungen in der Planung, auf die sich Messdienstleister,  Energieberater und Planer neu einstellen müssen. Teilweise betreffen die Änderungen konstruktive Entscheidungen, die bereits in der Planungsphase getroffen werden müssen! 
+
+Es muss nun noch mehr auf die luftdichte Planung, die fachgerechte Ausführung und die korrekte Messung geachtet werden!!!
+
+Die wichtigsten Punkte möchten wir Ihnen hier kurz vorstellen:
+
+DIN EN ISO 9972 2018-12 Anhang NA 
+
+
+
+Die Gebäude müssen dichter erstellt werden.
+Der Messzeitpunkt für die Blowerdoor-Messung muss vor der Fertigstellung liegen
+Es muss eine Unter- und eine Überdruckmessung durchgeführt werden und bei beiden Messungen ist der Grenzwert einzuhalten!
+Es gibt drei Messverfahren. (1 Prüfung im Nutzungszustand, 2 Prüfung der Gebäudehülle, 3 Prüfung zu einem bestimmten Zweck)
+Das Innenvolumen wird anders berechnet.
+Die Genauigkeit Messtechnik ist strenger.
+Aufzugtüren und Rauchabzüge/Fahrstuhlentrauchungen dürfen nicht abgedichtet werden
