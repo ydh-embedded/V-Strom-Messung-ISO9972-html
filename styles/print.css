@@ -1,6 +1,7 @@
 /* Print Styles für ISO 9972 - A4 Horizontal Layout */
 
 @media print {
+
     /* Page Setup für A4 Querformat */
     @page {
         size: A4 landscape;
@@ -101,14 +102,17 @@
         width: 100% !important;
     }
 
-    .grid > div {
+    .grid>div {
         flex: 1 !important;
         min-width: 200px !important;
         break-inside: avoid;
     }
 
     /* Überschriften */
-    h1, h2, h3, h4 {
+    h1,
+    h2,
+    h3,
+    h4 {
         color: #000 !important;
         break-after: avoid;
         margin-top: 15px !important;
@@ -152,7 +156,8 @@
         font-size: 9pt !important;
     }
 
-    th, td {
+    th,
+    td {
         border: 1pt solid #333 !important;
         padding: 6px !important;
         text-align: left !important;
@@ -221,7 +226,7 @@
     }
 
     /* Erläuterungen */
-    .space-y-4 > div {
+    .space-y-4>div {
         margin-bottom: 8px !important;
         padding: 5px !important;
         background: #f8f9fa !important;
@@ -311,5 +316,46 @@
     .dark\\:border-gray-700,
     .dark\\:border-gray-600 {
         border-color: #333 !important;
+    }
+}
+
+/* ===================================
+   BILDSCHIRM-ANZEIGE (Optional)
+   Zeigt Seitenumbrüche am Bildschirm an
+   =================================== */
+
+@media screen {
+
+    /* Seitenumbrüche am Bildschirm visualisieren (optional) */
+    .page-break-before::before,
+    .page-break::before,
+    .section-break::before,
+    .new-chapter::before {
+        content: "📄 SEITENUMBRUCH" !important;
+        display: block !important;
+        text-align: center !important;
+        background: #e3f2fd !important;
+        color: #1565c0 !important;
+        padding: 0.5em !important;
+        margin: 1em 0 !important;
+        border: 2px dashed #1565c0 !important;
+        border-radius: 4px !important;
+        font-size: 0.8em !important;
+        font-weight: bold !important;
+    }
+
+    /* Unsichtbare Umbrüche am Bildschirm anzeigen */
+    .invisible-page-break::before {
+        content: "📄 UNSICHTBARER SEITENUMBRUCH" !important;
+        display: block !important;
+        text-align: center !important;
+        background: #fff3e0 !important;
+        color: #ef6c00 !important;
+        padding: 0.25em !important;
+        margin: 0.5em 0 !important;
+        border: 1px dashed #ef6c00 !important;
+        border-radius: 4px !important;
+        font-size: 0.7em !important;
+        opacity: 0.7 !important;
     }
 }

@@ -1,0 +1,168 @@
+/* ===================================
+   ERWEITERTE SEITENUMBRUCH-UTILITIES
+   Fügen Sie diese Regeln zu Ihrer print.css hinzu
+   =================================== */
+
+@media print {
+    
+    /* ===================================
+       SEITENUMBRUCH-STEUERUNG
+       =================================== */
+    
+    /* Seitenumbruch VOR dem Element */
+    .page-break-before {
+        page-break-before: always !important;
+    }
+    
+    /* Seitenumbruch NACH dem Element */
+    .page-break-after {
+        page-break-after: always !important;
+    }
+    
+    /* Seitenumbruch VOR UND NACH dem Element */
+    .page-break-both {
+        page-break-before: always !important;
+        page-break-after: always !important;
+    }
+    
+    /* ===================================
+       SEITENUMBRUCH VERMEIDEN
+       =================================== */
+    
+    /* Seitenumbruch INNERHALB des Elements vermeiden */
+    .no-page-break-inside {
+        page-break-inside: avoid !important;
+    }
+    
+    /* Seitenumbruch VOR dem Element vermeiden */
+    .no-page-break-before {
+        page-break-before: avoid !important;
+    }
+    
+    /* Seitenumbruch NACH dem Element vermeiden */
+    .no-page-break-after {
+        page-break-after: avoid !important;
+    }
+    
+    /* ===================================
+       SPEZIELLE SEITENUMBRUCH-KLASSEN
+       =================================== */
+    
+    /* Neue Seite mit Überschrift */
+    .new-chapter {
+        page-break-before: always !important;
+        page-break-after: avoid !important;
+        margin-top: 0 !important;
+        padding-top: 1em !important;
+    }
+    
+    /* Zusammengehörige Elemente */
+    .keep-together {
+        page-break-inside: avoid !important;
+        page-break-before: avoid !important;
+    }
+    
+    /* Abschnitt der auf neuer Seite beginnen soll */
+    .section-break {
+        page-break-before: always !important;
+        border-top: 2pt solid #000 !important;
+        padding-top: 1em !important;
+        margin-top: 0 !important;
+    }
+    
+    /* ===================================
+       UNSICHTBARE SEITENUMBRÜCHE
+       =================================== */
+    
+    /* Vollständig unsichtbarer Seitenumbruch */
+    .invisible-page-break {
+        page-break-before: always !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        visibility: hidden !important;
+        display: block !important;
+    }
+    
+    /* Seitenumbruch mit optionaler Linie */
+    .page-break-with-line {
+        page-break-before: always !important;
+        border-top: 1pt solid #ccc !important;
+        margin: 0 !important;
+        padding-top: 0.5em !important;
+        height: 1pt !important;
+    }
+    
+    /* ===================================
+       SPEZIELLE LAYOUTS
+       =================================== */
+    
+    /* Querformat-Seite erzwingen */
+    .landscape-page {
+        page-break-before: always !important;
+        page-break-after: always !important;
+    }
+    
+    /* Hochformat-Seite erzwingen */
+    .portrait-page {
+        page-break-before: always !important;
+        page-break-after: always !important;
+    }
+    
+    /* ===================================
+       BEDINGTE SEITENUMBRÜCHE
+       =================================== */
+    
+    /* Seitenumbruch nur bei wenig Platz */
+    .conditional-break {
+        page-break-inside: avoid !important;
+    }
+    
+    .conditional-break::before {
+        content: "" !important;
+        display: block !important;
+        height: 100px !important;
+        page-break-inside: avoid !important;
+    }
+}
+
+/* ===================================
+   BILDSCHIRM-ANZEIGE (Optional)
+   Zeigt Seitenumbrüche am Bildschirm an
+   =================================== */
+
+@media screen {
+    /* Seitenumbrüche am Bildschirm visualisieren (optional) */
+    .page-break-before::before,
+    .page-break::before,
+    .section-break::before,
+    .new-chapter::before {
+        content: "📄 SEITENUMBRUCH" !important;
+        display: block !important;
+        text-align: center !important;
+        background: #e3f2fd !important;
+        color: #1565c0 !important;
+        padding: 0.5em !important;
+        margin: 1em 0 !important;
+        border: 2px dashed #1565c0 !important;
+        border-radius: 4px !important;
+        font-size: 0.8em !important;
+        font-weight: bold !important;
+    }
+    
+    /* Unsichtbare Umbrüche am Bildschirm anzeigen */
+    .invisible-page-break::before {
+        content: "📄 UNSICHTBARER SEITENUMBRUCH" !important;
+        display: block !important;
+        text-align: center !important;
+        background: #fff3e0 !important;
+        color: #ef6c00 !important;
+        padding: 0.25em !important;
+        margin: 0.5em 0 !important;
+        border: 1px dashed #ef6c00 !important;
+        border-radius: 4px !important;
+        font-size: 0.7em !important;
+        opacity: 0.7 !important;
+    }
+}

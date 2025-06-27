@@ -72,7 +72,7 @@
     --surface-glass: rgba(55, 65, 81, 0.9);
     
     /* === TEXT COLORS === */
-    --text-primary: #f9fafb;
+    --text-primary: #ffffff;
     --text-secondary: #e5e7eb;
     --text-muted: #9ca3af;
     --text-contrast: #ffffff;
@@ -156,6 +156,7 @@ body {
     border: 1px solid var(--border-primary);
     box-shadow: 0 8px 32px var(--shadow-light);
     border-radius: 22px;
+    margin-top: 1rem;
 }
 
 /* ===================================
@@ -568,6 +569,20 @@ input[type="range"]::-moz-range-thumb {
 @media (min-width: 1200px) {
     .container-main {
         padding: 0.1rem;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .dark\:text-white {
+        --tw-text-opacity: 1;
+        color: rgb(var(--text-primary-dark) / var(--tw-text-opacity, 1));
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .dark\:text-white {
+        --tw-text-opacity: 1;
+        color: rgb(var(--text-primary-light) / var(--tw-text-opacity, 1));
     }
 }
 
