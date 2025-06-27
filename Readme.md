@@ -24,3 +24,20 @@
   ```bash
   python -m http.server 7000
   ```
+
+
+## Anordnung der print.css
+
+Logische Neuordnung
+
+- Page Setup → Grundkonfiguration zuerst
+- Body & Container → Haupt-Layout
+- Navigation → Versteckte Elemente
+- Seiten-Layout → Seitenumbrüche und -struktur
+- Typography → Schriftarten und Überschriften
+- Layouts → Grid und Flex-Systeme
+- Tabellen → Datendarstellung
+- Formulare → Eingabefelder
+- Charts → Diagramme
+- Spacing → Abstände
+- Dark Mode → Überschreibungen
