@@ -46,7 +46,7 @@
     --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     --gradient-title: linear-gradient(135deg, #1e293b 0%, var(--primary-color) 50%, #1d4ed8 100%);
     --gradient-button: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-    --gradient-orange: linear-gradient(135deg, #fb923c 0%, #ea580c 50%, #dc2626 100%);
+    --gradient-orange: linear-gradient(135deg, #fb923c 0%, #ea580c 50%, #cf6060 100%);
     --gradient-success: linear-gradient(135deg, #10b981, #059669);
     
     /* === INTERACTIVE STATES === */
