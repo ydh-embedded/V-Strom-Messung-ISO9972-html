@@ -1,8 +1,15 @@
-/* Print Styles für ISO 9972 - A4 Horizontal Layout */
+/* ===================================
+   PRINT STYLES FÜR ISO 9972 A4 QUERFORMAT
+   Optimiert für Luftdurchlässigkeitsmessung
+   =================================== */
 
 @media print {
 
-    /* Page Setup für A4 Querformat */
+    /* ===================================
+       PAGE SETUP & GRUNDKONFIGURATION
+       =================================== */
+    
+    /* A4 Querformat mit optimierten Rändern */
     @page {
         size: A4 landscape;
         margin: 15mm 20mm 15mm 20mm;
@@ -10,7 +17,7 @@
         color-adjust: exact;
     }
 
-    /* Global Print Resets */
+    /* Globale Print-Resets für alle Elemente */
     * {
         -webkit-print-color-adjust: exact !important;
         color-adjust: exact !important;
@@ -18,20 +25,30 @@
         text-shadow: none !important;
     }
 
-    /* Body und Container */
+    /* ===================================
+       BODY & CONTAINER GRUNDLAGEN
+       =================================== */
+    
+    /* Haupt-Body mit PDF-Hintergrund */
     body {
+        /* Schriftart und Typografie */
         font-family: Arial, sans-serif !important;
         font-size: 10pt !important;
         line-height: 1.3 !important;
         color: #000 !important;
-        background: white !important;
+        
+        /* Layout und Spacing */
         margin: 0 !important;
         padding: 0 !important;
+        
+        /* Hintergrund-Konfiguration */
+        background: white !important;
         background-image: url('/PDF/protokoll.pdf');
         background-size: cover;
         background-repeat: no-repeat;
     }
 
+    /* Haupt-Container für Layout */
     .container-main {
         width: 100% !important;
         max-width: none !important;
@@ -39,26 +56,60 @@
         padding: 0 !important;
     }
 
-    /* Navigation verstecken */
+    /* ===================================
+       NAVIGATION & VERSTECKTE ELEMENTE
+       =================================== */
+    
+    /* Navigation komplett verstecken */
     nav {
         display: none !important;
     }
 
-    /* Nur die aktive Seite anzeigen */
+    /* Buttons und interaktive Elemente verstecken */
+    button {
+        display: none !important;
+    }
+
+    /* Slider verstecken, nur Werte anzeigen */
+    input[type="range"] {
+        display: none !important;
+    }
+
+    /* Animationen und Effekte entfernen */
+    .hidden,
+    .transform,
+    .hover\\:scale-105,
+    .transition-transform,
+    .duration-300,
+    .glass-effect {
+        display: none !important;
+    }
+
+    /* ===================================
+       SEITEN-LAYOUT & SEITENUMBRÜCHE
+       =================================== */
+    
+    /* Seiten-Container */
     .page {
         display: block !important;
         page-break-after: always;
     }
 
+    /* Nur aktive Seite anzeigen */
     .page:not(.active) {
         display: none !important;
     }
 
+    /* Letzte Seite ohne Umbruch */
     .page:last-child {
         page-break-after: avoid;
     }
 
-    /* Print Header für jede Seite */
+    /* ===================================
+       SEITEN-HEADER & FOOTER
+       =================================== */
+    
+    /* Standard Print-Header für alle Seiten */
     .page::before {
         content: "ISO 9972 - Luftdurchlässigkeitsmessung";
         display: block;
@@ -70,15 +121,7 @@
         border-bottom: 2px solid #333;
     }
 
-    .mr-1 {
-        margin-right: 0.25rem;
-    }
-
-    .ml-1 {
-        margin-left: 0.25rem;
-    }
-
-    /* Measurement Page spezifisch */
+    /* Spezifische Header für verschiedene Seiten */
     #measurement::before {
         content: "ISO 9972 - Messung & Eingabe";
     }
@@ -87,39 +130,21 @@
         content: "ISO 9972 - Analyse & Auswertung";
     }
 
-    /* Karten Layout für Druck optimieren */
-    .bg-white,
-    .dark\\:bg-gray-800 {
-        background: white !important;
-        border: 1.5pt solid #333 !important;
-        margin-bottom: 15px !important;
-        padding: 10px !important;
-        border-radius: 5px !important;
-        break-inside: avoid;
+    /* Print-Footer mit Seitenzahl */
+    .page::after {
+        content: "Seite " counter(page);
+        position: fixed;
+        bottom: 10mm;
+        right: 20mm;
+        font-size: 9pt;
+        color: #666;
     }
 
-    /* Grid Layouts für Druck anpassen */
-    .grid {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        gap: 10px !important;
-        margin-bottom: 15px !important;
-    }
-
-    .grid-cols-1,
-    .lg\\:grid-cols-3,
-    .md\\:grid-cols-3 {
-        display: flex !important;
-        width: 100% !important;
-    }
-
-    .grid>div {
-        flex: 1 !important;
-        min-width: 200px !important;
-        break-inside: avoid;
-    }
-
-    /* Überschriften */
+    /* ===================================
+       ÜBERSCHRIFTEN & TYPOGRAFIE
+       =================================== */
+    
+    /* Alle Überschriften */
     h1,
     h2,
     h3,
@@ -130,17 +155,151 @@
         margin-bottom: 8px !important;
     }
 
+    /* Mittlere Überschriften */
     h3 {
         font-size: 12pt !important;
         font-weight: bold !important;
     }
 
+    /* Kleine Überschriften */
     h4 {
         font-size: 11pt !important;
         font-weight: bold !important;
     }
 
-    /* Parameter Werte hervorheben */
+    /* Text-Größenklassen */
+    .text-sm {
+        font-size: 9pt !important;
+    }
+
+    .text-xs {
+        font-size: 8pt !important;
+    }
+
+    /* ===================================
+       KARTEN & CONTAINER LAYOUTS
+       =================================== */
+    
+    /* Hauptkarten mit Rahmen */
+    .bg-white,
+    .dark\\:bg-gray-800 {
+        background: white !important;
+        border: 1.5pt solid #333 !important;
+        margin-bottom: 15px !important;
+        padding: 10px !important;
+        border-radius: 5px !important;
+        break-inside: avoid;
+    }
+
+    /* Gradient-Bereiche für bessere Lesbarkeit */
+    .bg-gradient-to-br {
+        background: #f8f9fa !important;
+        border: 2pt solid #333 !important;
+    }
+
+    /* Farbige Hintergrund-Bereiche */
+    .bg-blue-50,
+    .bg-green-50,
+    .bg-purple-50 {
+        background: #f8f9fa !important;
+    }
+
+    /* ===================================
+       GRID & FLEX LAYOUTS
+       =================================== */
+    
+    /* Grid-Container für Druck optimieren */
+    .grid {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 10px !important;
+        margin-bottom: 15px !important;
+    }
+
+    /* Grid-Spalten zu Flexbox */
+    .grid-cols-1,
+    .lg\\:grid-cols-3,
+    .md\\:grid-cols-3 {
+        display: flex !important;
+        width: 100% !important;
+    }
+
+    /* Grid-Elemente */
+    .grid>div {
+        flex: 1 !important;
+        min-width: 200px !important;
+        break-inside: avoid;
+    }
+
+    /* Flex-Layouts vereinfachen */
+    .flex {
+        display: block !important;
+    }
+
+    /* Spezielle Flex-Varianten */
+    .flex.justify-between {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
+    .flex.items-center {
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    /* ===================================
+       TABELLEN & MESSWERTE
+       =================================== */
+    
+    /* Tabellen-Grundlayout */
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin: 10px 0 !important;
+        break-inside: avoid;
+        font-size: 9pt !important;
+    }
+
+    /* Tabellen-Zellen */
+    th,
+    td {
+        border: 1pt solid #333 !important;
+        padding: 6px !important;
+        text-align: left !important;
+        background: white !important;
+    }
+
+    /* Tabellen-Header */
+    th {
+        background: #f0f0f0 !important;
+        font-weight: bold !important;
+    }
+
+    /* Input-Felder in Tabellen */
+    input[type="number"] {
+        border: none !important;
+        background: transparent !important;
+        width: 100% !important;
+        font-size: 9pt !important;
+    }
+
+    /* Spezielle Messwert-Tabelle */
+    #measurementTable input {
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+    }
+
+    /* Overflow für Tabellen */
+    .overflow-x-auto {
+        overflow: visible !important;
+    }
+
+    /* ===================================
+       PARAMETER-WERTE & WICHTIGE DATEN
+       =================================== */
+    
+    /* Hervorgehobene Parameter-Werte */
     #n50-value,
     #volume-value,
     #pressure-value,
@@ -158,58 +317,27 @@
         text-align: center !important;
     }
 
-    /* Tabellen */
-    table {
-        width: 100% !important;
-        border-collapse: collapse !important;
-        margin: 10px 0 !important;
-        break-inside: avoid;
-        font-size: 9pt !important;
-    }
-
-    th,
-    td {
-        border: 1pt solid #333 !important;
-        padding: 6px !important;
-        text-align: left !important;
-        background: white !important;
-    }
-
-    th {
-        background: #f0f0f0 !important;
-        font-weight: bold !important;
-    }
-
-    /* Input Felder für Tabelle */
-    input[type="number"] {
-        border: none !important;
-        background: transparent !important;
-        width: 100% !important;
-        font-size: 9pt !important;
-    }
-
-    /* Buttons verstecken */
-    button {
-        display: none !important;
-    }
-
-    /* Checkboxen und Labels */
+    /* ===================================
+       FORMULARE & EINGABEFELDER
+       =================================== */
+    
+    /* Checkboxen sichtbar lassen */
     input[type="checkbox"] {
         display: inline-block !important;
         margin-right: 5px !important;
     }
 
+    /* Labels für Formularelemente */
     label {
         font-size: 9pt !important;
         color: #000 !important;
     }
 
-    /* Sliders verstecken, nur Werte anzeigen */
-    input[type="range"] {
-        display: none !important;
-    }
-
-    /* Chart Container */
+    /* ===================================
+       DIAGRAMME & CHARTS
+       =================================== */
+    
+    /* Chart-Container */
     .chart-container {
         width: 100% !important;
         height: 300px !important;
@@ -218,74 +346,25 @@
         break-inside: avoid;
     }
 
+    /* Chart-Element */
     #chart {
         max-width: 100% !important;
         height: auto !important;
     }
 
-    /* Gradient Bereiche für bessere Lesbarkeit */
-    .bg-gradient-to-br {
-        background: #f8f9fa !important;
-        border: 2pt solid #333 !important;
+    /* ===================================
+       SPACING & MARGINS
+       =================================== */
+    
+    /* Standard-Abstände */
+    .mr-1 {
+        margin-right: 0.25rem;
     }
 
-    /* Spezielle Bereiche */
-    .bg-blue-50,
-    .bg-green-50,
-    .bg-purple-50 {
-        background: #f8f9fa !important;
+    .ml-1 {
+        margin-left: 0.25rem;
     }
 
-    /* Erläuterungen */
-    .space-y-4>div {
-        margin-bottom: 8px !important;
-        padding: 5px !important;
-        background: #f8f9fa !important;
-        border: 1pt solid #ddd !important;
-        border-radius: 3px !important;
-    }
-
-    /* Text Größen anpassen */
-    .text-sm {
-        font-size: 9pt !important;
-    }
-
-    .text-xs {
-        font-size: 8pt !important;
-    }
-
-    /* Versteckte Elemente für Druck */
-    .hidden,
-    .transform,
-    .hover\\:scale-105,
-    .transition-transform,
-    .duration-300,
-    .glass-effect {
-        display: none !important;
-    }
-
-    /* Overflow für Tabellen */
-    .overflow-x-auto {
-        overflow: visible !important;
-    }
-
-    /* Flex Layouts vereinfachen */
-    .flex {
-        display: block !important;
-    }
-
-    .flex.justify-between {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-    }
-
-    .flex.items-center {
-        display: flex !important;
-        align-items: center !important;
-    }
-
-    /* Spacing */
     .mb-8 {
         margin-bottom: 15px !important;
     }
@@ -298,23 +377,24 @@
         margin-bottom: 8px !important;
     }
 
-    /* Print Footer */
-    .page::after {
-        content: "Seite " counter(page);
-        position: fixed;
-        bottom: 10mm;
-        right: 20mm;
-        font-size: 9pt;
-        color: #666;
+    /* ===================================
+       ERLÄUTERUNGEN & ZUSATZINFO
+       =================================== */
+    
+    /* Erläuterungs-Bereiche */
+    .space-y-4>div {
+        margin-bottom: 8px !important;
+        padding: 5px !important;
+        background: #f8f9fa !important;
+        border: 1pt solid #ddd !important;
+        border-radius: 3px !important;
     }
 
-    /* Spezielle Anpassungen für Messwerttabelle */
-    #measurementTable input {
-        print-color-adjust: exact !important;
-        -webkit-print-color-adjust: exact !important;
-    }
-
-    /* Dark mode Klassen überschreiben */
+    /* ===================================
+       DARK MODE ÜBERSCHREIBUNGEN
+       =================================== */
+    
+    /* Dark Mode Hintergründe zu Hell */
     .dark\\:bg-gray-800,
     .dark\\:bg-gray-900,
     .dark\\:text-white,
@@ -324,6 +404,7 @@
         color: #000 !important;
     }
 
+    /* Dark Mode Rahmen zu Dunkel */
     .dark\\:border-gray-700,
     .dark\\:border-gray-600 {
         border-color: #333 !important;
@@ -331,13 +412,17 @@
 }
 
 /* ===================================
-   BILDSCHIRM-ANZEIGE (Optional)
+   BILDSCHIRM-ANZEIGE FÜR ENTWICKLUNG
    Zeigt Seitenumbrüche am Bildschirm an
    =================================== */
 
 @media screen {
 
-    /* Seitenumbrüche am Bildschirm visualisieren (optional) */
+    /* ===================================
+       SEITENUMBRUCH-VISUALISIERUNG
+       =================================== */
+    
+    /* Sichtbare Seitenumbrüche am Bildschirm */
     .page-break-before::before,
     .page-break::before,
     .section-break::before,
@@ -355,7 +440,7 @@
         font-weight: bold !important;
     }
 
-    /* Unsichtbare Umbrüche am Bildschirm anzeigen */
+    /* Unsichtbare Umbrüche für Entwicklungs-Zwecke */
     .invisible-page-break::before {
         content: "📄 UNSICHTBARER SEITENUMBRUCH" !important;
         display: block !important;
