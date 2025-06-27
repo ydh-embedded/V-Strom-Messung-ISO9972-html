@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A4 Querformat - Beispielseite</title>
+    <link rel="stylesheet" href="tailwind-a4-landscape.css">
+    <style>
+        /* Zusätzliche Styles für bessere Darstellung */
+        @media screen {
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background: #f5f5f5;
+                margin: 0;
+                padding: 0;
+            }
+        }
+        
+        @media print {
+            body {
+                font-family: 'Times New Roman', serif;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Screen-only Vorschau Container -->
+    <div class="print-preview">
+        
+        <!-- A4 Querformat Container -->
+        <div class="a4-landscape">
+            
+            <!-- Header (wird beim Drucken fixiert) -->
+            <header class="print-header print-flex print-justify-between print-items-center no-page-break">
+                <div>
+                    <h1 class="print-text-lg print-m-0">Firmenname GmbH</h1>
+                    <p class="print-text-sm print-m-0 print-text-gray-600">Musterstraße 123, 12345 Musterstadt</p>
+                </div>
+                <div class="print-text-right">
+                    <p class="print-text-sm print-m-0">Datum: 27.06.2025</p>
+                    <p class="print-text-sm print-m-0">Seite 1 von 1</p>
+                </div>
+            </header>
+            
+            <!-- Hauptinhalt -->
+            <main class="print-content">
+                
+                <!-- Titel Bereich -->
+                <section class="print-m-4 no-page-break">
+                    <h1 class="print-text-3xl print-text-center print-m-2">Geschäftsbericht 2025</h1>
+                    <h2 class="print-text-xl print-text-center print-text-gray-600 print-m-1">Quartal 1 - Zusammenfassung</h2>
+                </section>
+                
+                <!-- Zwei-Spalten Layout -->
+                <section class="print-grid print-grid-cols-2 print-m-4" style="gap: 10mm;">
+                    
+                    <!-- Linke Spalte -->
+                    <div>
+                        <h3 class="print-text-lg print-border-b print-p-1">Umsatzentwicklung</h3>
+                        <p class="print-text-base print-m-2">
+                            Im ersten Quartal 2025 konnten wir einen Umsatzanstieg von 15% gegenüber dem Vorjahresquartal verzeichnen. 
+                            Diese positive Entwicklung ist hauptsächlich auf die Einführung neuer Produktlinien zurückzuführen.
+                        </p>
+                        
+                        <h4 class="print-text-base print-m-2">Wichtige Kennzahlen:</h4>
+                        <ul class="print-text-sm">
+                            <li>Gesamtumsatz: €2.5 Millionen</li>
+                            <li>Gewinnmarge: 18.5%</li>
+                            <li>Neue Kunden: 245</li>
+                            <li>Kundenzufriedenheit: 94%</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Rechte Spalte -->
+                    <div>
+                        <h3 class="print-text-lg print-border-b print-p-1">Marktanalyse</h3>
+                        <p class="print-text-base print-m-2">
+                            Der Markt zeigt weiterhin positive Trends. Unsere Marktposition hat sich im Vergleich zum Vorjahr 
+                            um 3 Prozentpunkte verbessert. Die Investitionen in Forschung und Entwicklung zahlen sich aus.
+                        </p>
+                        
+                        <div class="print-bg-gray-100 print-p-2 print-m-2">
+                            <h4 class="print-text-base print-m-1">Prognose Q2 2025:</h4>
+                            <p class="print-text-sm print-m-1">
+                                Erwarteter Umsatzanstieg von weiteren 8-12% basierend auf aktuellen Markttrends 
+                                und geplanten Produkteinführungen.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Tabelle -->
+                <section class="print-m-4 no-page-break">
+                    <h3 class="print-text-lg print-m-2">Quartalsergebnisse im Detail</h3>
+                    <table class="print-table">
+                        <thead>
+                            <tr>
+                                <th>Monat</th>
+                                <th>Umsatz (€)</th>
+                                <th>Kosten (€)</th>
+                                <th>Gewinn (€)</th>
+                                <th>Marge (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Januar</td>
+                                <td>750.000</td>
+                                <td>612.500</td>
+                                <td>137.500</td>
+                                <td>18.3%</td>
+                            </tr>
+                            <tr>
+                                <td>Februar</td>
+                                <td>820.000</td>
+                                <td>664.400</td>
+                                <td>155.600</td>
+                                <td>19.0%</td>
+                            </tr>
+                            <tr>
+                                <td>März</td>
+                                <td>930.000</td>
+                                <td>767.100</td>
+                                <td>162.900</td>
+                                <td>17.5%</td>
+                            </tr>
+                            <tr class="print-bg-gray-100">
+                                <td><strong>Gesamt Q1</strong></td>
+                                <td><strong>2.500.000</strong></td>
+                                <td><strong>2.044.000</strong></td>
+                                <td><strong>456.000</strong></td>
+                                <td><strong>18.2%</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                
+                <!-- Drei-Spalten Layout für Zusatzinfos -->
+                <section class="print-grid print-grid-cols-3 print-m-4" style="gap: 5mm;">
+                    <div class="print-border print-p-2">
+                        <h4 class="print-text-base print-text-center">Mitarbeiter</h4>
+                        <p class="print-text-2xl print-text-center print-m-1">127</p>
+                        <p class="print-text-sm print-text-center print-text-gray-600">+8 seit Q4 2024</p>
+                    </div>
+                    
+                    <div class="print-border print-p-2">
+                        <h4 class="print-text-base print-text-center">Projekte</h4>
+                        <p class="print-text-2xl print-text-center print-m-1">34</p>
+                        <p class="print-text-sm print-text-center print-text-gray-600">12 abgeschlossen</p>
+                    </div>
+                    
+                    <div class="print-border print-p-2">
+                        <h4 class="print-text-base print-text-center">Standorte</h4>
+                        <p class="print-text-2xl print-text-center print-m-1">5</p>
+                        <p class="print-text-sm print-text-center print-text-gray-600">Deutschland & EU</p>
+                    </div>
+                </section>
+                
+                <!-- Fazit -->
+                <section class="print-m-4">
+                    <h3 class="print-text-lg print-border-b print-p-1">Fazit und Ausblick</h3>
+                    <p class="print-text-base print-m-2">
+                        Das erste Quartal 2025 war außerordentlich erfolgreich. Die strategischen Investitionen der 
+                        vergangenen Jahre zeigen deutliche Ergebnisse. Für das zweite Quartal sind wir optimistisch 
+                        und erwarten eine Fortsetzung des positiven Trends.
+                    </p>
+                    
+                    <div class="print-flex print-justify-between print-m-4">
+                        <div>
+                            <p class="print-text-sm print-m-1">Erstellt von:</p>
+                            <p class="print-text-base">Max Mustermann</p>
+                            <p class="print-text-sm print-text-gray-600">Geschäftsführer</p>
+                        </div>
+                        <div class="print-text-right">
+                            <p class="print-text-sm print-m-1">Genehmigt von:</p>
+                            <p class="print-text-base">Dr. Anna Schmidt</p>
+                            <p class="print-text-sm print-text-gray-600">Vorstandsvorsitzende</p>
+                        </div>
+                    </div>
+                </section>
+                
+            </main>
+            
+            <!-- Footer (wird beim Drucken fixiert) -->
+            <footer class="print-footer print-flex print-justify-between print-items-center print-text-sm print-text-gray-600 no-page-break">
+                <div>
+                    <p class="print-m-0">Firmenname GmbH | Geschäftsbericht Q1 2025</p>
+                </div>
+                <div>
+                    <p class="print-m-0">Vertraulich - Nur für internen Gebrauch</p>
+                </div>
+            </footer>
+            
+        </div>
+        
+        <!-- Screen-only Druckhinweise -->
+        <div class="no-print" style="max-width: 297mm; margin: 20px auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h2 style="color: #333; margin-top: 0;">Druckhinweise</h2>
+            <ul style="color: #666; line-height: 1.6;">
+                <li><strong>Druckeinstellungen:</strong> Wählen Sie "Querformat" und "A4" als Papierformat</li>
+                <li><strong>Ränder:</strong> Setzen Sie alle Ränder auf "Minimal" oder "Keine"</li>
+                <li><strong>Hintergrundgrafiken:</strong> Aktivieren Sie "Hintergrundgrafiken drucken"</li>
+                <li><strong>Maßstab:</strong> Verwenden Sie 100% Skalierung</li>
+                <li><strong>Browser:</strong> Chrome oder Firefox empfohlen für beste Ergebnisse</li>
+            </ul>
+            
+            <button onclick="window.print()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; margin-top: 10px;">
+                🖨️ Seite drucken
+            </button>
+        </div>
+        
+    </div>
+</body>
+</html>
+
