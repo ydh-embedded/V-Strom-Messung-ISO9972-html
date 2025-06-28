@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blower Door Messprotokoll - Seite 1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            .protocol-page { page-break-after: always; box-shadow: none !important; border: 1px solid #000 !important; }
+        }
+        .input-field { border-bottom: 1px solid #333; min-width: 200px; display: inline-block; padding: 2px 5px; background: transparent; }
+        .stamp-box { border: 2px dashed #ccc; height: 80px; display: flex; align-items: center; justify-content: center; color: #999; font-style: italic; margin-top: 10px; }
+        .w-a4-landscape { width: 297mm; }
+        .min-h-a4-landscape { min-height: 210mm; }
+        .max-h-a4-section { max-height: 180mm; }
+    </style>
+</head>
+
+<body class="font-sans bg-gray-50">
+    <nav class="bg-white shadow-lg sticky top-0 z-50 no-print">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <div class="w-100 h-11 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold text-lg ml-2.5">ISO</span>
+                        <span class="text-white font-bold text-lg ml-0.5 mr-2.5">9972</span>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800">Blower Door Protokoll - Seite 1</h1>
+                </div>
+                <div class="flex space-x-2">
+                    <button onclick="window.print()" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors">🖨️ Drucken</button>
+                    <button onclick="setzeDatum()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">📅 Datum ändern</button>
+                    <span class="bg-gray-200 px-4 py-2 rounded">Datum: <span class="auto-datum font-bold"></span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-none">
+        <div class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
+                <span>Seite 1 von 8</span>
+                <span>Blower Door Messprotokoll</span>
+                <span><strong>Datum:</strong> <span class="auto-datum bg-yellow-100 px-2 py-1 rounded"></span></span>
+            </div>
+
+            <h1 class="text-2xl text-blue-900 text-center mb-8">Blower door Messung nach ISO 9972</h1>
+
+            <div class="grid grid-cols-2 gap-5 my-5 max-h-a4-section">
+                <div class="border border-gray-300 p-4 bg-gray-50">
+                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Geprüftes Objekt</h2>
+                    <p class="my-2 text-xs"><strong>Objektbezeichnung:</strong> <span class="input-field"></span></p>
+                    <p class="my-2 text-xs"><strong>Adresse:</strong> <span class="input-field"></span></p>
+                    <p class="my-2 text-xs"><strong>PLZ/Ort:</strong> <span class="input-field"></span></p>
+                    <p class="my-2 text-xs"><strong>Baujahr:</strong> <span class="input-field"></span></p>
+                    <p class="my-2 text-xs"><strong>Gebäudeart:</strong> <span class="input-field"></span></p>
+                </div>
+
+                <div class="border border-gray-300 p-4 bg-gray-50">
+                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Auftraggeber</h2>
+                    <p class="my-2 text-xs"><strong>Name/Firma:</strong> <span class="input-field"></span></p>
+                    <p class="my-2 text-xs"><strong>Ansprechpartner:</strong> <span class="input-field"></span></p>
+                    <p class="my-2 text-xs"><strong>Adresse:</strong> <span class="input-field"></span></p>
+                    <p class="my-2 text-xs"><strong>PLZ/Ort:</strong> <span class="input-field"></span></p>
+                    <p class="my-2 text-xs"><strong>Telefon:</strong> <span class="input-field"></span></p>
+                    <p class="my-2 text-xs"><strong>E-Mail:</strong> <span class="input-field"></span></p>
+                </div>
+
+                <div class="border border-gray-300 p-4 bg-gray-50">
+                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Auftragnehmer</h2>
+                    <p class="my-2 text-xs"><strong>Firma:</strong> <span class="input-field"></span></p>
+                    <p class="my-2 text-xs"><strong>Ansprechpartner:</strong> <span class="input-field"></span></p>
+                    <p class="my-2 text-xs"><strong>Adresse:</strong> <span class="input-field"></span></p>
+                    <p class="my-2 text-xs"><strong>PLZ/Ort:</strong> <span class="input-field"></span></p>
+                    <p class="my-2 text-xs"><strong>Telefon:</strong> <span class="input-field"></span></p>
+                    <p class="my-2 text-xs"><strong>E-Mail:</strong> <span class="input-field"></span></p>
+                </div>
+
+                <div class="border border-gray-300 p-4 bg-gray-50">
+                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Messung durchgeführt von</h2>
+                    <p class="my-2 text-xs"><strong>Name:</strong> <span class="input-field"></span></p>
+                    <p class="my-2 text-xs"><strong>Qualifikation:</strong> <span class="input-field"></span></p>
+                    <p class="my-2 text-xs"><strong>Unterschrift:</strong> <span class="input-field"></span></p>
+                </div>
+
+                <div class="col-span-2 border border-gray-300 p-4 bg-gray-50">
+                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Messdatum und Stempel</h2>
+                    <p class="my-2 text-xs"><strong>Messdatum:</strong> <span class="auto-datum bg-yellow-100 px-2 py-1 rounded"></span></p>
+                    <p class="my-2 text-xs"><strong>Uhrzeit:</strong> <span class="auto-uhrzeit bg-yellow-100 px-2 py-1 rounded"></span></p>
+                    <p class="my-2 text-xs"><strong>Firmenstempel:</strong></p>
+                    <div class="stamp-box">Platz für Firmenstempel</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const heute = new Date();
+            const deutschesDatum = heute.toLocaleDateString('de-DE');
+            const aktuelleZeit = heute.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+            
+            document.querySelectorAll('.auto-datum').forEach(feld => { feld.textContent = deutschesDatum; });
+            document.querySelectorAll('.auto-uhrzeit').forEach(feld => { feld.textContent = aktuelleZeit; });
+        });
+
+        function setzeDatum() {
+            const datum = prompt("Datum eingeben (TT.MM.JJJJ):");
+            if (datum) {
+                document.querySelectorAll('.auto-datum').forEach(feld => { feld.textContent = datum; });
+            }
+        }
+    </script>
+</body>
+</html>
