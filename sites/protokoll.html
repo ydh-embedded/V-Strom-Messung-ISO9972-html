@@ -4,10 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blower Door Messprotokoll</title>
+    <title>Blower Door Messprotokoll nach ISO 9972</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"></script>
     <style>
+        /* Custom Styles - Übernommen aus integrated_blower_door.html */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Print Styles */
         @media print {
             .no-print {
                 display: none !important;
@@ -15,9 +25,36 @@
 
             .protocol-page {
                 page-break-after: always;
+                box-shadow: none !important;
+                border: 1px solid #000 !important;
+            }
+
+            .protocol-page:last-child {
+                page-break-after: auto;
             }
         }
 
+        /* Protocol specific styles */
+        .input-field {
+            border-bottom: 1px solid #333;
+            min-width: 200px;
+            display: inline-block;
+            padding: 2px 5px;
+            background: transparent;
+        }
+
+        .stamp-box {
+            border: 2px dashed #ccc;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        /* A4 Landscape dimensions */
         .w-a4-landscape {
             width: 297mm;
         }
@@ -30,47 +67,286 @@
             max-height: 180mm;
         }
 
-        .input-field {
-            border-bottom: 1px solid #333;
-            min-width: 200px;
-            display: inline-block;
-            padding: 2px 4px;
+        /* Custom Slider Styles */
+        .slider-blue {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #e5f3ff 0%, #3b82f6 100%);
+            outline: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
         }
 
-        .stamp-box {
-            border: 2px dashed #666;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            font-style: italic;
-            margin-top: 10px;
+        .slider-blue:hover {
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+            transform: translateY(-1px);
         }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+        .slider-blue::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .slider-blue::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.6);
+        }
+
+        .slider-blue::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .slider-green {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #f0fdf4 0%, #22c55e 100%);
+            outline: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);
+        }
+
+        .slider-green:hover {
+            box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .slider-green::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .slider-green::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(34, 197, 94, 0.6);
+        }
+
+        .slider-green::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+        }
+
+        .slider-purple {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #faf5ff 0%, #a855f7 100%);
+            outline: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(168, 85, 247, 0.2);
+        }
+
+        .slider-purple:hover {
+            box-shadow: 0 4px 8px rgba(168, 85, 247, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .slider-purple::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7, #9333ea);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .slider-purple::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(168, 85, 247, 0.6);
+        }
+
+        .slider-purple::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7, #9333ea);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
         }
     </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    maxHeight: {
+                        'a4-section': '180mm',
+                    },
+                    width: {
+                        'a4-landscape': '297mm',
+                    },
+                    height: {
+                        'a4-landscape': '210mm',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 
-<body>
-    <!-- Protokoll Seite -->
-    <div id="protocol" class="page active">
-        <div class="max-w-none">
-            <!-- Steuerungsbuttons -->
-            <div class="no-print bg-blue-100 p-4 mb-4 rounded-lg mx-auto max-w-4xl">
-                <div class="flex gap-4 justify-center">
+<body class="font-sans bg-gray-50">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50 no-print">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo und Titel -->
+                <div class="flex items-center space-x-4">
+                    <div
+                        class="w-100 h-11 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold text-lg ml-2.5">ISO</span>
+                        <span class="text-white font-bold text-lg ml-0.5 mr-2.5">9972</span>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800 dark:text-white">
+                        Luftdurchlässigkeit
+                    </h1>
+                </div>
+
+                <!-- Navigation Menu -->
+                <div class="flex space-x-2">
+                    <button onclick="showPage('home')"
+                        class="nav-btn bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                        🏠 Startseite
+                    </button>
+                    <button onclick="showPage('protocol')"
+                        class="nav-btn bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                        📋 Protokoll
+                    </button>
+                    <button onclick="showPage('measurement')"
+                        class="nav-btn bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">
+                        📊 Messung
+                    </button>
+                    <button onclick="showPage('analysis')"
+                        class="nav-btn bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
+                        📈 Analyse
+                    </button>
+                    <button onclick="printProtocol()"
+                        class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors">
+                        🖨️ Drucken
+                    </button>
+                    <!-- Steuerungsbuttons -->
                     <button onclick="setzeDatum()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">📅
                         Datum ändern</button>
-                    <button onclick="printProtocol()"
-                        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">🖨️ Drucken</button>
                     <span class="bg-gray-200 px-4 py-2 rounded">Aktuelles Datum: <span
                             class="auto-datum font-bold"></span></span>
                 </div>
             </div>
+        </div>
+    </nav>
 
+    <!-- Startseite -->
+    <div id="home" class="page active">
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <div class="bg-white rounded-xl shadow-xl p-8 mb-8">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Blower Door Messprotokoll nach ISO 9972
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-blue-50 rounded-lg p-6 text-center">
+                        <div class="text-4xl mb-4">📋</div>
+                        <h3 class="text-xl font-bold text-blue-800 mb-2">Protokoll</h3>
+                        <p class="text-gray-600 mb-4">Vollständiges 8-seitiges Messprotokoll nach ISO 9972 Standard</p>
+                        <button onclick="showPage('protocol')"
+                            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                            Zum Protokoll
+                        </button>
+                    </div>
+
+                    <div class="bg-green-50 rounded-lg p-6 text-center">
+                        <div class="text-4xl mb-4">📊</div>
+                        <h3 class="text-xl font-bold text-green-800 mb-2">Messung</h3>
+                        <p class="text-gray-600 mb-4">Eingabe und Verwaltung von Messdaten mit interaktiven Parametern
+                        </p>
+                        <button onclick="showPage('measurement')"
+                            class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                            Zur Messung
+                        </button>
+                    </div>
+
+                    <div class="bg-orange-50 rounded-lg p-6 text-center">
+                        <div class="text-4xl mb-4">📈</div>
+                        <h3 class="text-xl font-bold text-orange-800 mb-2">Analyse</h3>
+                        <p class="text-gray-600 mb-4">Grafische Auswertung und Berechnung der Kennwerte</p>
+                        <button onclick="showPage('analysis')"
+                            class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
+                            Zur Analyse
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Über die Blower Door Messung</h3>
+                    <p class="text-gray-600 mb-4">
+                        Die Blower Door Messung ist ein Verfahren zur Bestimmung der Luftdurchlässigkeit von Gebäuden
+                        nach ISO 9972.
+                        Sie wird eingesetzt zur Qualitätskontrolle der Bauausführung und zur Überprüfung von
+                        Anforderungen nach KfW-Richtlinien.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-bold text-gray-700 mb-2">Kennwerte:</h4>
+                            <ul class="text-gray-600 space-y-1">
+                                <li>• n₅₀-Wert: Luftwechselrate bei 50 Pa</li>
+                                <li>• q₅₀-Wert: Spezifischer Leckagestrom</li>
+                                <li>• V₅₀: Volumenstrom bei 50 Pa</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 mb-2">Anwendungen:</h4>
+                            <ul class="text-gray-600 space-y-1">
+                                <li>• KfW-Nachweis</li>
+                                <li>• Passivhaus-Standard</li>
+                                <li>• Leckageortung</li>
+                                <li>• Qualitätskontrolle</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protokoll Seite -->
+    <div id="protocol" class="page">
+        <div class="max-w-none">
             <!-- Seite 1 -->
             <div
                 class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
@@ -237,48 +513,226 @@
         </div>
     </div>
 
+    <!-- Messung Seite -->
+    <div id="measurement" class="page">
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <!-- Anzeigeoptionen -->
+            <div class="bg-white rounded-xl shadow-xl p-6 border border-gray-200 mb-8">
+                <h3 class="text-xl font-bold mb-4 text-gray-800">Anzeigeoptionen</h3>
+                <div class="flex items-center justify-center space-x-6 flex-wrap">
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="showTheoretical" checked
+                            class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded">
+                        <label for="showTheoretical"
+                            class="text-sm font-medium text-gray-700 cursor-pointer flex items-center">
+                            <span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
+                            Theoretische Kurve anzeigen
+                        </label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="showSimulated"
+                            class="w-5 h-5 text-amber-600 bg-gray-100 border-gray-300 rounded">
+                        <label for="showSimulated"
+                            class="text-sm font-medium text-gray-700 cursor-pointer flex items-center">
+                            <span class="w-3 h-3 bg-amber-500 rounded-full mr-2"></span>
+                            Simulierte Messpunkte anzeigen
+                        </label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="showReal" checked
+                            class="w-5 h-5 text-green-600 bg-gray-100 border-gray-300 rounded">
+                        <label for="showReal"
+                            class="text-sm font-medium text-gray-700 cursor-pointer flex items-center">
+                            <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                            Reale Messpunkte anzeigen
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Eingabeparameter -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <div
+                    class="bg-white rounded-xl shadow-xl p-6 border border-gray-200 transform hover:scale-105 transition-transform duration-300">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 flex items-center">
+                        <span class="w-3 h-3 bg-blue-500 rounded-full mr-3"></span>
+                        n₅₀-Wert
+                    </h3>
+                    <label for="n50" class="block text-sm font-medium text-gray-700 mb-3">n₅₀-Wert [1/h]</label>
+                    <input type="range" id="n50" min="0.5" max="10" step="0.1" value="3.0"
+                        class="w-full slider-blue mb-4">
+                    <div class="text-center bg-blue-50 rounded-lg p-3">
+                        <span class="text-3xl font-bold text-blue-600" id="n50-value">3.0</span>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white rounded-xl shadow-xl p-6 border border-gray-200 transform hover:scale-105 transition-transform duration-300">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 flex items-center">
+                        <span class="w-3 h-3 bg-green-500 rounded-full mr-3"></span>
+                        Gebäudevolumen
+                    </h3>
+                    <label for="volume" class="block text-sm font-medium text-gray-700 mb-3">Gebäudevolumen
+                        [m³]</label>
+                    <input type="range" id="volume" min="100" max="2000" step="50" value="500"
+                        class="w-full slider-green mb-4">
+                    <div class="text-center bg-green-50 rounded-lg p-3">
+                        <span class="text-3xl font-bold text-green-600" id="volume-value">500</span>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white rounded-xl shadow-xl p-6 border border-gray-200 transform hover:scale-105 transition-transform duration-300">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 flex items-center">
+                        <span class="w-3 h-3 bg-purple-500 rounded-full mr-3"></span>
+                        Max. Druck
+                    </h3>
+                    <label for="pressure" class="block text-sm font-medium text-gray-700 mb-3">Max. Druck
+                        [Pa]</label>
+                    <input type="range" id="pressure" min="50" max="200" step="10" value="100"
+                        class="w-full slider-purple mb-4">
+                    <div class="text-center bg-purple-50 rounded-lg p-3">
+                        <span class="text-3xl font-bold text-purple-600" id="pressure-value">100</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messpunkte Eingabe -->
+            <div class="bg-white rounded-xl shadow-xl p-6 border border-gray-200 mb-8">
+                <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
+                    <h3 class="text-xl font-bold text-gray-800 flex items-center">
+                        <span class="w-3 h-3 bg-red-500 rounded-full mr-3"></span>
+                        Reale Messpunkte eingeben
+                    </h3>
+                    <div class="flex space-x-2">
+                        <button id="clearMeasurements"
+                            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200">
+                            Alle löschen
+                        </button>
+                        <button id="addMeasurementRow"
+                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200">
+                            + Zeile hinzufügen
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="border border-gray-300 px-4 py-2 text-left text-gray-700 font-semibold">
+                                    Differenzdruck [Pa]
+                                </th>
+                                <th class="border border-gray-300 px-4 py-2 text-left text-gray-700 font-semibold">
+                                    Volumenstrom [m³/h]
+                                </th>
+                                <th class="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
+                                    Aktionen
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="measurementTable">
+                            <!-- Initial rows will be added by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 text-sm text-gray-600">
+                    <p><strong>Hinweis:</strong> Geben Sie Ihre gemessenen Werte ein. Leere Zeilen werden
+                        ignoriert.</p>
+                    <p><strong>Tipp:</strong> Drücken Sie Tab, um zwischen den Feldern zu wechseln.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analyse Seite -->
+    <div id="analysis" class="page">
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <!-- Diagramm -->
+            <div class="bg-white rounded-xl shadow-xl p-8 border border-gray-200 mb-8">
+                <div class="chart-container h-80 min-h-[600px] max-h-[600px]">
+                    <canvas id="chart"></canvas>
+                </div>
+
+                <!-- Berechnete Werte -->
+                <div
+                    class="bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 rounded-xl shadow-2xl p-4 mb-8 relative overflow-hidden max-h-[25000px]">
+                    <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+                    <div class="relative z-10 max-h-[200px] overflow-hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div
+                                class="bg-white/20 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 hover:bg-white/30 transition-all duration-300">
+                                <div class="text-4xl font-bold text-white mb-3" id="calc-n50">3.0</div>
+                                <div class="text-white/90 text-sm font-medium">n₅₀-Wert [1/h]</div>
+                            </div>
+                            <div
+                                class="bg-white/20 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 hover:bg-white/30 transition-all duration-300">
+                                <div class="text-4xl font-bold text-white mb-3" id="calc-q50">1.20</div>
+                                <div class="text-white/90 text-sm font-medium">q₅₀-Wert [m³/(h·m²)]</div>
+                            </div>
+                            <div
+                                class="bg-white/20 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 hover:bg-white/30 transition-all duration-300">
+                                <div class="text-4xl font-bold text-white mb-3" id="calc-v50">1500</div>
+                                <div class="text-white/90 text-sm font-medium">V₅₀ [m³/h]</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="chart-error"
+                    class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4">
+                    <p><strong>Fehler:</strong> Das Diagramm konnte nicht geladen werden. Bitte überprüfen Sie
+                        die
+                        Konsole für weitere Details.</p>
+                </div>
+
+                <!-- Erläuterungen -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div
+                        class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-xl p-6 border border-blue-200">
+                        <h4 class="text-xl font-bold mb-4 text-blue-800 flex items-center">
+                            <span class="w-4 h-4 bg-blue-500 rounded-full mr-3"></span>
+                            Grundlegende Definitionen
+                        </h4>
+                        <div class="space-y-4 text-sm text-blue-700">
+                            <div class="p-3 bg-white/50 rounded-lg">
+                                <strong>n₅₀-Wert:</strong> Luftwechselrate bei 50 Pa Druckdifferenz
+                            </div>
+                            <div class="p-3 bg-white/50 rounded-lg">
+                                <strong>q₅₀-Wert:</strong> Spezifischer Leckagestrom pro m² Hüllfläche
+                            </div>
+                            <div class="p-3 bg-white/50 rounded-lg">
+                                <strong>V₅₀:</strong> Volumenstrom bei 50 Pa Druckdifferenz
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-xl p-6 border border-green-200">
+                        <h4 class="text-xl font-bold mb-4 text-green-800 flex items-center">
+                            <span class="w-4 h-4 bg-green-500 rounded-full mr-3"></span>
+                            Technische Parameter
+                        </h4>
+                        <div class="space-y-4 text-sm text-green-700">
+                            <div class="p-3 bg-white/50 rounded-lg">
+                                <strong>Potenzfunktion:</strong> V = C × ΔP^n
+                            </div>
+                            <div class="p-3 bg-white/50 rounded-lg">
+                                <strong>Typischer n-Wert:</strong> 0,65 (für turbulente Strömung)
+                            </div>
+                            <div class="p-3 bg-white/50 rounded-lg">
+                                <strong>Messbereich:</strong> 10-100 Pa (nach ISO 9972)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Automatisches Datum setzen
-        function setzeAktuellesDatum() {
-            const heute = new Date();
-            const datum = heute.toLocaleDateString('de-DE');
-            const uhrzeit = heute.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-
-            // Alle Datum-Elemente aktualisieren
-            document.querySelectorAll('.auto-datum').forEach(element => {
-                element.textContent = datum;
-            });
-
-            // Alle Uhrzeit-Elemente aktualisieren
-            document.querySelectorAll('.auto-uhrzeit').forEach(element => {
-                element.textContent = uhrzeit;
-            });
-        }
-
-        // Datum manuell setzen
-        function setzeDatum() {
-            const neuesDatum = prompt('Bitte geben Sie das neue Datum ein (TT.MM.JJJJ):',
-                new Date().toLocaleDateString('de-DE'));
-
-            if (neuesDatum) {
-                document.querySelectorAll('.auto-datum').forEach(element => {
-                    element.textContent = neuesDatum;
-                });
-            }
-        }
-
-        // Drucken
-        function printProtocol() {
-            window.print();
-        }
-
-        // Beim Laden der Seite das aktuelle Datum setzen
-        document.addEventListener('DOMContentLoaded', function () {
-            setzeAktuellesDatum();
-        });
-    </script>
-    <script>
-        // JavaScript für die Website-Funktionalität
+        // JavaScript für die Website-Funktionalität - Übernommen aus integrated_blower_door.html
 
         // Globale Variablen
         let chart = null;
@@ -666,6 +1120,7 @@
             }, 500);
         });
     </script>
+
 </body>
 
 </html>
