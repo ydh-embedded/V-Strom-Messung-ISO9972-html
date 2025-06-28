@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blower Door Messprotokoll</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"></script>
+    <style>
+        /* Custom Styles */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Print Styles */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            .protocol-page {
+                page-break-after: always;
+                box-shadow: none !important;
+                border: 1px solid #000 !important;
+            }
+
+            .protocol-page:last-child {
+                page-break-after: auto;
+            }
+        }
+
+        /* Protocol specific styles */
+        .input-field {
+            border-bottom: 1px solid #333;
+            min-width: 200px;
+            display: inline-block;
+            padding: 2px 5px;
+            background: transparent;
+        }
+
+        .stamp-box {
+            border: 2px dashed #ccc;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        /* A4 Landscape dimensions */
+        .w-a4-landscape {
+            width: 297mm;
+        }
+
+        .min-h-a4-landscape {
+            min-height: 210mm;
+        }
+
+        .max-h-a4-section {
+            max-height: 180mm;
+        }
+
+        /* Custom Slider Styles */
+        .slider-blue {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #e5f3ff 0%, #3b82f6 100%);
+            outline: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+        }
+
+        .slider-blue:hover {
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .slider-blue::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .slider-blue::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.6);
+        }
+
+        .slider-blue::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .slider-green {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #f0fdf4 0%, #22c55e 100%);
+            outline: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);
+        }
+
+        .slider-green:hover {
+            box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .slider-green::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .slider-green::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(34, 197, 94, 0.6);
+        }
+
+        .slider-green::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+        }
+
+        .slider-purple {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #faf5ff 0%, #a855f7 100%);
+            outline: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(168, 85, 247, 0.2);
+        }
+
+        .slider-purple:hover {
+            box-shadow: 0 4px 8px rgba(168, 85, 247, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .slider-purple::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7, #9333ea);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .slider-purple::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(168, 85, 247, 0.6);
+        }
+
+        .slider-purple::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7, #9333ea);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    maxHeight: {
+                        'a4-section': '180mm',
+                    },
+                    width: {
+                        'a4-landscape': '297mm',
+                    },
+                    height: {
+                        'a4-landscape': '210mm',
+                    }
+                }
+            }
+        }
+    </script>
+
+    
+</head>
+<body>
+    <!-- Protokoll Seite -->
+    <div id="protocol" class="page">
+        <div class="max-w-none">
+            <!-- Steuerungsbuttons -->
+            <div class="no-print bg-blue-100 p-4 mb-4 rounded-lg mx-auto max-w-4xl">
+                <div class="flex gap-4 justify-center">
+                    <button onclick="setzeDatum()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">📅 Datum ändern</button>
+                    <button onclick="printProtocol()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">🖨️ Drucken</button>
+                    <span class="bg-gray-200 px-4 py-2 rounded">Aktuelles Datum: <span class="auto-datum font-bold"></span></span>
+                </div>
+            </div>
+
+            <!-- Seite 1 -->
+            <div class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
+                <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
+                    <span>Seite 1 von 8</span>
+                    <span>Blower Door Messprotokoll</span>
+                    <span><strong>Datum:</strong> <span class="auto-datum bg-yellow-100 px-2 py-1 rounded"></span></span>
+                </div>
+
+                <h1 class="text-2xl text-blue-900 text-center mb-8">Blower door Messung nach ISO 9972</h1>
+
+                <div class="grid grid-cols-2 gap-5 my-5 max-h-a4-section">
+                    <div class="border border-gray-300 p-4 bg-gray-50">
+                        <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Geprüftes Objekt</h2>
+                        <p class="my-2 text-xs"><strong>Objektbezeichnung:</strong> <span class="input-field"></span></p>
+                        <p class="my-2 text-xs"><strong>Adresse:</strong> <span class="input-field"></span></p>
+                        <p class="my-2 text-xs"><strong>PLZ/Ort:</strong> <span class="input-field"></span></p>
+                        <p class="my-2 text-xs"><strong>Baujahr:</strong> <span class="input-field"></span></p>
+                        <p class="my-2 text-xs"><strong>Gebäudeart:</strong> <span class="input-field"></span></p>
+                    </div>
+
+                    <div class="border border-gray-300 p-4 bg-gray-50">
+                        <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Auftraggeber</h2>
+                        <p class="my-2 text-xs"><strong>Name/Firma:</strong> <span class="input-field"></span></p>
+                        <p class="my-2 text-xs"><strong>Ansprechpartner:</strong> <span class="input-field"></span></p>
+                        <p class="my-2 text-xs"><strong>Adresse:</strong> <span class="input-field"></span></p>
+                        <p class="my-2 text-xs"><strong>PLZ/Ort:</strong> <span class="input-field"></span></p>
+                        <p class="my-2 text-xs"><strong>Telefon:</strong> <span class="input-field"></span></p>
+                        <p class="my-2 text-xs"><strong>E-Mail:</strong> <span class="input-field"></span></p>
+                    </div>
+
+                    <div class="border border-gray-300 p-4 bg-gray-50">
+                        <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Auftragnehmer</h2>
+                        <p class="my-2 text-xs"><strong>Firma:</strong> <span class="input-field"></span></p>
+                        <p class="my-2 text-xs"><strong>Ansprechpartner:</strong> <span class="input-field"></span></p>
+                        <p class="my-2 text-xs"><strong>Adresse:</strong> <span class="input-field"></span></p>
+                        <p class="my-2 text-xs"><strong>PLZ/Ort:</strong> <span class="input-field"></span></p>
+                        <p class="my-2 text-xs"><strong>Telefon:</strong> <span class="input-field"></span></p>
+                        <p class="my-2 text-xs"><strong>E-Mail:</strong> <span class="input-field"></span></p>
+                    </div>
+
+                    <div class="border border-gray-300 p-4 bg-gray-50">
+                        <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Messung durchgeführt von</h2>
+                        <p class="my-2 text-xs"><strong>Name:</strong> <span class="input-field"></span></p>
+                        <p class="my-2 text-xs"><strong>Qualifikation:</strong> <span class="input-field"></span></p>
+                        <p class="my-2 text-xs"><strong>Unterschrift:</strong> <span class="input-field"></span></p>
+                    </div>
+
+                    <div class="col-span-2 border border-gray-300 p-4 bg-gray-50">
+                        <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Messdatum und Stempel</h2>
+                        <p class="my-2 text-xs"><strong>Messdatum:</strong> <span class="auto-datum bg-yellow-100 px-2 py-1 rounded"></span></p>
+                        <p class="my-2 text-xs"><strong>Uhrzeit:</strong> <span class="auto-uhrzeit bg-yellow-100 px-2 py-1 rounded"></span></p>
+                        <p class="my-2 text-xs"><strong>Firmenstempel:</strong></p>
+                        <div class="stamp-box">Platz für Firmenstempel</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seite 2 -->
+            <div class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
+                <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
+                    <span>Seite 2 von 8</span>
+                    <span>Blower Door Messprotokoll</span>
+                    <span><strong>Datum:</strong> <span class="auto-datum bg-yellow-100 px-2 py-1 rounded"></span></span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-5 my-5 max-h-a4-section">
+                    <div class="border border-gray-300 p-4 bg-gray-50">
+                        <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Zweck der Messung</h2>
+                        <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Überprüfung der Anforderungen nach KfW-Richtlinien</p>
+                        <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Nachweis Passivhaus-Standard</p>
+                        <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Qualitätskontrolle Bauausführung</p>
+                        <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Leckageortung</p>
+                        <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Sonstiges: <span class="input-field"></span></p>
+                    </div>
+
+                    <div class="border border-gray-300 p-4 bg-gray-50">
+                        <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Prüfnorm und Verfahren</h2>
+                        <p class="my-2 text-xs"><strong>Prüfnorm:</strong> Bestimmung der Luftdurchlässigkeit von Gebäuden - Differenzdruckverfahren ISO 9972</p>
+                        <p class="my-2 text-xs"><strong>Gebäudevorbereitung:</strong> Verfahren 1 - Prüfung des Gebäudes im Nutzungszustand</p>
+                        <p class="my-2 text-xs"><strong>Prüfverfahren:</strong></p>
+                        <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Methode A (Einzelmessung)</p>
+                        <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Methode B (Mehrfachmessung)</p>
+                    </div>
+
+                    <div class="col-span-2 border border-gray-300 p-4 bg-gray-50">
+                        <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Messergebnisse</h2>
+                        <p class="my-2 text-xs">Die Messergebnisse werden auf einen Differenzdruck zwischen Gebäudeinneren und Umgebung von <strong>50 Pa</strong> bezogen.</p>
+
+                        <h3 class="text-sm text-blue-900 mt-4 mb-2">Wichtige Kennwerte:</h3>
+
+                        <table class="w-full border-collapse my-4 text-xs">
+                            <thead>
+                                <tr class="bg-gray-200">
+                                    <th class="border border-gray-800 p-2 text-left font-bold">Parameter</th>
+                                    <th class="border border-gray-800 p-2 text-left font-bold">Einheit</th>
+                                    <th class="border border-gray-800 p-2 text-left font-bold">Grenzwert</th>
+                                    <th class="border border-gray-800 p-2 text-left font-bold">Messwert</th>
+                                    <th class="border border-gray-800 p-2 text-left font-bold">Bewertung</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-gray-800 p-2">n₅₀</td>
+                                    <td class="border border-gray-800 p-2">1/h</td>
+                                    <td class="border border-gray-800 p-2"></td>
+                                    <td class="border border-gray-800 p-2"></td>
+                                    <td class="border border-gray-800 p-2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-800 p-2">q₅₀</td>
+                                    <td class="border border-gray-800 p-2">m³/(h·m²)</td>
+                                    <td class="border border-gray-800 p-2"></td>
+                                    <td class="border border-gray-800 p-2"></td>
+                                    <td class="border border-gray-800 p-2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-800 p-2">w₅₀</td>
+                                    <td class="border border-gray-800 p-2">m³/(h·m²)</td>
+                                    <td class="border border-gray-800 p-2"></td>
+                                    <td class="border border-gray-800 p-2"></td>
+                                    <td class="border border-gray-800 p-2"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="bg-green-100 border border-green-400 p-3 my-3">
+                            <p class="my-2 text-xs"><strong>Bewertung:</strong></p>
+                            <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Anforderungen erfüllt</p>
+                            <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Anforderungen nicht erfüllt</p>
+                            <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Nachbesserung erforderlich</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weitere Seiten Hinweis -->
+            <div class="no-print bg-blue-100 p-4 rounded-lg mx-auto max-w-4xl text-center">
+                <p class="text-blue-800 font-bold">📄 Seiten 3-8 des vollständigen Protokolls sind im Druckmodus verfügbar</p>
+                <button onclick="printProtocol()" class="bg-blue-500 text-white px-6 py-2 rounded mt-2 hover:bg-blue-600">
+                    Vollständiges Protokoll drucken
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Automatisches Datum setzen
+        function setzeAktuellesDatum() {
+            const heute = new Date();
+            const datum = heute.toLocaleDateString('de-DE');
+            const uhrzeit = heute.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+            
+            // Alle Datum-Elemente aktualisieren
+            document.querySelectorAll('.auto-datum').forEach(element => {
+                element.textContent = datum;
+            });
+            
+            // Alle Uhrzeit-Elemente aktualisieren
+            document.querySelectorAll('.auto-uhrzeit').forEach(element => {
+                element.textContent = uhrzeit;
+            });
+        }
+
+        // Datum manuell setzen
+        function setzeDatum() {
+            const neuesDatum = prompt('Bitte geben Sie das neue Datum ein (TT.MM.JJJJ):', 
+                new Date().toLocaleDateString('de-DE'));
+            
+            if (neuesDatum) {
+                document.querySelectorAll('.auto-datum').forEach(element => {
+                    element.textContent = neuesDatum;
+                });
+            }
+        }
+
+        // Drucken
+        function printProtocol() {
+            window.print();
+        }
+
+        // Beim Laden der Seite das aktuelle Datum setzen
+        document.addEventListener('DOMContentLoaded', function() {
+            setzeAktuellesDatum();
+        });
+    </script>
+</body>
+</html>
