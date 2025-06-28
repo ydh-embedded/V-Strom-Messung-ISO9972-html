@@ -690,344 +690,352 @@
             </div>
 
             <!-- Seite 5 -->
+
+
+
+            <!-- Seite 5 - Leckageortung -->
             <div
                 class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
                 <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
                     <span>Seite 5 von 8</span>
                     <span>Blower Door Messprotokoll</span>
-                    <span><strong>Datum:</strong> <span class="input-field"></span></span>
+                    <span><strong>Datum:</strong> <span
+                            class="auto-datum bg-yellow-100 px-2 py-1 rounded"></span></span>
                 </div>
 
-                <h2>Leckagen</h2>
-                <p><strong>Leckageortung durchgeführt:</strong></p>
-                <p><input type="checkbox" class="checkbox"> Ja</p>
-                <p><input type="checkbox" class="checkbox"> Nein</p>
+                <div class="grid grid-cols-1 gap-5 my-5 max-h-a4-section">
+                    <div class="border border-gray-300 p-4 bg-gray-50">
+                        <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Leckageortung</h2>
+                        <p class="my-2 text-xs"><strong>Leckageortung durchgeführt:</strong></p>
+                        <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Ja</p>
+                        <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Nein</p>
 
-                <p><strong>Detektierte Leckagen:</strong></p>
-                <p><input type="checkbox" class="checkbox"> Es wurden keine großen Leckagen detektiert</p>
-                <p><input type="checkbox" class="checkbox"> Folgende Leckagen wurden festgestellt:</p>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Leckage-Nr.</th>
-                            <th>Ort der Leckage</th>
-                            <th>Beschreibung</th>
-                            <th>Schweregrad</th>
-                            <th>Behoben</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td></td>
-                            <td></td>
-                            <td>☐ gering ☐ mittel ☐ schwer</td>
-                            <td>☐ Ja ☐ Nein</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td></td>
-                            <td></td>
-                            <td>☐ gering ☐ mittel ☐ schwer</td>
-                            <td>☐ Ja ☐ Nein</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td></td>
-                            <td></td>
-                            <td>☐ gering ☐ mittel ☐ schwer</td>
-                            <td>☐ Ja ☐ Nein</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td></td>
-                            <td></td>
-                            <td>☐ gering ☐ mittel ☐ schwer</td>
-                            <td>☐ Ja ☐ Nein</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p><strong>Empfohlene Maßnahmen:</strong></p>
-                <div class="contact-box">
-                    <span class="input-field" style="width: 100%; height: 60px; display: block;"></span>
+                        <p class="my-3 text-xs"><strong>Detektierte Leckagen:</strong></p>
+                        <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Es wurden keine großen Leckagen
+                            detektiert</p>
+                        <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Folgende Leckagen wurden
+                            festgestellt:</p>
+                    </div>
                 </div>
 
-                <h2>Diagramm</h2>
-                <p><strong>Messwerte-Darstellung:</strong></p>
-                <div class="diagram-placeholder">
-                    Hier soll das Druckverlauf-Diagramm eingebettet werden<br>
-                    <small>Diagramm zeigt: Druckdifferenz (Pa) vs. Volumenstrom (m³/h)<br>
-                        Unter- und Überdruckmessungen, Regressionsgeraden, Korrelationskoeffizient</small>
+
+
+                <div
+                    class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
+                    <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
+                        <div class="border border-gray-300 p-4 bg-gray-50">
+                            <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                Leckagen-Übersicht
+                            </h2>
+
+                            <table class="w-full border-collapse my-4 text-xs">
+                                <thead>
+                                    <tr class="bg-gray-200">
+                                        <th class="border border-gray-800 p-2 text-left font-bold">Leckage-Nr.</th>
+                                        <th class="border border-gray-800 p-2 text-left font-bold">Ort der Leckage
+                                        </th>
+                                        <th class="border border-gray-800 p-2 text-left font-bold">Beschreibung</th>
+                                        <th class="border border-gray-800 p-2 text-left font-bold">Schweregrad</th>
+                                        <th class="border border-gray-800 p-2 text-left font-bold">Behoben</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border border-gray-800 p-2">-45</td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-blue-50">
+                                        <td class="border border-gray-800 p-2 font-bold">-50</td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-800 p-2">-55</td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-800 p-2">-60</td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="border border-gray-300 p-4 bg-gray-50">
+                            <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                Regressionsanalyse
+                                Unterdruck</h2>
+
+                            <div class="grid grid-cols-2 gap-4 my-4">
+                                <div class="bg-gray-100 border border-gray-300 p-3">
+                                    <p class="my-2 text-xs"><strong>Korrelationskoeffizient r²:</strong> <span
+                                            class="input-field"></span></p>
+                                    <p class="my-2 text-xs"><strong>Exponent n:</strong> <span
+                                            class="input-field"></span>
+                                    </p>
+                                </div>
+                                <div class="bg-gray-100 border border-gray-300 p-3">
+                                    <p class="my-2 text-xs"><strong>Faktor C:</strong> <span class="input-field"></span>
+                                    </p>
+                                    <p class="my-2 text-xs"><strong>V₅₀ (Unterdruck):</strong> <span
+                                            class="input-field"></span></p>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-100 border border-gray-300 p-6 my-3 text-center text-gray-500 italic">
+                                Platz für Excel-Tabelle oder detaillierte Messwerte<br>
+                                <small class="text-xs">Regressionsanalyse und statistische Auswertung</small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <p><strong>Foto-Dokumentation:</strong></p>
-                <p><input type="checkbox" class="checkbox"> Messaufbau dokumentiert</p>
-                <p><input type="checkbox" class="checkbox"> Leckagen fotografiert</p>
-                <p><input type="checkbox" class="checkbox"> Besonderheiten dokumentiert</p>
+                <!-- Seite 8 - Überdruckmessung -->
+                <div
+                    class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
+                    <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
+                        <span>Seite 8 von 8</span>
+                        <span>Blower Door Messprotokoll</span>
+                        <span><strong>Datum:</strong> <span
+                                class="auto-datum bg-yellow-100 px-2 py-1 rounded"></span></span>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-5 my-5 max-h-a4-section">
+                        <div class="border border-gray-300 p-4 bg-gray-50">
+                            <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                Überdruckmessung
+                            </h2>
+                            <p class="my-2 text-xs"><strong>Messergebnisse Überdruck:</strong></p>
+
+                            <table class="w-full border-collapse my-4 text-xs">
+                                <thead>
+                                    <tr class="bg-gray-200">
+                                        <th class="border border-gray-800 p-2 text-left font-bold">Sollwert (Pa)
+                                        </th>
+                                        <th class="border border-gray-800 p-2 text-left font-bold">Druckdifferenz
+                                            (Pa)</th>
+                                        <th class="border border-gray-800 p-2 text-left font-bold">Volumenstrom
+                                            (m³/h)</th>
+                                        <th class="border border-gray-800 p-2 text-left font-bold">Temperatur (°C)
+                                        </th>
+                                        <th class="border border-gray-800 p-2 text-left font-bold">Bemerkungen</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border border-gray-800 p-2">+10</td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-800 p-2">+15</td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-800 p-2">+20</td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-800 p-2">+25</td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-800 p-2">+30</td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-800 p-2">+35</td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-800 p-2">+40</td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-800 p-2">+45</td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-blue-50">
+                                        <td class="border border-gray-800 p-2 font-bold">+50</td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-800 p-2">+55</td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-800 p-2">+60</td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                        <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="border border-gray-300 p-4 bg-gray-50">
+                            <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                Regressionsanalyse
+                                Überdruck und Gesamtbewertung</h2>
+
+                            <div class="grid grid-cols-2 gap-4 my-4">
+                                <div class="bg-gray-100 border border-gray-300 p-3">
+                                    <p class="my-2 text-xs"><strong>Korrelationskoeffizient r²:</strong> <span
+                                            class="input-field"></span></p>
+                                    <p class="my-2 text-xs"><strong>Exponent n:</strong> <span
+                                            class="input-field"></span>
+                                    </p>
+                                    <p class="my-2 text-xs"><strong>Faktor C:</strong> <span class="input-field"></span>
+                                    </p>
+                                    <p class="my-2 text-xs"><strong>V₅₀ (Überdruck):</strong> <span
+                                            class="input-field"></span></p>
+                                </div>
+                                <div class="bg-blue-100 border border-blue-400 p-3">
+                                    <p class="my-2 text-xs"><strong>Mittelwerte:</strong></p>
+                                    <p class="my-2 text-xs"><strong>V₅₀ Mittelwert:</strong> <span
+                                            class="input-field"></span></p>
+                                    <p class="my-2 text-xs"><strong>n₅₀-Wert:</strong> <span class="input-field"></span>
+                                    </p>
+                                    <p class="my-2 text-xs"><strong>q₅₀-Wert:</strong> <span class="input-field"></span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-100 border border-green-400 p-3 my-3">
+                                <p class="my-2 text-xs"><strong>Abschlussbewertung:</strong></p>
+                                <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Messung erfolgreich
+                                    durchgeführt</p>
+                                <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Grenzwerte eingehalten
+                                </p>
+                                <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Nachbesserung
+                                    erforderlich</p>
+                                <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Wiederholungsmessung
+                                    empfohlen
+                                </p>
+                            </div>
+
+                            <div class="bg-gray-100 border border-gray-300 p-3 my-3">
+                                <p class="my-2 text-xs"><strong>Zusätzliche Bemerkungen:</strong></p>
+                                <span class="input-field w-full h-20 block"></span>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4 my-4">
+                                <div class="bg-gray-100 border border-gray-300 p-3">
+                                    <p class="my-2 text-xs"><strong>Prüfer:</strong></p>
+                                    <p class="my-2 text-xs">Name: <span class="input-field"></span></p>
+                                    <p class="my-2 text-xs">Unterschrift: <span class="input-field"></span></p>
+                                </div>
+                                <div class="bg-gray-100 border border-gray-300 p-3">
+                                    <p class="my-2 text-xs"><strong>Auftraggeber:</strong></p>
+                                    <p class="my-2 text-xs">Name: <span class="input-field"></span></p>
+                                    <p class="my-2 text-xs">Unterschrift: <span class="input-field"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <!-- Seite 6 -->
-            <div
-                class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
-                <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
-                    <span>Seite 6 von 8</span>
-                    <span>Blower Door Messprotokoll</span>
-                    <span><strong>Datum:</strong> <span class="input-field"></span></span>
-                </div>
-
-                <h2>Messreihen</h2>
-
-                <h3>Klimabedingungen</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Messung</th>
-                            <th>Innentemp. (°C)</th>
-                            <th>Außentemp. (°C)</th>
-                            <th>Barometrischer Druck (Pa)</th>
-                            <th>Windstärke (Beaufort)</th>
-                            <th>Windrichtung</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Beginn</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Mitte</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Ende</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Mittelwert</strong></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p><strong>Wetterbedingungen:</strong> <span class="input-field"></span></p>
-
-                <h3>Natürliche Druckdifferenzen vor der Messung</h3>
-                <p><strong>Messung bei 0,1 Pa Sollwert:</strong></p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Messung</th>
-                            <th>Δp +0,1 Pa</th>
-                            <th>Δp -0,1 Pa</th>
-                            <th>Δp Mittelwert</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Mittelwert</strong></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p><strong>Messung bei 0,2 Pa Sollwert:</strong></p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Messung</th>
-                            <th>Δp +0,2 Pa</th>
-                            <th>Δp -0,2 Pa</th>
-                            <th>Δp Mittelwert</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Mittelwert</strong></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div class="evaluation-box">
-                    <p><strong>Bewertung der natürlichen Druckdifferenzen:</strong></p>
-                    <p><input type="checkbox" class="checkbox"> Messbedingungen geeignet (Δp < 5 Pa)</p>
-                            <p><input type="checkbox" class="checkbox"> Messbedingungen bedingt geeignet</p>
-                            <p><input type="checkbox" class="checkbox"> Messbedingungen ungeeignet</p>
-                </div>
-            </div>
-
-            <!-- Seite 7 -->
-            <div
-                class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
-                <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
-                    <span>Seite 7 von 8</span>
-                    <span>Blower Door Messprotokoll</span>
-                    <span><strong>Datum:</strong> <span class="input-field"></span></span>
-                </div>
-
-                <h2>Unterdruckmessung</h2>
-                <p><strong>Messergebnisse Unterdruck:</strong></p>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Sollwert (Pa)</th>
-                            <th>Druckdifferenz (Pa)</th>
-                            <th>Volumenstrom (m³/h)</th>
-                            <th>Temperatur (°C)</th>
-                            <th>Bemerkungen</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>-10</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>-15</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>-20</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>-25</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>-30</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>-35</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>-40</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>-45</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>-50</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>-55</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>-60</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3>Regressionsanalyse Unterdruck:</h3>
-                <p><strong>Korrelationskoeffizient r²:</strong> <span class="input-field"></span></p>
-                <p><strong>Exponent n:</strong> <span class="input-field"></span></p>
-                <p><strong>Faktor C:</strong> <span class="input-field"></span></p>
-                <p><strong>V₅₀ (Unterdruck):</strong> <span class="input-field"></span></p>
-
-                <div class="diagram-placeholder" style="height: 100px;">
-                    Platz für Excel-Tabelle oder detaillierte Messwerte
-                </div>
-            </div>
-
             <!-- Weitere Seiten Hinweis -->
             <div class="no-print bg-blue-100 p-4 rounded-lg mx-auto max-w-4xl text-center">
                 <p class="text-blue-800 font-bold">📄 Seiten 3-8 des vollständigen Protokolls sind im Druckmodus
