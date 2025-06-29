@@ -19,208 +19,18 @@
 
         /* Print Styles */
         @media print {
-            /* Hide non-printable elements */
             .no-print {
                 display: none !important;
             }
 
-            /* Reset page margins and setup for A4 landscape with 35mm margin */
-            @page {
-                size: A4 landscape;
-                margin: 35mm; /* 35mm margin on all sides */
-                -webkit-print-color-adjust: exact;
-                color-adjust: exact;
-            }
-
-            /* Reset body and html for print */
-            html, body {
-                margin: 0 !important;
-                padding: 0 !important;
-                width: 100% !important;
-                height: 100% !important;
-                background: white !important;
-                font-size: 12pt !important;
-                line-height: 1.4 !important;
-            }
-
-            /* Protocol page styling for print */
             .protocol-page {
                 page-break-after: always;
-                page-break-inside: avoid;
                 box-shadow: none !important;
-                border: none !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                width: 100% !important;
-                max-width: none !important;
-                min-height: auto !important;
-                height: auto !important;
-                background: white !important;
-                font-size: 10pt !important;
-                color: black !important;
+                border: 1px solid #000 !important;
             }
 
             .protocol-page:last-child {
                 page-break-after: auto;
-            }
-
-            /* Adjust content within protocol pages */
-            .protocol-page * {
-                max-width: none !important;
-                box-shadow: none !important;
-                border-radius: 0 !important;
-                background: transparent !important;
-            }
-
-            /* Ensure proper spacing for print */
-            .protocol-page h1 {
-                font-size: 16pt !important;
-                margin: 0 0 15pt 0 !important;
-                text-align: center !important;
-                color: black !important;
-            }
-
-            .protocol-page h2 {
-                font-size: 12pt !important;
-                margin: 10pt 0 8pt 0 !important;
-                color: black !important;
-                border-bottom: 1pt solid black !important;
-                padding-bottom: 2pt !important;
-            }
-
-            .protocol-page h3 {
-                font-size: 11pt !important;
-                margin: 8pt 0 6pt 0 !important;
-                color: black !important;
-            }
-
-            /* Grid layouts for print */
-            .protocol-page .grid {
-                display: block !important;
-            }
-
-            .protocol-page .grid-cols-2 > div {
-                width: 48% !important;
-                float: left !important;
-                margin-right: 4% !important;
-                margin-bottom: 10pt !important;
-            }
-
-            .protocol-page .grid-cols-2 > div:nth-child(2n) {
-                margin-right: 0 !important;
-            }
-
-            /* Tables for print */
-            .protocol-page table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-                margin: 10pt 0 !important;
-                font-size: 9pt !important;
-            }
-
-            .protocol-page table th,
-            .protocol-page table td {
-                border: 1pt solid black !important;
-                padding: 4pt !important;
-                text-align: left !important;
-                vertical-align: top !important;
-            }
-
-            .protocol-page table th {
-                background: #f0f0f0 !important;
-                font-weight: bold !important;
-            }
-
-            /* Input fields for print */
-            .input-field {
-                border-bottom: 1pt solid black !important;
-                min-width: 50mm !important;
-                display: inline-block !important;
-                padding: 1pt 2pt !important;
-                background: transparent !important;
-                font-size: 10pt !important;
-                height: 12pt !important;
-            }
-
-            /* Stamp boxes for print */
-            .stamp-box {
-                border: 1pt dashed black !important;
-                height: 30mm !important;
-                display: block !important;
-                margin: 5pt 0 !important;
-                padding: 5pt !important;
-                text-align: center !important;
-                font-style: italic !important;
-                color: #666 !important;
-            }
-
-            /* Page headers for print */
-            .protocol-page .flex.justify-between {
-                display: block !important;
-                border-bottom: 1pt solid black !important;
-                padding-bottom: 5pt !important;
-                margin-bottom: 10pt !important;
-                font-size: 9pt !important;
-            }
-
-            /* Ensure proper text wrapping */
-            .protocol-page p {
-                margin: 4pt 0 !important;
-                line-height: 1.3 !important;
-                font-size: 10pt !important;
-            }
-
-            /* Clear floats */
-            .protocol-page::after {
-                content: "";
-                display: table;
-                clear: both;
-            }
-
-            /* Swipe container adjustments for print */
-            .swipe-container {
-                position: static !important;
-                width: 100% !important;
-                height: auto !important;
-                overflow: visible !important;
-                background: white !important;
-            }
-
-            .swipe-wrapper {
-                display: block !important;
-                height: auto !important;
-                transform: none !important;
-            }
-
-            .swipe-slide {
-                flex: none !important;
-                height: auto !important;
-                display: block !important;
-                padding: 0 !important;
-                page-break-after: always;
-            }
-
-            .swipe-slide:last-child {
-                page-break-after: auto;
-            }
-
-            /* Force black text for all elements */
-            .protocol-page * {
-                color: black !important;
-            }
-
-            /* Ensure borders are visible */
-            .protocol-page .border,
-            .protocol-page .border-gray-300,
-            .protocol-page .border-gray-800 {
-                border-color: black !important;
-            }
-
-            /* Background colors for print */
-            .protocol-page .bg-gray-50,
-            .protocol-page .bg-blue-50,
-            .protocol-page .bg-green-100 {
-                background: #f8f8f8 !important;
             }
         }
 
@@ -391,175 +201,6 @@
             cursor: pointer;
             border: 3px solid white;
             box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
-        }
-
-        /* Swipe Container Styles */
-        .swipe-container {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-            background: #f8fafc;
-        }
-
-        .swipe-wrapper {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            transition: transform 0.3s ease-out;
-            will-change: transform;
-        }
-
-        .swipe-slide {
-            flex: 0 0 100vh;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: center;
-            padding: 5vh 20px 20px 20px; /* Adjusted padding-top to 5vh */
-            box-sizing: border-box;
-        }
-
-        /* Navigation Buttons */
-        .swipe-nav {
-            position: fixed;
-            right: 30px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 2px solid #e2e8f0;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #475569;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .swipe-nav:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: #3b82f6;
-            color: #3b82f6;
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
-        }
-
-        .swipe-nav:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .swipe-nav.prev {
-            top: 50%;
-            transform: translateY(-50%) rotate(90deg);
-        }
-
-        .swipe-nav.next {
-            bottom: 50%;
-            transform: translateY(50%) rotate(90deg);
-        }
-
-        .swipe-nav.prev:hover {
-            transform: translateY(-50%) rotate(90deg) scale(1.1);
-        }
-
-        .swipe-nav.next:hover {
-            transform: translateY(50%) rotate(90deg) scale(1.1);
-        }
-
-        /* Page Indicator */
-        .page-indicator {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 12px 20px;
-            border-radius: 25px;
-            font-weight: 600;
-            color: #475569;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-        }
-
-        /* Pagination Dots */
-        .swipe-pagination {
-            position: fixed;
-            right: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            z-index: 1000;
-        }
-
-        .swipe-pagination-bullet {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(148, 163, 184, 0.5);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .swipe-pagination-bullet:hover {
-            background: rgba(59, 130, 246, 0.7);
-            transform: scale(1.2);
-        }
-
-        .swipe-pagination-bullet.active {
-            background: #3b82f6;
-            transform: scale(1.3);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-        }
-
-        /* Touch and Mouse Interaction */
-        .swipe-wrapper {
-            touch-action: pan-y;
-            user-select: none;
-        }
-
-        /* Smooth scrolling for better UX */
-        .swipe-container * {
-            scroll-behavior: smooth;
-        }
-
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-            .swipe-nav {
-                width: 50px;
-                height: 50px;
-                right: 20px;
-                font-size: 20px;
-            }
-
-            .page-indicator {
-                right: 20px;
-                top: 20px;
-                padding: 8px 16px;
-                font-size: 14px;
-            }
-
-            .swipe-pagination {
-                right: 20px;
-            }
-
-            .swipe-pagination-bullet {
-                width: 10px;
-                height: 10px;
-            }
         }
     </style>
     <script>
@@ -732,6 +373,14 @@
                             </span>
                         </button>
 
+                        <a href="sites/protokoll.html"
+                            class="elegant-button text-slate-700 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:text-indigo-700 inline-block">
+                            <span class="relative z-10 flex items-center gap-2">
+                                <span class="text-lg">📋</span>
+                                Protokoll
+                            </span>
+                        </a>
+
                         <button onclick="printProtocol()"
                             class="elegant-button text-slate-700 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:text-indigo-700">
                             <span class="relative z-10 flex items-center gap-2">
@@ -875,7 +524,7 @@
                 <div class="swipe-slide">
                     <div class="max-w-none">
                         <div
-                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none max-w-4xl min-h-screen mx-auto min-h-a4-landscape mx-auto">
+                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
                             <div
                                 class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
                                 <span>Seite 1 von 8</span>
@@ -965,7 +614,7 @@
                 <div class="swipe-slide">
                     <div class="max-w-none">
                         <div
-                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none max-w-4xl min-h-screen mx-auto min-h-a4-landscape mx-auto">
+                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
                             <div
                                 class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
                                 <span>Seite 2 von 8</span>
@@ -1068,7 +717,7 @@
                 <div class="swipe-slide">
                     <div class="max-w-none">
                         <div
-                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none max-w-4xl min-h-screen mx-auto min-h-a4-landscape mx-auto">
+                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
                             <div
                                 class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
                                 <span>Seite 3 von 8</span>
@@ -1137,7 +786,7 @@
                 <div class="swipe-slide">
                     <div class="max-w-none">
                         <div
-                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none max-w-4xl min-h-screen mx-auto min-h-a4-landscape mx-auto">
+                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
                             <div class="text-center">
                                 <h2 class="text-2xl font-bold mb-4">Seite 4 - Messergebnisse</h2>
                                 <div class="space-y-4 text-left">
@@ -1187,7 +836,7 @@
                 <div class="swipe-slide">
                     <div class="max-w-none">
                         <div
-                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none max-w-4xl min-h-screen mx-auto min-h-a4-landscape mx-auto">
+                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
                             <div
                                 class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
                                 <span>Seite 5 von 8</span>
@@ -1312,7 +961,7 @@
                 <div class="swipe-slide">
                     <div class="max-w-none">
                         <div
-                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none max-w-4xl min-h-screen mx-auto min-h-a4-landscape mx-auto">
+                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
                             <div
                                 class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
                                 <span>Seite 6 von 8</span>
@@ -1450,7 +1099,7 @@
                 <div class="swipe-slide">
                     <div class="max-w-none">
                         <div
-                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none max-w-4xl min-h-screen mx-auto min-h-a4-landscape mx-auto">
+                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
                             <div class="text-center">
                                 <h2 class="text-2xl font-bold mb-4">Seite 7 - Bewertung</h2>
                                 <div class="space-y-4 text-left">
@@ -1552,7 +1201,7 @@
                 <div class="swipe-slide">
                     <div class="max-w-none">
                         <div
-                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none max-w-4xl min-h-screen mx-auto min-h-a4-landscape mx-auto">
+                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none w-a4-landscape min-h-a4-landscape mx-auto">
                             <div class="text-center">
                                 <h2 class="text-2xl font-bold mb-4">Seite 8 - Unterschriften</h2>
                                 <div class="space-y-8 text-left mt-16">
@@ -1588,8 +1237,8 @@
         // Global variables
         let currentSlide = 0;
         const totalSlides = 8; // Korrigiert auf 8 Slides
-        let startY = 0;
-        let currentY = 0;
+        let startX = 0;
+        let currentX = 0;
         let isDragging = false;
         let isMoving = false;
 
@@ -1643,7 +1292,7 @@
             }
         }
 
-        // Swipe functionality for vertical scrolling
+        // Swipe functionality
         function initSwipe() {
             const swipeWrapper = document.getElementById('swipeWrapper');
             if (!swipeWrapper) return;
@@ -1664,120 +1313,81 @@
 
             // Prevent context menu on long press
             swipeWrapper.addEventListener('contextmenu', e => e.preventDefault());
-
-            // Mouse wheel support for vertical scrolling
-            swipeWrapper.addEventListener('wheel', handleWheel, { passive: false });
         }
 
         function handleTouchStart(e) {
             if (isMoving) return;
-            startY = e.touches[0].clientY;
+            startX = e.touches[0].clientX;
             isDragging = true;
         }
 
         function handleTouchMove(e) {
             if (!isDragging || isMoving) return;
 
-            // Prevent scrolling while swiping vertically
-            const diffY = Math.abs(e.touches[0].clientY - startY);
-            const diffX = Math.abs(e.touches[0].clientX - (e.touches[0].clientX || startY));
+            // Prevent scrolling while swiping horizontally
+            const diffX = Math.abs(e.touches[0].clientX - startX);
+            const diffY = Math.abs(e.touches[0].clientY - (e.touches[0].clientY || startX));
 
-            if (diffY > diffX) {
+            if (diffX > diffY) {
                 e.preventDefault();
             }
 
-            currentY = e.touches[0].clientY;
+            currentX = e.touches[0].clientX;
         }
 
         function handleTouchEnd(e) {
-            if (!isDragging) return;
+            if (!isDragging || isMoving) return;
+            isDragging = false;
 
-            const diffY = currentY - startY;
-            const threshold = 50; // Minimum swipe distance
+            const diffX = startX - currentX;
+            const threshold = 50;
 
-            if (Math.abs(diffY) > threshold) {
-                if (diffY > 0) {
-                    // Swipe down - go to previous slide
-                    prevSlide();
-                } else {
-                    // Swipe up - go to next slide
+            if (Math.abs(diffX) > threshold) {
+                if (diffX > 0) {
                     nextSlide();
+                } else {
+                    prevSlide();
                 }
             }
-
-            isDragging = false;
-            startY = 0;
-            currentY = 0;
         }
 
         function handleMouseStart(e) {
             if (isMoving) return;
-            startY = e.clientY;
+            startX = e.clientX;
             isDragging = true;
             e.preventDefault();
         }
 
         function handleMouseMove(e) {
             if (!isDragging || isMoving) return;
-            currentY = e.clientY;
+            currentX = e.clientX;
         }
 
         function handleMouseEnd(e) {
-            if (!isDragging) return;
+            if (!isDragging || isMoving) return;
+            isDragging = false;
 
-            const diffY = currentY - startY;
+            const diffX = startX - currentX;
             const threshold = 50;
 
-            if (Math.abs(diffY) > threshold) {
-                if (diffY > 0) {
-                    prevSlide();
-                } else {
+            if (Math.abs(diffX) > threshold) {
+                if (diffX > 0) {
                     nextSlide();
+                } else {
+                    prevSlide();
                 }
             }
-
-            isDragging = false;
-            startY = 0;
-            currentY = 0;
         }
 
         function handleKeyDown(e) {
-            if (!document.getElementById('swipe').classList.contains('active')) return;
-
-            switch (e.key) {
-                case 'ArrowUp':
-                case 'PageUp':
+            if (document.getElementById('swipe').classList.contains('active')) {
+                if (e.key === 'ArrowLeft') {
                     e.preventDefault();
                     prevSlide();
-                    break;
-                case 'ArrowDown':
-                case 'PageDown':
-                case ' ':
+                } else if (e.key === 'ArrowRight') {
                     e.preventDefault();
                     nextSlide();
-                    break;
-                case 'Home':
-                    e.preventDefault();
-                    goToSlide(0);
-                    break;
-                case 'End':
-                    e.preventDefault();
-                    goToSlide(totalSlides - 1);
-                    break;
-            }
-        }
-
-        function handleWheel(e) {
-            if (!document.getElementById('swipe').classList.contains('active')) return;
-            
-            e.preventDefault();
-            
-            if (isMoving) return;
-            
-            if (e.deltaY > 0) {
-                nextSlide();
-            } else {
-                prevSlide();
+                }
             }
         }
 
@@ -1803,12 +1413,10 @@
         }
 
         function updateSlidePosition() {
-            if (isMoving) return;
             isMoving = true;
-
             const swipeWrapper = document.getElementById('swipeWrapper');
-            const translateY = -currentSlide * 100;
-            swipeWrapper.style.transform = `translateY(${translateY}vh)`;
+            const translateX = -currentSlide * 100;
+            swipeWrapper.style.transform = `translateX(${translateX}%)`;
 
             // Update pagination
             document.querySelectorAll('.swipe-pagination-bullet').forEach((bullet, index) => {
