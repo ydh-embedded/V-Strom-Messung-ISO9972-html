@@ -1,599 +1,368 @@
-/* ===================================
-   OPTIMIERTE PRINT STYLES FÜR ISO 9972
-   A4 Querformat - Luftdurchlässigkeitsmessung
-   Bereinigt und strukturiert
-   =================================== */
-
-/* ===================================
-   1. PAGE SETUP & GRUNDKONFIGURATION
-   =================================== */
-
-@page {
-    size: A4 landscape;
-    margin: 25mm 25mm 25mm 25mm;
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-    print-color-adjust: exact;
-}
+/* Print CSS for A4 Landscape Printing - Protokoll Section */
+/* Optimized for Blower Door Messprotokoll nach ISO 9972 */
 
 @media print {
-    
-    /* ===================================
-       2. GLOBALE PRINT-RESETS
-       =================================== */
-    
-    * {
-        -webkit-print-color-adjust: exact !important;
-        color-adjust: exact !important;
-        print-color-adjust: exact !important;
-        box-shadow: none !important;
-        text-shadow: none !important;
+    /* Hide non-printable elements */
+    .no-print {
+        display: none !important;
     }
 
-    /* ===================================
-       3. BODY & CONTAINER
-       =================================== */
-    
+    /* Reset page margins and setup for A4 landscape with 35mm margin */
+    @page {
+        size: A4 landscape;
+        margin: 35mm; /* 35mm margin on all sides */
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    /* Reset body and html for print */
     html, body {
-        width: 247mm !important; /* 297mm - 50mm Ränder */
-        height: 160mm !important; /* 210mm - 50mm Ränder */
         margin: 0 !important;
         padding: 0 !important;
-        overflow: hidden !important;
-        font-family: Arial, sans-serif !important;
-        font-size: 9pt !important; /* Kleinere Schrift */
-        line-height: 1.2 !important; /* Kompaktere Zeilenhöhe */
-        color: #000000 !important;
+        width: 100% !important;
+        height: 100% !important;
         background: white !important;
+        font-size: 12pt !important;
+        line-height: 1.4 !important;
     }
 
-    /* Template-Hintergrund als Overlay */
-    body::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: url('/images/protokoll-template.png');
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
-        z-index: -1;
-        opacity: 0.1;
-    }
-
-    .container-main {
+    /* Protocol page styling for print */
+    .protocol-page {
+        page-break-after: always;
+        page-break-inside: avoid;
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
         width: 100% !important;
         max-width: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    /* ===================================
-       4. VERSTECKTE ELEMENTE
-       =================================== */
-    
-    .no-print,
-    nav,
-    button,
-    input[type="button"],
-    input[type="submit"],
-    input[type="reset"],
-    input[type="range"],
-    .floating-shapes,
-    .nav-link,
-    .enhanced-button,
-    .hidden,
-    .transform,
-    .hover\\:scale-105,
-    .transition-transform,
-    .duration-300,
-    .glass-effect {
-        display: none !important;
-    }
-
-    .print-visible,
-    .print-only {
-        display: block !important;
-    }
-
-    /* ===================================
-       5. SEITEN-LAYOUT & UMBRÜCHE
-       =================================== */
-    
-    .page,
-    .protocol-page,
-    .a4-landscape {
-        display: block !important;
-        width: 100%;
-        min-height: calc(160mm - 20mm); /* Angepasst an neue Höhe */
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        page-break-after: always;
-        break-after: page;
-    }
-
-    .page:last-child,
-    .protocol-page:last-child {
-        page-break-after: avoid;
-        break-after: auto;
-    }
-
-    /* Nur aktive Seite anzeigen */
-    .page:not(.active) {
-        display: none !important;
-    }
-
-    /* Seitenumbruch-Kontrolle */
-    .page-break {
-        page-break-after: always !important;
-        break-after: page !important;
-    }
-    
-    .no-page-break,
-    .page-break-inside-avoid {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-    }
-
-    /* ===================================
-       6. HEADER & FOOTER
-       =================================== */
-    
-    .print-header {
-        position: fixed;
-        top: 2mm;
-        left: 25mm;
-        right: 25mm;
-        height: 12mm; /* Kompakter */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12pt; /* Kleinere Überschrift */
-        font-weight: bold;
-        border-bottom: 1.5pt solid #333333;
-        background: white;
-        z-index: 1000;
-    }
-
-    .print-footer {
-        position: fixed;
-        bottom: 2mm;
-        left: 25mm;
-        right: 25mm;
-        height: 8mm; /* Kompakter */
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 8pt; /* Kleinere Schrift */
-        color: #666666;
-        background: white;
-        z-index: 1000;
-    }
-
-    /* Standard-Header für alle Seiten */
-    .page::before {
-        content: "ISO 9972 - Luftdurchlässigkeitsmessung";
-        display: block;
-        font-size: 12pt; /* Kleinere Überschrift */
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 8mm; /* Kompakter */
-        padding-bottom: 3mm;
-        border-bottom: 1.5pt solid #333333;
-    }
-
-    /* Spezifische Header */
-    #measurement::before {
-        content: "ISO 9972 - Messung & Eingabe";
-    }
-
-    #analysis::before {
-        content: "ISO 9972 - Analyse & Auswertung";
-    }
-
-    #results::before {
-        content: "ISO 9972 - Ergebnisse & Dokumentation";
-    }
-
-    /* ===================================
-       7. TYPOGRAFIE & ÜBERSCHRIFTEN
-       =================================== */
-    
-    h1 { 
-        font-size: 14pt !important; /* Kompakter */
-        margin: 5mm 0 3mm 0 !important; 
-        font-weight: bold !important;
-        color: #000000 !important;
-        break-after: avoid;
-    }
-    
-    h2 { 
-        font-size: 12pt !important; /* Kompakter */
-        margin: 4mm 0 2mm 0 !important; 
-        font-weight: bold !important;
-        color: #000000 !important;
-        break-after: avoid;
-    }
-    
-    h3 { 
-        font-size: 11pt !important; /* Kompakter */
-        margin: 3mm 0 2mm 0 !important; 
-        font-weight: bold !important;
-        color: #000000 !important;
-        break-after: avoid;
-    }
-    
-    h4 { 
-        font-size: 10pt !important; /* Kompakter */
-        margin: 2mm 0 1mm 0 !important; 
-        font-weight: bold !important;
-        color: #000000 !important;
-        break-after: avoid;
-    }
-
-    p { 
-        margin: 1.5mm 0 !important; /* Kompakter */
-        line-height: 1.3 !important;
-    }
-
-    /* Text-Größenklassen */
-    .text-xs, .print-text-xs { font-size: 7pt !important; }
-    .text-sm, .print-text-sm { font-size: 8pt !important; }
-    .text-base, .print-text-base { font-size: 9pt !important; }
-    .text-lg, .print-text-lg { font-size: 10pt !important; }
-    .text-xl, .print-text-xl { font-size: 12pt !important; }
-
-    ul, ol {
-        margin: 2mm 0 !important; /* Kompakter */
-        padding-left: 6mm !important;
-    }
-    
-    li { 
-        margin: 0.5mm 0 !important; /* Kompakter */
-    }
-
-    /* ===================================
-       8. CONTAINER & KARTEN
-       =================================== */
-    
-    .bg-white,
-    .dark\\:bg-gray-800,
-    .bg-gradient-to-br,
-    .glass-effect {
+        min-height: auto !important;
+        height: auto !important;
         background: white !important;
-        border: 1pt solid #333333 !important;
-        margin-bottom: 5mm !important; /* Kompakter */
-        padding: 3mm !important; /* Kompakter */
-        border-radius: 1mm !important;
-        break-inside: avoid;
+        font-size: 10pt !important;
+        color: black !important;
+    }
+
+    .protocol-page:last-child {
+        page-break-after: auto;
+    }
+
+    /* Adjust content within protocol pages */
+    .protocol-page * {
+        max-width: none !important;
         box-shadow: none !important;
-        backdrop-filter: none !important;
+        border-radius: 0 !important;
+        background: transparent !important;
     }
 
-    /* Farbige Hintergrund-Bereiche normalisieren */
-    .bg-blue-50,
-    .bg-green-50,
-    .bg-purple-50,
-    .bg-gray-50 {
-        background: #f8f9fa !important;
-        border: 1pt solid #dddddd !important;
+    /* Typography for print */
+    .protocol-page h1 {
+        font-size: 16pt !important;
+        margin: 0 0 15pt 0 !important;
+        text-align: center !important;
+        color: black !important;
+        font-weight: bold !important;
     }
 
-    /* ===================================
-       9. LAYOUT SYSTEMS
-       =================================== */
-    
-    /* Grid zu Flexbox für bessere Print-Kompatibilität */
-    .grid {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        gap: 3mm !important; /* Kompakter */
-        margin-bottom: 5mm !important; /* Kompakter */
+    .protocol-page h2 {
+        font-size: 12pt !important;
+        margin: 10pt 0 8pt 0 !important;
+        color: black !important;
+        border-bottom: 1pt solid black !important;
+        padding-bottom: 2pt !important;
+        font-weight: bold !important;
     }
 
-    .grid-cols-1,
-    .grid-cols-2,
-    .grid-cols-3,
-    .lg\\:grid-cols-3,
-    .md\\:grid-cols-3,
-    .print-grid-cols-2,
-    .print-grid-cols-3 {
-        display: flex !important;
-        width: 100% !important;
+    .protocol-page h3 {
+        font-size: 11pt !important;
+        margin: 8pt 0 6pt 0 !important;
+        color: black !important;
+        font-weight: bold !important;
     }
 
-    .grid > div {
-        flex: 1 !important;
-        min-width: 50mm !important; /* Kompakter */
-        break-inside: avoid;
+    .protocol-page p {
+        margin: 4pt 0 !important;
+        line-height: 1.3 !important;
+        font-size: 10pt !important;
+        color: black !important;
     }
 
-    /* Flex-Layouts vereinfachen */
-    .flex {
+    /* Grid layouts for print */
+    .protocol-page .grid {
         display: block !important;
     }
 
-    .flex.justify-between {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
+    .protocol-page .grid-cols-2 > div {
+        width: 48% !important;
+        float: left !important;
+        margin-right: 4% !important;
+        margin-bottom: 10pt !important;
     }
 
-    .flex.items-center {
-        display: flex !important;
-        align-items: center !important;
+    .protocol-page .grid-cols-2 > div:nth-child(2n) {
+        margin-right: 0 !important;
     }
 
-    .print-flex { display: flex !important; }
+    .protocol-page .grid-cols-3 > div {
+        width: 31% !important;
+        float: left !important;
+        margin-right: 3.5% !important;
+        margin-bottom: 10pt !important;
+    }
 
-    /* ===================================
-       10. TABELLEN
-       =================================== */
-    
-    table,
-    .print-table,
-    .enhanced-table {
+    .protocol-page .grid-cols-3 > div:nth-child(3n) {
+        margin-right: 0 !important;
+    }
+
+    /* Tables for print */
+    .protocol-page table {
         width: 100% !important;
         border-collapse: collapse !important;
-        margin: 3mm 0 !important; /* Kompakter */
-        break-inside: avoid;
-        font-size: 8pt !important; /* Kleinere Schrift */
+        margin: 10pt 0 !important;
+        font-size: 9pt !important;
+        page-break-inside: avoid;
     }
 
-    th,
-    td {
-        border: 1pt solid #333333 !important;
-        padding: 2mm !important; /* Kompakter */
+    .protocol-page table th,
+    .protocol-page table td {
+        border: 1pt solid black !important;
+        padding: 4pt !important;
         text-align: left !important;
         vertical-align: top !important;
-        background: white !important;
+        color: black !important;
     }
 
-    th {
+    .protocol-page table th {
         background: #f0f0f0 !important;
         font-weight: bold !important;
-        font-size: 8pt !important; /* Kleinere Schrift */
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
     }
 
-    /* Input-Felder in Tabellen */
-    input[type="number"],
-    input[type="text"] {
-        border: none !important;
-        background: transparent !important;
-        width: 100% !important;
-        font-size: 8pt !important; /* Kleinere Schrift */
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-
-    /* Overflow-Kontrolle für Tabellen */
-    .overflow-x-auto {
-        overflow: visible !important;
-    }
-
-    /* ===================================
-       11. WICHTIGE MESSWERTE
-       =================================== */
-    
-    #n50-value,
-    #volume-value,
-    #pressure-value,
-    #calc-n50,
-    #calc-q50,
-    #calc-v50,
-    .measurement-value {
-        font-size: 10pt !important; /* Kompakter */
-        font-weight: bold !important;
-        color: #000000 !important;
-        background: #f0f0f0 !important;
-        padding: 1.5mm !important; /* Kompakter */
-        border-radius: 1mm !important;
-        border: 1pt solid #333333 !important;
-        display: inline-block !important;
-        min-width: 15mm !important; /* Kompakter */
-        text-align: center !important;
-    }
-
-    /* ===================================
-       12. FORMULARE & EINGABEFELDER
-       =================================== */
-    
-    /* Checkboxen und Labels */
-    input[type="checkbox"] {
-        display: inline-block !important;
-        margin-right: 1.5mm !important; /* Kompakter */
-        width: 3mm !important; /* Kleiner */
-        height: 3mm !important; /* Kleiner */
-    }
-
-    label {
-        font-size: 8pt !important; /* Kleinere Schrift */
-        color: #000000 !important;
-        margin-right: 3mm !important; /* Kompakter */
-    }
-
-    /* Eingabefelder für Formulare */
+    /* Input fields for print */
     .input-field {
-        border-bottom: 1pt solid #333333;
-        min-width: 30mm; /* Kompakter */
-        display: inline-block;
-        height: 5mm; /* Kompakter */
-        margin: 0 1.5mm; /* Kompakter */
-        background: transparent;
+        border-bottom: 1pt solid black !important;
+        min-width: 50mm !important;
+        display: inline-block !important;
+        padding: 1pt 2pt !important;
+        background: transparent !important;
+        font-size: 10pt !important;
+        height: 12pt !important;
+        color: black !important;
     }
 
-    .signature-line {
-        border-bottom: 1pt solid #333333;
-        height: 8mm; /* Kompakter */
-        margin-bottom: 2mm; /* Kompakter */
-        width: 50mm; /* Kompakter */
-        display: inline-block;
-    }
-
+    /* Stamp boxes for print */
     .stamp-box {
-        border: 1pt dashed #666666;
-        height: 20mm; /* Kompakter */
-        width: 50mm; /* Kompakter */
-        text-align: center;
-        line-height: 20mm;
-        color: #666666;
-        font-style: italic;
-        margin: 3mm 0; /* Kompakter */
-        display: inline-block;
-    }
-
-    /* ===================================
-       13. DIAGRAMME & CHARTS
-       =================================== */
-    
-    .chart-container {
-        width: 100% !important;
-        height: 60mm !important; /* Kompakter */
-        border: 1pt solid #333333 !important;
-        background: white !important;
-        break-inside: avoid;
-        margin: 3mm 0 !important; /* Kompakter */
-    }
-
-    #chart,
-    .chart-element {
-        max-width: 100% !important;
-        height: auto !important;
-        background: white !important;
-    }
-
-    .diagram-placeholder {
-        border: 2pt dashed #3498db;
-        height: 45mm; /* Kompakter */
-        text-align: center;
-        line-height: 45mm;
-        color: #3498db;
-        font-weight: bold;
-        margin: 5mm 0; /* Kompakter */
-        background: white;
-    }
-
-    /* ===================================
-       14. SPACING & MARGINS
-       =================================== */
-    
-    /* Einheitliche Spacing-Klassen */
-    .print-m-0, .m-0 { margin: 0 !important; }
-    .print-m-1, .m-1 { margin: 1.5mm !important; } /* Kompakter */
-    .print-m-2, .m-2 { margin: 3mm !important; } /* Kompakter */
-    .print-m-4, .m-4 { margin: 6mm !important; } /* Kompakter */
-
-    .print-p-0, .p-0 { padding: 0 !important; }
-    .print-p-1, .p-1 { padding: 1.5mm !important; } /* Kompakter */
-    .print-p-2, .p-2 { padding: 3mm !important; } /* Kompakter */
-    .print-p-4, .p-4 { padding: 6mm !important; } /* Kompakter */
-
-    .mb-8 { margin-bottom: 6mm !important; } /* Kompakter */
-    .mb-6 { margin-bottom: 4mm !important; } /* Kompakter */
-    .mb-4 { margin-bottom: 3mm !important; } /* Kompakter */
-    .mb-2 { margin-bottom: 1.5mm !important; } /* Kompakter */
-
-    .mr-1 { margin-right: 1.5mm !important; } /* Kompakter */
-    .ml-1 { margin-left: 1.5mm !important; } /* Kompakter */
-
-    /* ===================================
-       15. DARK MODE ÜBERSCHREIBUNGEN
-       =================================== */
-    
-    .dark\\:bg-gray-800,
-    .dark\\:bg-gray-900,
-    .dark\\:text-white,
-    .dark\\:text-gray-200,
-    .dark\\:text-gray-300 {
-        background: white !important;
-        color: #000000 !important;
-    }
-
-    .dark\\:border-gray-700,
-    .dark\\:border-gray-600 {
-        border-color: #333333 !important;
-    }
-
-    /* ===================================
-       16. ERLÄUTERUNGEN & ZUSATZINFO
-       =================================== */
-    
-    .space-y-4 > div {
-        margin-bottom: 3mm !important; /* Kompakter */
-        padding: 2mm !important; /* Kompakter */
-        background: #f8f9fa !important;
-        border: 1pt solid #dddddd !important;
-        border-radius: 1mm !important; /* Kompakter */
-        break-inside: avoid;
-    }
-
-    /* ===================================
-       17. BILDER & MEDIEN
-       =================================== */
-    
-    img {
-        max-width: 100% !important;
-        height: auto !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-    }
-
-    /* ===================================
-       18. QUALITÄTSSICHERUNG
-       =================================== */
-    
-    /* Wichtige Elemente immer zusammenhalten */
-    .keep-together,
-    .measurement-section,
-    .result-section {
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-    }
-
-    /* Text-Umbruch-Kontrolle */
-    .no-wrap {
-        white-space: nowrap !important;
-    }
-
-    .text-break {
-        word-wrap: break-word !important;
-        overflow-wrap: break-word !important;
-    }
-}
-
-/* ===================================
-   19. BILDSCHIRM-ENTWICKLUNGSHILFEN
-   Nur für Entwicklung sichtbar
-   =================================== */
-
-@media screen {
-    /* Seitenumbruch-Visualisierung */
-    .page-break-before::before,
-    .page-break::before {
-        content: "📄 SEITENUMBRUCH" !important;
+        border: 1pt dashed black !important;
+        height: 30mm !important;
         display: block !important;
+        margin: 5pt 0 !important;
+        padding: 5pt !important;
         text-align: center !important;
-        background: #e3f2fd !important;
-        color: #1565c0 !important;
-        padding: 8px !important;
-        margin: 16px 0 !important;
-        border: 2px dashed #1565c0 !important;
-        border-radius: 4px !important;
-        font-size: 12px !important;
-        font-weight: bold !important;
+        font-style: italic !important;
+        color: #666 !important;
+        page-break-inside: avoid;
     }
 
-    /* Print-Vorschau-Modus */
-    .print-preview {
-        width: 247mm; /* Angepasst */
-        min-height: 160mm; /* Angepasst */
-        margin: 20px auto;
-        padding: 15mm; /* Kompakter */
-        background: white;
-        box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        border: 1px solid #ddd;
+    /* Page headers for print */
+    .protocol-page .flex.justify-between {
+        display: block !important;
+        border-bottom: 1pt solid black !important;
+        padding-bottom: 5pt !important;
+        margin-bottom: 10pt !important;
+        font-size: 9pt !important;
+    }
+
+    /* Clear floats */
+    .protocol-page::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    /* Swipe container adjustments for print */
+    .swipe-container {
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+        background: white !important;
+    }
+
+    .swipe-wrapper {
+        display: block !important;
+        height: auto !important;
+        transform: none !important;
+    }
+
+    .swipe-slide {
+        flex: none !important;
+        height: auto !important;
+        display: block !important;
+        padding: 0 !important;
+        page-break-after: always;
+    }
+
+    .swipe-slide:last-child {
+        page-break-after: auto;
+    }
+
+    /* Force black text for all elements */
+    .protocol-page * {
+        color: black !important;
+    }
+
+    /* Ensure borders are visible */
+    .protocol-page .border,
+    .protocol-page .border-gray-300,
+    .protocol-page .border-gray-800 {
+        border-color: black !important;
+    }
+
+    /* Background colors for print */
+    .protocol-page .bg-gray-50,
+    .protocol-page .bg-blue-50,
+    .protocol-page .bg-green-100 {
+        background: #f8f8f8 !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    /* Form elements styling for print */
+    .protocol-page input[type="text"],
+    .protocol-page input[type="number"],
+    .protocol-page input[type="date"],
+    .protocol-page textarea,
+    .protocol-page select {
+        border: 1pt solid black !important;
+        background: white !important;
+        color: black !important;
+        font-size: 10pt !important;
+        padding: 2pt !important;
+    }
+
+    /* Checkbox and radio button styling for print */
+    .protocol-page input[type="checkbox"],
+    .protocol-page input[type="radio"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 12pt !important;
+        height: 12pt !important;
+        border: 1pt solid black !important;
+        background: white !important;
+        margin-right: 4pt !important;
+    }
+
+    .protocol-page input[type="checkbox"]:checked::after {
+        content: "✓";
+        display: block;
+        text-align: center;
+        font-size: 10pt;
+        line-height: 10pt;
+        color: black;
+    }
+
+    .protocol-page input[type="radio"] {
+        border-radius: 50% !important;
+    }
+
+    .protocol-page input[type="radio"]:checked::after {
+        content: "●";
+        display: block;
+        text-align: center;
+        font-size: 8pt;
+        line-height: 8pt;
+        color: black;
+    }
+
+    /* Navigation and interactive elements - hide for print */
+    .swipe-nav,
+    .page-indicator,
+    .swipe-pagination,
+    .no-print,
+    button:not(.print-button),
+    .slider-blue,
+    .slider-green,
+    .slider-purple {
+        display: none !important;
+    }
+
+    /* Ensure proper page breaks */
+    .page-break-before {
+        page-break-before: always;
+    }
+
+    .page-break-after {
+        page-break-after: always;
+    }
+
+    .page-break-inside-avoid {
+        page-break-inside: avoid;
+    }
+
+    /* Chart and canvas elements for print */
+    .protocol-page canvas {
+        max-width: 100% !important;
+        height: auto !important;
+        page-break-inside: avoid;
+    }
+
+    /* Signature areas */
+    .signature-area {
+        border-top: 1pt solid black !important;
+        margin-top: 20pt !important;
+        padding-top: 5pt !important;
+        text-align: center !important;
+        font-size: 9pt !important;
+        color: black !important;
+    }
+
+    /* Date and time fields */
+    .date-field,
+    .time-field {
+        border-bottom: 1pt solid black !important;
+        min-width: 30mm !important;
+        display: inline-block !important;
+        padding: 1pt 2pt !important;
+        background: transparent !important;
+        font-size: 10pt !important;
+        color: black !important;
+    }
+
+    /* Measurement result boxes */
+    .result-box {
+        border: 2pt solid black !important;
+        padding: 8pt !important;
+        margin: 5pt 0 !important;
+        background: #f8f8f8 !important;
+        font-weight: bold !important;
+        text-align: center !important;
+        page-break-inside: avoid;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    /* Protocol specific sections */
+    .protocol-section {
+        margin-bottom: 15pt !important;
+        page-break-inside: avoid;
+    }
+
+    .protocol-subsection {
+        margin-bottom: 10pt !important;
+    }
+
+    /* Footer information */
+    .protocol-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        font-size: 8pt !important;
+        text-align: center !important;
+        color: #666 !important;
+        border-top: 1pt solid #ccc !important;
+        padding-top: 2pt !important;
     }
 }
+
