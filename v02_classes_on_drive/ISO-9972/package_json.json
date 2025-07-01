@@ -1,0 +1,32 @@
+{
+  "name": "blower-door-protocol",
+  "version": "1.0.0",
+  "description": "Blower Door Messprotokoll nach ISO 9972",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build-css": "tailwindcss -i ./src/css/input.css -o ./dist/css/output.css --watch",
+    "build-css-prod": "tailwindcss -i ./src/css/input.css -o ./dist/css/output.css --minify"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.10",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.3.6",
+    "vite": "^5.0.8"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.0"
+  },
+  "keywords": [
+    "blower-door",
+    "ISO-9972",
+    "luftdichtheit",
+    "energieberatung"
+  ],
+  "author": "Ihr Name",
+  "license": "MIT"
+}
