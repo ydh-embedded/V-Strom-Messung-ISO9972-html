@@ -1,0 +1,2610 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blower Door Messprotokoll nach ISO 9972 - Dark Theme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"></script>
+
+    <style>
+        /* Custom Rose-Gold Colors */
+        :root {
+            --rose-gold-50: #fdf2f8;
+            --rose-gold-100: #fce7f3;
+            --rose-gold-200: #fbcfe8;
+            --rose-gold-300: #f9a8d4;
+            --rose-gold-400: #f472b6;
+            --rose-gold-500: #ec4899;
+            --rose-gold-600: #db2777;
+            --rose-gold-700: #be185d;
+            --rose-gold-800: #9d174d;
+            --rose-gold-900: #831843;
+
+            --amber-gold-300: #fcd34d;
+            --amber-gold-400: #f59e0b;
+            --amber-gold-500: #d97706;
+        }
+
+        /* Dark Theme Base */
+        body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e2e8f0;
+        }
+
+        /* Navigation Button Styles */
+        .nav-btn {
+            position: relative;
+            overflow: hidden;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(236, 72, 153, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-btn:hover::before {
+            left: 100%;
+        }
+
+        .nav-btn:hover {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: rgba(236, 72, 153, 0.6);
+            color: var(--rose-gold-300);
+        }
+
+        .action-btn {
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(236, 72, 153, 0.4);
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Header Scroll Animation */
+        .header-scroll {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: top center;
+        }
+
+        .header-scroll.hidden {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+            pointer-events: none;
+        }
+
+        /* Navigation Scroll Enhancement */
+        .nav-container {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(90deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+            border-bottom: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .nav-container.scrolled {
+            backdrop-filter: blur(20px);
+            background: linear-gradient(90deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
+            box-shadow: 0 8px 32px rgba(236, 72, 153, 0.15);
+            border-bottom: 1px solid rgba(236, 72, 153, 0.4);
+        }
+
+        .nav-container.scrolled .logo-glow {
+            transform: scale(0.9);
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Print Styles - keep light theme for printing */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            @page {
+                size: A4 landscape;
+                margin: 35mm;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+
+            html,
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                background: white !important;
+                font-size: 12pt !important;
+                line-height: 1.4 !important;
+            }
+
+            .protocol-page {
+                page-break-after: always;
+                page-break-inside: avoid;
+                box-shadow: none !important;
+                border: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+                min-height: auto !important;
+                height: auto !important;
+                background: white !important;
+                font-size: 10pt !important;
+                color: black !important;
+            }
+
+            .protocol-page * {
+                color: black !important;
+                background: white !important;
+                border-color: black !important;
+            }
+        }
+
+        /* Protocol specific styles with dark theme */
+        .input-field {
+            border-bottom: 1px solid var(--rose-gold-400);
+            min-width: 200px;
+            display: inline-block;
+            padding: 2px 5px;
+            background: transparent;
+            color: #e2e8f0;
+        }
+
+        .stamp-box {
+            border: 2px dashed var(--rose-gold-400);
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--rose-gold-300);
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        /* Custom Dark Rose-Gold Slider Styles */
+        .slider-dark-rose {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, rgba(30, 41, 59, 0.8) 0%, var(--rose-gold-500) 100%);
+            outline: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
+        }
+
+        .slider-dark-rose:hover {
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .slider-dark-rose::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--rose-gold-400), var(--amber-gold-400));
+            cursor: pointer;
+            border: 3px solid rgba(15, 23, 42, 0.8);
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.6);
+            transition: all 0.2s ease;
+        }
+
+        .slider-dark-rose::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(236, 72, 153, 0.7);
+        }
+
+        .slider-dark-amber {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, rgba(30, 41, 59, 0.8) 0%, var(--amber-gold-500) 100%);
+            outline: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);
+        }
+
+        .slider-dark-amber:hover {
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .slider-dark-amber::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--amber-gold-400), var(--rose-gold-400));
+            cursor: pointer;
+            border: 3px solid rgba(15, 23, 42, 0.8);
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.6);
+            transition: all 0.2s ease;
+        }
+
+        .slider-dark-amber::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(217, 119, 6, 0.7);
+        }
+
+        /* Swipe Container Styles */
+        .swipe-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f0f23, #1a1a2e, #16213e);
+        }
+
+        .swipe-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: transform 0.3s ease-out;
+            will-change: transform;
+        }
+
+        .swipe-slide {
+            flex: 0 0 100vh;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 5vh 20px 20px 20px;
+            box-sizing: border-box;
+        }
+
+        /* Navigation Buttons */
+        .swipe-nav {
+            position: fixed;
+            right: 30px;
+            background: rgba(30, 41, 59, 0.95);
+            border: 2px solid var(--rose-gold-400);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--rose-gold-300);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.25);
+        }
+
+        .swipe-nav:hover {
+            background: rgba(30, 41, 59, 1);
+            border-color: var(--rose-gold-300);
+            color: var(--rose-gold-200);
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+        }
+
+        .swipe-nav:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .swipe-nav.prev {
+            top: 50%;
+            transform: translateY(-50%) rotate(90deg);
+        }
+
+        .swipe-nav.next {
+            bottom: 50%;
+            transform: translateY(50%) rotate(90deg);
+        }
+
+        .swipe-nav.prev:hover {
+            transform: translateY(-50%) rotate(90deg) scale(1.1);
+        }
+
+        .swipe-nav.next:hover {
+            transform: translateY(50%) rotate(90deg) scale(1.1);
+        }
+
+        /* Page Indicator */
+        .page-indicator {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            color: var(--rose-gold-300);
+            border: 1px solid rgba(236, 72, 153, 0.4);
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
+            z-index: 1000;
+        }
+
+        /* Pagination Dots */
+        .swipe-pagination {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        .swipe-pagination-bullet {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(236, 72, 153, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(30, 41, 59, 0.8);
+            box-shadow: 0 2px 6px rgba(236, 72, 153, 0.25);
+        }
+
+        .swipe-pagination-bullet:hover {
+            background: rgba(252, 211, 77, 0.7);
+            transform: scale(1.2);
+        }
+
+        .swipe-pagination-bullet.active {
+            background: var(--amber-gold-400);
+            transform: scale(1.3);
+        }
+
+
+
+
+        .weather-controls {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(236, 72, 153, 0.3);
+        }
+
+        .weather-field-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .weather-field-group label {
+            min-width: 160px;
+            color: #f472b6;
+            font-weight: 500;
+        }
+
+        .weather-field-group input {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(236, 72, 153, 0.4);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: #e2e8f0;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .weather-field-group input:focus {
+            outline: none;
+            border-color: #f472b6;
+            box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.2);
+        }
+
+        .weather-status {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .weather-status.success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #86efac;
+        }
+
+        .weather-status.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+
+        .weather-status.loading {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #93c5fd;
+        }
+
+        .weather-manual-inputs {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+            padding: 16px;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 8px;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .weather-manual-inputs input {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(236, 72, 153, 0.4);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: #e2e8f0;
+            width: 120px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f472b6, #ec4899);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #ec4899, #db2777);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-blue {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-blue:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            transform: translateY(-1px);
+        }
+
+        .weather-info {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .coordinates-display {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(252, 211, 77, 0.4);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            font-family: monospace;
+            color: #fcd34d;
+        }
+
+
+
+
+
+
+        /* Measurement table styles */
+        .measurement-table {
+            font-size: 0.875rem;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+        }
+
+        .measurement-table th {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(51, 65, 85, 0.8));
+            font-weight: 600;
+            color: var(--rose-gold-300);
+            border-color: rgba(236, 72, 153, 0.3);
+        }
+
+        .measurement-table td {
+            border-color: rgba(236, 72, 153, 0.2);
+        }
+
+        .measurement-table input {
+            border: 1px solid rgba(236, 72, 153, 0.4);
+            border-radius: 4px;
+            padding: 6px 8px;
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+            background: rgba(15, 23, 42, 0.8);
+            color: #e2e8f0;
+        }
+
+        .measurement-table input:focus {
+            outline: none;
+            border-color: var(--rose-gold-400);
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
+        }
+
+        /* Tab styles */
+        .tab-button {
+            transition: all 0.3s ease;
+            background: rgba(30, 41, 59, 0.6);
+            color: #cbd5e1;
+            border: 1px solid rgba(236, 72, 153, 0.3);
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, var(--rose-gold-500), var(--amber-gold-500));
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+            border-color: var(--rose-gold-400);
+        }
+
+        .tab-button:hover:not(.active) {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(236, 72, 153, 0.5);
+            color: var(--rose-gold-300);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Elegant button styles */
+        .elegant-button {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(51, 65, 85, 0.9));
+            border: 1px solid rgba(236, 72, 153, 0.4);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            color: var(--rose-gold-300);
+        }
+
+        .elegant-button:hover {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(51, 65, 85, 1));
+            border-color: var(--rose-gold-300);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+            color: var(--rose-gold-200);
+        }
+
+        /* Logo glow effect */
+        .logo-glow {
+            background: linear-gradient(135deg, var(--rose-gold-500), var(--amber-gold-400));
+            box-shadow: 0 4px 20px rgba(236, 72, 153, 0.4);
+        }
+
+        .shine-effect {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shine-effect::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+
+            50% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+
+            100% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+        }
+
+        /* Dark theme specific overrides */
+        .bg-gradient-to-br {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important;
+        }
+
+        .text-purple-700 {
+            color: var(--rose-gold-300) !important;
+        }
+
+        .text-purple-600 {
+            color: var(--rose-gold-400) !important;
+        }
+
+        .text-purple-500 {
+            color: var(--rose-gold-500) !important;
+        }
+
+        .text-purple-800 {
+            color: var(--rose-gold-200) !important;
+        }
+
+        .border-purple-200 {
+            border-color: rgba(236, 72, 153, 0.3) !important;
+        }
+
+        .border-purple-300 {
+            border-color: rgba(236, 72, 153, 0.4) !important;
+        }
+
+        .bg-purple-50,
+        .bg-blue-50,
+        .bg-green-50 {
+            background: rgba(30, 41, 59, 0.6) !important;
+        }
+
+        .bg-purple-100,
+        .bg-blue-100,
+        .bg-green-100 {
+            background: rgba(30, 41, 59, 0.7) !important;
+        }
+
+        .bg-white\/60,
+        .bg-white\/80 {
+            background: rgba(30, 41, 59, 0.8) !important;
+        }
+
+        .text-blue-700,
+        .text-green-700,
+        .text-red-700 {
+            color: var(--rose-gold-300) !important;
+        }
+
+        .text-blue-600,
+        .text-green-600,
+        .text-red-600 {
+            color: var(--rose-gold-400) !important;
+        }
+
+        .border-blue-200,
+        .border-green-200,
+        .border-red-200 {
+            border-color: rgba(236, 72, 153, 0.3) !important;
+        }
+
+        .border-blue-300,
+        .border-green-300,
+        .border-red-300 {
+            border-color: rgba(236, 72, 153, 0.4) !important;
+        }
+
+        .bg-blue-200,
+        .bg-green-200,
+        .bg-red-200 {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(252, 211, 77, 0.3)) !important;
+            color: #e2e8f0 !important;
+        }
+
+        .bg-blue-300,
+        .bg-green-300,
+        .bg-red-300 {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.4), rgba(252, 211, 77, 0.4)) !important;
+            color: #e2e8f0 !important;
+        }
+
+        /* Chart specific dark theme */
+        #chart {
+            background: rgba(30, 41, 59, 0.8) !important;
+            border-radius: 8px;
+        }
+
+        /* Card backgrounds */
+        .bg-white\/40 {
+            background: rgba(30, 41, 59, 0.7) !important;
+            border-color: rgba(236, 72, 153, 0.3) !important;
+        }
+
+        .bg-white\/60:hover {
+            background: rgba(30, 41, 59, 0.9) !important;
+        }
+
+        /* Protocol page dark theme for screen */
+        .protocol-page {
+            background: rgba(30, 41, 59, 0.9) !important;
+            border-color: rgba(236, 72, 153, 0.4) !important;
+            color: #e2e8f0 !important;
+        }
+
+        .protocol-page h1,
+        .protocol-page h2,
+        .protocol-page h3 {
+            color: var(--rose-gold-300) !important;
+        }
+
+        .auto-datum,
+        .auto-uhrzeit {
+            background: rgba(236, 72, 153, 0.2) !important;
+            color: #e2e8f0 !important;
+        }
+
+        /* Home page styling */
+        .home-gradient {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 30%, #16213e 70%, #0f0f23 100%) !important;
+        }
+
+        .home-button-primary {
+            background: linear-gradient(135deg, var(--rose-gold-500), var(--amber-gold-500)) !important;
+            color: white !important;
+            border: 1px solid var(--rose-gold-400) !important;
+        }
+
+        .home-button-primary:hover {
+            background: linear-gradient(135deg, var(--rose-gold-400), var(--amber-gold-400)) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.4);
+        }
+
+        .home-button-secondary {
+            background: transparent !important;
+            border: 2px solid var(--rose-gold-400) !important;
+            color: var(--rose-gold-300) !important;
+        }
+
+        .home-button-secondary:hover {
+            background: rgba(236, 72, 153, 0.2) !important;
+            color: var(--rose-gold-200) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.3);
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 font-sans">
+    <!-- Navigation -->
+    <nav id="main-nav" class="nav-container shadow-xl fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 lg:px-6">
+            <div class="flex justify-between items-center h-20">
+
+                <!-- Logo Section -->
+                <div class="flex items-center">
+                    <button onclick="showPage('home')"
+                        class="group flex items-center space-x-3 hover:scale-105 transition-all duration-300">
+                        <div
+                            class="logo-glow shine-effect w-12 h-12 rounded-xl flex items-center justify-center shadow-lg">
+                            <span class="text-white font-bold text-xs tracking-wider">ISO</span>
+                        </div>
+                        <div class="hidden md:block">
+                            <h1 class="text-xl font-bold text-rose-300 group-hover:text-rose-200 transition-colors">
+                                Blower Door
+                            </h1>
+                            <p class="text-xs text-rose-400 -mt-1">9972:2018-12</p>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex items-center space-x-2 lg:space-x-3">
+                    <button onclick="showPage('home')"
+                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                        <span class="relative z-10 flex items-center gap-2">
+                            <span class="text-base">🏠</span>
+                            <span class="hidden sm:inline">Start</span>
+                        </span>
+                    </button>
+
+                    <button onclick="showPage('weather')"
+                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                        <span class="relative z-10 flex items-center gap-2">
+                            <span class="text-base">🌤️</span>
+                            <span class="hidden sm:inline">Wetter</span>
+                        </span>
+                    </button>
+
+                    <button onclick="showPage('measurement')"
+                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                        <span class="relative z-10 flex items-center gap-2">
+                            <span class="text-base">📊</span>
+                            <span class="hidden sm:inline">Messung</span>
+                        </span>
+                    </button>
+
+                    <button onclick="showPage('analysis')"
+                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                        <span class="relative z-10 flex items-center gap-2">
+                            <span class="text-base">📈</span>
+                            <span class="hidden sm:inline">Analyse</span>
+                        </span>
+                    </button>
+
+                    <button onclick="showPage('protocol')"
+                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                        <span class="relative z-10 flex items-center gap-2">
+                            <span class="text-base">📋</span>
+                            <span class="hidden sm:inline">Protokoll</span>
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Right Section: Weather Display + Action Buttons -->
+                <div class="flex items-center space-x-3">
+
+                    <!-- Current Weather Display -->
+                    <div id="nav-weather-display" class="weather-display hidden lg:block">
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            <div class="weather-item">
+                                <span class="weather-icon">🌡️</span>
+                                <span id="nav-temp" class="weather-value">--</span>
+                                <span class="weather-unit">°C</span>
+                            </div>
+
+                            <div class="weather-item">
+                                <span class="weather-icon">🌡️</span>
+                                <span id="nav-pressure" class="weather-value">--</span>
+                                <span class="weather-unit">hPa</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <button onclick="printProtocol()"
+                        class="action-btn bg-gradient-to-r from-emerald-600 to-green-600 text-green-100 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:from-emerald-500 hover:to-green-500">
+                        <span class="flex items-center gap-2">
+                            <span class="text-base">🖨️</span>
+                            <span class="hidden xl:inline">Drucken</span>
+                        </span>
+                    </button>
+
+                    <button onclick="setzeDatum()"
+                        class="action-btn bg-gradient-to-r from-blue-600 to-indigo-600 text-blue-100 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:from-blue-500 hover:to-indigo-500">
+                        <span class="flex items-center gap-2">
+                            <span class="text-base">📅</span>
+                            <span class="auto-datum font-semibold text-xs">2.7.2025</span>
+                        </span>
+                    </button>
+
+                    <!-- Weather Update Button (Mobile) -->
+                    <button onclick="updateNavWeather()"
+                        class="action-btn lg:hidden bg-gradient-to-r from-rose-600 to-pink-600 text-rose-100 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:from-rose-500 hover:to-pink-500">
+                        <span class="flex items-center gap-1">
+                            <span class="text-base">🌤️</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Enhanced Header with Weather Integration -->
+    <header id="main-header" class="header-scroll pt-24 pb-8">
+
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-4">
+        <!-- Start Page -->
+        <div id="home" class="page active">
+            <div class="min-h-screen home-gradient flex-start items-center justify-center">
+
+
+
+
+
+                <div class="text-center text-rose-200 p-8">
+                    <h1 class="text-5xl font-bold mb-6 text-rose-300">Blower Door Messung</h1>
+                    <div class="space-y-4">
+                        <button onclick="showPage('protocol')"
+                            class="home-button-secondary px-8 py-3 rounded-lg font-semibold transition-all duration-300 backdrop-blur-sm">
+                            Protokoll anzeigen
+                        </button>
+                        <br>
+
+                        <br>
+                    </div>
+                </div>
+
+                <div class="max-w-4xl mx-auto text-center px-6">
+                    <h1 class="text-2xl font-light text-rose-300 mb-4 tracking-wide leading-relaxed">
+                        Professionelle Luftdurchlässigkeitsmessung
+                    </h1>
+                    <div class="w-24 h-1 bg-gradient-to-r from-rose-400 to-amber-400 mx-auto rounded-full"></div>
+                    <p class="text-sm text-rose-400 mt-3">
+                        Zertifizierung nach ISO 9972:2018-12
+                    </p>
+
+                    <div class="text-center text-rose-200 p-8">
+
+                        <div class="space-y-4">
+
+
+                            <button onclick="showPage('measurement')"
+                                class="home-button-primary px-8 py-3 rounded-lg font-semibold transition-all duration-300 backdrop-blur-sm">
+                                Neue Messung starten
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <!-- Measurement Page -->
+        <div id="measurement" class="page">
+            <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+                <div class="max-w-6xl mx-auto">
+                    <h2 class="text-4xl font-bold text-rose-300 mb-8 text-center">Messdatenerfassung</h2>
+
+                    <!-- Parameter Controls -->
+                    <div class="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 mb-8 border border-rose-500/30">
+                        <h3 class="text-2xl font-bold text-rose-300 mb-6">Messparameter</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label class="block text-rose-300 font-medium mb-2">n₅₀-Wert [1/h]</label>
+                                <input type="range" id="n50" min="0.5" max="10" step="0.1" value="3.0"
+                                    class="slider-dark-rose w-full">
+                                <div class="text-rose-300 text-center mt-2 font-bold text-lg" id="n50-value">3.0</div>
+                            </div>
+                            <div>
+                                <label class="block text-rose-300 font-medium mb-2">Gebäudevolumen [m³]</label>
+                                <input type="range" id="volume" min="100" max="2000" step="10" value="500"
+                                    class="slider-dark-amber w-full">
+                                <div class="text-rose-300 text-center mt-2 font-bold text-lg" id="volume-value">500
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-rose-300 font-medium mb-2">Max. Druck [Pa]</label>
+                                <input type="range" id="pressure" min="50" max="150" step="5" value="100"
+                                    class="slider-dark-rose w-full">
+                                <div class="text-rose-300 text-center mt-2 font-bold text-lg" id="pressure-value">100
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Measurement Tables -->
+                    <div class="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 border border-rose-500/30">
+                        <h3 class="text-2xl font-bold text-rose-300 mb-6">Messwerte</h3>
+
+                        <!-- Tab Navigation -->
+                        <div class="flex space-x-2 mb-6">
+                            <button onclick="switchTab('underpressure')" id="tab-underpressure"
+                                class="tab-button active px-6 py-3 rounded-lg font-medium">
+                                Unterdruck
+                            </button>
+                            <button onclick="switchTab('overpressure')" id="tab-overpressure"
+                                class="tab-button px-6 py-3 rounded-lg font-medium">
+                                Überdruck
+                            </button>
+                        </div>
+
+                        <!-- Underpressure Table -->
+                        <div id="underpressure-content" class="tab-content active">
+                            <div class="bg-slate-800/80 rounded-lg p-4 mb-4 border border-rose-500/20">
+                                <h4 class="text-lg font-bold text-rose-300 mb-4">Unterdruckmessungen</h4>
+                                <div class="overflow-x-auto">
+                                    <table class="measurement-table w-full border-collapse">
+                                        <thead>
+                                            <tr>
+                                                <th class="border px-4 py-3 text-left">Differenzdruck [Pa]</th>
+                                                <th class="border px-4 py-3 text-left">Volumenstrom [m³/h]</th>
+                                                <th class="border px-4 py-3 text-center">Aktionen</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="underpressureTable">
+                                            <!-- Rows will be added dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="mt-4 space-x-2">
+                                    <button onclick="addUnderpressureRow()"
+                                        class="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded hover:from-rose-400 hover:to-pink-400 transition-all duration-300">
+                                        Zeile hinzufügen
+                                    </button>
+                                    <button onclick="clearUnderpressure()"
+                                        class="bg-gradient-to-r from-red-600 to-red-500 text-white px-4 py-2 rounded hover:from-red-500 hover:to-red-400 transition-all duration-300">
+                                        Tabelle leeren
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Overpressure Table -->
+                        <div id="overpressure-content" class="tab-content">
+                            <div class="bg-slate-800/80 rounded-lg p-4 mb-4 border border-rose-500/20">
+                                <h4 class="text-lg font-bold text-rose-300 mb-4">Überdruckmessungen</h4>
+                                <div class="overflow-x-auto">
+                                    <table class="measurement-table w-full border-collapse">
+                                        <thead>
+                                            <tr>
+                                                <th class="border px-4 py-3 text-left">Differenzdruck [Pa]</th>
+                                                <th class="border px-4 py-3 text-left">Volumenstrom [m³/h]</th>
+                                                <th class="border px-4 py-3 text-center">Aktionen</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="overpressureTable">
+                                            <!-- Rows will be added dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="mt-4 space-x-2">
+                                    <button onclick="addOverpressureRow()"
+                                        class="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded hover:from-rose-400 hover:to-pink-400 transition-all duration-300">
+                                        Zeile hinzufügen
+                                    </button>
+                                    <button onclick="clearOverpressure()"
+                                        class="bg-gradient-to-r from-red-600 to-red-500 text-white px-4 py-2 rounded hover:from-red-500 hover:to-red-400 transition-all duration-300">
+                                        Tabelle leeren
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Legacy Combined Table -->
+                        <div class="bg-slate-800/80 rounded-lg p-4 mt-6 border border-rose-500/20">
+                            <h4 class="text-lg font-bold text-rose-300 mb-4">Kombinierte Messwerte (Legacy)</h4>
+                            <div class="overflow-x-auto">
+                                <table class="measurement-table w-full border-collapse">
+                                    <thead>
+                                        <tr>
+                                            <th class="border px-4 py-3 text-left">Differenzdruck [Pa]</th>
+                                            <th class="border px-4 py-3 text-left">Volumenstrom [m³/h]</th>
+                                            <th class="border px-4 py-3 text-center">Aktionen</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="measurementTable">
+                                        <!-- Rows will be added dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-4 space-x-2">
+                                <button id="addMeasurementRow"
+                                    class="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded hover:from-rose-400 hover:to-pink-400 transition-all duration-300">
+                                    Zeile hinzufügen
+                                </button>
+                                <button id="clearMeasurements"
+                                    class="bg-gradient-to-r from-red-600 to-red-500 text-white px-4 py-2 rounded hover:from-red-500 hover:to-red-400 transition-all duration-300">
+                                    Tabelle leeren
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Page -->
+        <div id="analysis" class="page">
+            <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+                <div class="max-w-6xl mx-auto">
+                    <h2 class="text-4xl font-bold text-rose-300 mb-8 text-center">Messdatenanalyse</h2>
+
+                    <!-- Chart Controls -->
+                    <div class="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 mb-8 border border-rose-500/30">
+                        <h3 class="text-xl font-bold text-rose-300 mb-4">Diagramm-Optionen</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <label class="flex items-center text-rose-300">
+                                <input type="checkbox" id="showTheoretical" checked class="mr-2 accent-rose-500">
+                                Theoretische Kurve
+                            </label>
+                            <label class="flex items-center text-rose-300">
+                                <input type="checkbox" id="showSimulated" class="mr-2 accent-amber-500">
+                                Simulierte Messpunkte
+                            </label>
+                            <label class="flex items-center text-rose-300">
+                                <input type="checkbox" id="showReal" checked class="mr-2 accent-emerald-500">
+                                Reale Messpunkte
+                            </label>
+                            <label class="flex items-center text-rose-300">
+                                <input type="checkbox" id="showUnderpressure" checked class="mr-2 accent-red-500">
+                                Unterdruckmessungen
+                            </label>
+                            <label class="flex items-center text-rose-300">
+                                <input type="checkbox" id="showOverpressure" checked class="mr-2 accent-purple-500">
+                                Überdruckmessungen
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Chart Container -->
+                    <div class="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 mb-8 border border-rose-500/30">
+                        <div class="bg-slate-800/90 rounded-lg p-4">
+                            <canvas id="chart" width="855" height="320"
+                                style="display: block; box-sizing: border-box; height: 400px; width: 1069px;"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Results Display -->
+                    <div class="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 mb-8 border border-rose-500/30">
+                        <h3 class="text-2xl font-bold text-rose-300 mb-6 text-center">Berechnete Kennwerte</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div
+                                class="bg-slate-800/40 backdrop-blur-sm rounded-xl p-6 text-center border border-rose-500/30 hover:bg-slate-800/60 transition-all duration-300">
+                                <div class="text-4xl font-bold text-rose-400 mb-3" id="calc-n50">3.0</div>
+                                <div class="text-rose-300/90 text-sm font-medium">n₅₀-Wert [1/h]</div>
+                            </div>
+                            <div
+                                class="bg-slate-800/40 backdrop-blur-sm rounded-xl p-6 text-center border border-amber-500/30 hover:bg-slate-800/60 transition-all duration-300">
+                                <div class="text-4xl font-bold text-amber-400 mb-3" id="calc-q50">9.52</div>
+                                <div class="text-amber-300/90 text-sm font-medium">q₅₀-Wert [m³/(h·m²)]</div>
+                            </div>
+                            <div
+                                class="bg-slate-800/40 backdrop-blur-sm rounded-xl p-6 text-center border border-pink-500/30 hover:bg-slate-800/60 transition-all duration-300">
+                                <div class="text-4xl font-bold text-pink-400 mb-3" id="calc-v50">1500</div>
+                                <div class="text-pink-300/90 text-sm font-medium">V₅₀ [m³/h]</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="chart-error"
+                        class="hidden bg-red-900/50 border border-red-500 text-red-300 px-4 py-3 rounded mt-4">
+                        <p><strong>Fehler:</strong> Das Diagramm konnte nicht geladen werden. Bitte überprüfen Sie die
+                            Konsole für weitere Details.</p>
+                    </div>
+
+                    <!-- Erläuterungen -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div
+                            class="bg-gradient-to-br from-slate-800/60 to-slate-700/60 rounded-xl shadow-xl p-6 border border-rose-500/30">
+                            <h4 class="text-xl font-bold mb-4 text-rose-300 flex items-center">
+                                <span class="w-4 h-4 bg-rose-400 rounded-full mr-3"></span>
+                                Grundlegende Definitionen
+                            </h4>
+                            <div class="space-y-4 text-sm text-slate-300">
+                                <div class="p-3 bg-slate-800/60 rounded-lg">
+                                    <strong class="text-rose-300">n₅₀-Wert:</strong> Luftwechselrate bei 50 Pa
+                                    Druckdifferenz
+                                </div>
+                                <div class="p-3 bg-slate-800/60 rounded-lg">
+                                    <strong class="text-rose-300">q₅₀-Wert:</strong> Spezifischer Leckagestrom pro m²
+                                    Hüllfläche
+                                </div>
+                                <div class="p-3 bg-slate-800/60 rounded-lg">
+                                    <strong class="text-rose-300">V₅₀:</strong> Volumenstrom bei 50 Pa Druckdifferenz
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-gradient-to-br from-slate-800/60 to-slate-700/60 rounded-xl shadow-xl p-6 border border-amber-500/30">
+                            <h4 class="text-xl font-bold mb-4 text-amber-300 flex items-center">
+                                <span class="w-4 h-4 bg-amber-400 rounded-full mr-3"></span>
+                                Technische Parameter
+                            </h4>
+                            <div class="space-y-4 text-sm text-slate-300">
+                                <div class="p-3 bg-slate-800/60 rounded-lg">
+                                    <strong class="text-amber-300">Potenzfunktion:</strong> V = C × ΔP^n
+                                </div>
+                                <div class="p-3 bg-slate-800/60 rounded-lg">
+                                    <strong class="text-amber-300">Typischer n-Wert:</strong> 0,65 (für turbulente
+                                    Strömung)
+                                </div>
+                                <div class="p-3 bg-slate-800/60 rounded-lg">
+                                    <strong class="text-amber-300">Messbereich:</strong> 10-100 Pa (nach ISO 9972)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Protocol Page -->
+        <div id="protocol" class="page">
+            <div class="swipe-container">
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Weather Page -->
+    <div id="weather" class="page">
+        <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold text-rose-300 mb-8 text-center">Wetterdatenerfassung</h2>
+
+                <!-- Weather Controls -->
+                <div class="weather-controls mb-8">
+                    <h3 class="text-2xl font-bold text-rose-300 mb-6 text-center">Aktuelle Wetterdaten laden</h3>
+
+                    <div class="text-center mb-6">
+                        <button onclick="getCurrentWeather()"
+                            class="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-3 rounded-lg font-semibold mr-4 mb-2 hover:from-rose-400 hover:to-pink-400 transition-all duration-300">
+                            🌤️ Aktuelle Wetterdaten laden
+                        </button>
+                        <button onclick="getUserLocation()"
+                            class="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-3 rounded-lg font-semibold mr-4 mb-2 hover:from-amber-400 hover:to-orange-400 transition-all duration-300">
+                            📍 Standort ermitteln
+                        </button>
+                        <button onclick="getLocationByIP()"
+                            class="bg-gradient-to-r from-emerald-500 to-green-500 text-white px-6 py-3 rounded-lg font-semibold mb-2 hover:from-emerald-400 hover:to-green-400 transition-all duration-300">
+                            🌐 Standort via IP
+                        </button>
+                        <div id="weather-status" class="weather-status"></div>
+                    </div>
+                </div>
+
+                <!-- Weather Data Display -->
+                <div class="weather-controls">
+                    <h3 class="text-2xl font-bold text-rose-300 mb-6">Wetterdaten für Protokoll</h3>
+
+
+                    <div class="space-y-4">
+                        <div class="weather-field-group">
+                            <label>Außentemperatur:</label>
+                            <div class="flex items-center gap-2">
+                                <input type="number" id="outside-temp" placeholder="___" step="0.1">
+                                <span class="text-rose-300">°C</span>
+                            </div>
+                        </div>
+
+                        <div class="weather-field-group">
+                            <label>Windgeschwindigkeit:</label>
+                            <div class="flex items-center gap-2">
+                                <input type="number" id="wind-speed" placeholder="___" step="0.1">
+                                <span class="text-rose-300">m/s</span>
+                            </div>
+                        </div>
+
+                        <div class="weather-field-group">
+                            <label>Windrichtung:</label>
+                            <input type="text" id="wind-direction" placeholder="___" style="width: 120px;">
+                        </div>
+                        <div class="weather-field-group">
+                            <label>Luftdruck:</label>
+                            <div class="flex items-center gap-2">
+                                <input type="number" id="air-pressure" placeholder="1013" step="0.1">
+                                <span class="text-rose-300">hPa</span>
+                            </div>
+                        </div>
+
+                        <div class="weather-field-group">
+                            <label>Luftfeuchtigkeit:</label>
+                            <div class="flex items-center gap-2">
+                                <input type="number" id="humidity" placeholder="50" step="1">
+                                <span class="text-rose-300">%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-8">
+                        <button onclick="transferWeatherToProtocol()"
+                            class="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-8 py-3 rounded-lg font-semibold hover:from-rose-400 hover:to-pink-400 transition-all duration-300">
+                            📋 Daten ins Protokoll übertragen
+                        </button>
+                    </div>
+                </div>
+
+
+                <!-- Standort-Ermittlung -->
+
+
+                <!-- Aktuelle Wetterdaten Anzeige -->
+                <div id="current-weather-display" class="weather-info" style="display: none;">
+                    <h4 class="text-xl font-bold text-amber-300 mb-4">🌡️ Aktuelle Wetterdaten</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                        <div class="bg-slate-800/60 p-3 rounded-lg">
+                            <strong class="text-rose-300">Temperatur:</strong><br>
+                            <span id="current-temp" class="text-2xl text-white">--°C</span>
+                        </div>
+                        <div class="bg-slate-800/60 p-3 rounded-lg">
+                            <strong class="text-rose-300">Wind:</strong><br>
+                            <span id="current-wind" class="text-white">-- km/h --</span>
+                        </div>
+                        <div class="bg-slate-800/60 p-3 rounded-lg">
+                            <strong class="text-rose-300">Wetter:</strong><br>
+                            <span id="current-weather-desc" class="text-white">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =================================================================
+        // VERBESSERTE WEATHER JAVASCRIPT FUNKTIONEN
+        // =================================================================
+
+        // Globale Variablen für Standort (fehlten in der ursprünglichen Datei)
+        let currentLat = 52.5200; // Berlin Standardkoordinaten
+        let currentLon = 13.4050;
+
+        // =================================================================
+        // HILFSFUNKTIONEN
+        // =================================================================
+
+        /**
+         * Aktualisiert den Status der Wetter-UI
+         * @param {string} message - Nachricht anzuzeigen
+         * @param {string} type - Typ: 'loading', 'success', 'error', ''
+         * @param {number} timeout - Zeit in ms bis zum Ausblenden
+         */
+        function updateWeatherStatus(message, type = '', timeout = 0) {
+            const statusElement = document.getElementById('weather-status');
+            if (!statusElement) {
+                console.warn('Weather status element not found');
+                return;
+            }
+
+            // Alle vorherigen Klassen entfernen
+            statusElement.className = 'weather-status';
+
+            // Neue Klasse hinzufügen
+            if (type) {
+                statusElement.classList.add(type);
+            }
+
+            statusElement.textContent = message;
+            statusElement.style.display = message ? 'block' : 'none';
+
+            // Auto-Hide nach Timeout
+            if (timeout > 0) {
+                setTimeout(() => {
+                    statusElement.style.display = 'none';
+                }, timeout);
+            }
+        }
+
+        /**
+         * Aktualisiert die Standort-Anzeige
+         * @param {number} lat - Breitengrad
+         * @param {number} lon - Längengrad  
+         * @param {string} locationName - Name des Standorts
+         */
+        function updateLocationDisplay(lat, lon, locationName = '') {
+            // Koordinaten-Anzeige aktualisieren (falls vorhanden)
+            const coordsDisplay = document.querySelector('.coordinates-display');
+            if (coordsDisplay) {
+                coordsDisplay.innerHTML = `
+            <strong>Koordinaten:</strong><br>
+            Latitude: ${lat.toFixed(4)}°<br>
+            Longitude: ${lon.toFixed(4)}°<br>
+            ${locationName ? `<strong>Standort:</strong> ${locationName}` : ''}
+        `;
+            }
+
+            console.log(`Location updated: ${lat}, ${lon} - ${locationName}`);
+        }
+
+        // =================================================================
+        // STANDORT-ERMITTLUNG
+        // =================================================================
+
+        /**
+         * Ermittelt den Benutzerstandort über die Geolocation API
+         */
+        async function getUserLocation() {
+            updateWeatherStatus('📍 Standort wird ermittelt...', 'loading');
+
+            if (!navigator.geolocation) {
+                updateWeatherStatus('❌ Geolocation wird von diesem Browser nicht unterstützt', 'error', 5000);
+                return;
+            }
+
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 300000 // 5 Minuten Cache
+            };
+
+            try {
+                const position = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, options);
+                });
+
+                currentLat = position.coords.latitude;
+                currentLon = position.coords.longitude;
+
+                const accuracy = Math.round(position.coords.accuracy);
+                updateLocationDisplay(currentLat, currentLon, `GPS-Standort (±${accuracy}m)`);
+                updateWeatherStatus(`✅ GPS-Standort ermittelt (Genauigkeit: ±${accuracy}m)`, 'success', 3000);
+
+                // Automatisch Wetterdaten laden
+                setTimeout(() => getCurrentWeather(), 1000);
+
+            } catch (error) {
+                let errorMessage = 'Unbekannter Fehler';
+
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = 'Standortzugriff wurde verweigert';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = 'Standort ist nicht verfügbar';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = 'Zeitüberschreitung bei Standortermittlung';
+                        break;
+                }
+
+                console.error('Geolocation Error:', error);
+                updateWeatherStatus(`❌ ${errorMessage}. Verwende Berlin als Standard.`, 'error', 5000);
+                updateLocationDisplay(currentLat, currentLon, 'Berlin, Deutschland (Standard)');
+            }
+        }
+
+        /**
+         * Ermittelt den Standort über IP-Geolocation
+         */
+        async function getLocationByIP() {
+            updateWeatherStatus('🌐 Standort wird über IP ermittelt...', 'loading');
+
+            try {
+                const response = await fetch('https://ipapi.co/json/', {
+                    method: 'GET',
+                    headers: {
+                        'User-Agent': 'BlowerDoorApp/1.0'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('IP Location Data:', data);
+
+                if (data.latitude && data.longitude) {
+                    currentLat = parseFloat(data.latitude);
+                    currentLon = parseFloat(data.longitude);
+
+                    const locationName = [
+                        data.city,
+                        data.region,
+                        data.country_name
+                    ].filter(Boolean).join(', ');
+
+                    updateLocationDisplay(currentLat, currentLon, locationName || 'Unbekannter Standort');
+                    updateWeatherStatus(`✅ IP-Standort: ${locationName}`, 'success', 3000);
+
+                    // Automatisch Wetterdaten laden
+                    setTimeout(() => getCurrentWeather(), 1000);
+                } else {
+                    throw new Error('Keine Koordinaten in IP-Antwort gefunden');
+                }
+            } catch (error) {
+                console.error('IP Location Error:', error);
+                updateWeatherStatus(`❌ IP-Standortermittlung fehlgeschlagen: ${error.message}`, 'error', 5000);
+                updateLocationDisplay(currentLat, currentLon, 'Berlin, Deutschland (Standard)');
+            }
+        }
+
+        /**
+         * Verwendet manuell eingegebene Koordinaten
+         */
+        function useManualLocation() {
+            const latElement = document.getElementById('manual-lat');
+            const lonElement = document.getElementById('manual-lon');
+
+            if (!latElement || !lonElement) {
+                updateWeatherStatus('❌ Eingabefelder für Koordinaten nicht gefunden', 'error', 3000);
+                return;
+            }
+
+            const lat = parseFloat(latElement.value);
+            const lon = parseFloat(lonElement.value);
+
+            // Validierung
+            if (isNaN(lat) || isNaN(lon)) {
+                updateWeatherStatus('❌ Bitte gültige Zahlen für Koordinaten eingeben', 'error', 3000);
+                return;
+            }
+
+            if (lat < -90 || lat > 90) {
+                updateWeatherStatus('❌ Breitengrad muss zwischen -90 und 90 liegen', 'error', 3000);
+                return;
+            }
+
+            if (lon < -180 || lon > 180) {
+                updateWeatherStatus('❌ Längengrad muss zwischen -180 und 180 liegen', 'error', 3000);
+                return;
+            }
+
+            currentLat = lat;
+            currentLon = lon;
+
+            updateLocationDisplay(currentLat, currentLon, 'Manuell eingegebener Standort');
+            updateWeatherStatus(`✅ Manuelle Koordinaten gesetzt: ${lat.toFixed(4)}, ${lon.toFixed(4)}`, 'success', 3000);
+
+            // Automatisch Wetterdaten laden
+            setTimeout(() => getCurrentWeather(), 1000);
+        }
+
+        // =================================================================
+        // WETTERDATEN-LADEN
+        // =================================================================
+
+        /**
+         * Lädt aktuelle Wetterdaten von der Open-Meteo API
+         */
+        async function getCurrentWeather() {
+            updateWeatherStatus('🌤️ Wetterdaten werden geladen...', 'loading');
+
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${currentLat}&longitude=${currentLon}&current_weather=true&hourly=temperature_2m,relative_humidity_2m,surface_pressure&timezone=auto&forecast_days=1`;
+
+                console.log('Weather API URL:', url);
+
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('Weather API Response:', data);
+
+                if (!data.current_weather) {
+                    throw new Error('Keine aktuellen Wetterdaten in API-Antwort');
+                }
+
+                const weather = data.current_weather;
+                const hourly = data.hourly;
+
+                // Aktuelle Wetterdaten anzeigen
+                updateCurrentWeatherDisplay(weather);
+
+                // Werte in Eingabefelder übertragen
+                updateWeatherInputFields(weather, hourly);
+
+                updateWeatherStatus('✅ Wetterdaten erfolgreich geladen!', 'success', 3000);
+
+            } catch (error) {
+                console.error('Weather API Error:', error);
+                updateWeatherStatus(`❌ Fehler beim Laden der Wetterdaten: ${error.message}`, 'error', 8000);
+
+                // Fallback-Werte setzen
+                setFallbackWeatherData();
+            }
+        }
+
+        /**
+         * Setzt Fallback-Wetterdaten bei API-Fehlern
+         */
+        function setFallbackWeatherData() {
+            const fallbackData = {
+                temperature: 20,
+                windspeed: 10,
+                winddirection: 180,
+                weathercode: 1
+            };
+
+            updateCurrentWeatherDisplay(fallbackData);
+            updateWeatherInputFields(fallbackData, {
+                surface_pressure: [1013],
+                relative_humidity_2m: [60]
+            });
+
+            console.log('Fallback weather data set');
+        }
+
+        // =================================================================
+        // UI-UPDATE FUNKTIONEN
+        // =================================================================
+
+        /**
+         * Aktualisiert die Anzeige der aktuellen Wetterdaten
+         * @param {Object} weather - Wetterdaten-Objekt
+         */
+        function updateCurrentWeatherDisplay(weather) {
+            const display = document.getElementById('current-weather-display');
+            const tempElement = document.getElementById('current-temp');
+            const windElement = document.getElementById('current-wind');
+            const descElement = document.getElementById('current-weather-desc');
+
+            if (!display || !tempElement || !windElement || !descElement) {
+                console.warn('Nicht alle Wetter-Display-Elemente gefunden');
+                return;
+            }
+
+            try {
+                tempElement.textContent = `${Math.round(weather.temperature)}°C`;
+                windElement.textContent = `${Math.round(weather.windspeed)} km/h ${getWindDirection(weather.winddirection)}`;
+                descElement.textContent = getWeatherDescription(weather.weathercode);
+
+                display.style.display = 'block';
+            } catch (error) {
+                console.error('Fehler beim Aktualisieren der Wetter-Anzeige:', error);
+            }
+        }
+
+        // Navigation Weather Update Functions
+        function updateNavWeather() {
+            // Get current weather data from main weather inputs
+            const outsideTemp = document.getElementById('outside-temp')?.value || '--';
+            const windSpeed = document.getElementById('wind-speed')?.value || '--';
+            const windDirection = document.getElementById('wind-direction')?.value || '--';
+            const airPressure = document.getElementById('air-pressure')?.value || '--';
+
+            // Update navigation weather display
+            const navTemp = document.getElementById('nav-temp');
+            const navWind = document.getElementById('nav-wind');
+            const navWindDir = document.getElementById('nav-wind-dir');
+            const navPressure = document.getElementById('nav-pressure');
+
+            if (navTemp) navTemp.textContent = outsideTemp;
+            if (navWind) navWind.textContent = windSpeed;
+            if (navWindDir) navWindDir.textContent = windDirection;
+            if (navPressure) navPressure.textContent = airPressure;
+
+            // Update header weather display (mobile)
+            const headerTemp = document.getElementById('header-temp');
+            const headerWind = document.getElementById('header-wind');
+            const headerWindDir = document.getElementById('header-wind-dir');
+
+            if (headerTemp) headerTemp.textContent = outsideTemp;
+            if (headerWind) headerWind.textContent = windSpeed;
+            if (headerWindDir) headerWindDir.textContent = windDirection;
+
+            // Show weather display if data is available
+            const navDisplay = document.getElementById('nav-weather-display');
+            if (navDisplay && (outsideTemp !== '--' || windSpeed !== '--')) {
+                navDisplay.classList.remove('hidden');
+                navDisplay.classList.add('lg:block');
+            }
+
+            console.log('Navigation weather updated');
+        }
+
+
+
+
+
+        /**
+         * Füllt die Eingabefelder mit Wetterdaten
+         * @param {Object} weather - Aktuelle Wetterdaten
+         * @param {Object} hourly - Stündliche Wetterdaten
+         */
+        function updateWeatherInputFields(weather, hourly) {
+            try {
+                // Temperatur
+                const outsideTempElement = document.getElementById('outside-temp');
+                if (outsideTempElement && weather.temperature !== undefined) {
+                    outsideTempElement.value = Math.round(weather.temperature * 10) / 10;
+                }
+
+                // Wind (km/h zu m/s konvertieren)
+                const windSpeedElement = document.getElementById('wind-speed');
+                if (windSpeedElement && weather.windspeed !== undefined) {
+                    const windSpeedMs = Math.round(weather.windspeed / 3.6 * 10) / 10;
+                    windSpeedElement.value = windSpeedMs;
+                }
+
+                // Windrichtung
+                const windDirectionElement = document.getElementById('wind-direction');
+                if (windDirectionElement && weather.winddirection !== undefined) {
+                    windDirectionElement.value = getWindDirection(weather.winddirection);
+                }
+
+                // Luftdruck aus stündlichen Daten
+                const airPressureElement = document.getElementById('air-pressure');
+                if (airPressureElement && hourly?.surface_pressure?.[0]) {
+                    airPressureElement.value = Math.round(hourly.surface_pressure[0]);
+                }
+
+                // Luftfeuchtigkeit aus stündlichen Daten
+                const humidityElement = document.getElementById('humidity');
+                if (humidityElement && hourly?.relative_humidity_2m?.[0]) {
+                    humidityElement.value = Math.round(hourly.relative_humidity_2m[0]);
+                }
+
+            } catch (error) {
+                console.error('Fehler beim Füllen der Eingabefelder:', error);
+            }
+        }
+
+        // =================================================================
+        // HILFSFUNKTIONEN FÜR WETTERDATEN
+        // =================================================================
+
+        /**
+         * Konvertiert Windrichtung in Grad zu Himmelsrichtung
+         * @param {number} degrees - Windrichtung in Grad
+         * @returns {string} Himmelsrichtung
+         */
+        function getWindDirection(degrees) {
+            if (degrees === undefined || degrees === null || isNaN(degrees)) {
+                return 'N';
+            }
+
+            const directions = [
+                'N', 'NNO', 'NO', 'ONO', 'O', 'OSO', 'SO', 'SSO',
+                'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'
+            ];
+
+            const index = Math.round(degrees / 22.5) % 16;
+            return directions[index] || 'N';
+        }
+
+        /**
+         * Konvertiert Wetter-Code zu deutscher Beschreibung
+         * @param {number} code - WMO Wetter-Code
+         * @returns {string} Deutsche Beschreibung
+         */
+        function getWeatherDescription(code) {
+            const descriptions = {
+                0: 'Klarer Himmel',
+                1: 'Überwiegend klar',
+                2: 'Teilweise bewölkt',
+                3: 'Bedeckt',
+                45: 'Nebel',
+                48: 'Raureif-Nebel',
+                51: 'Leichter Nieselregen',
+                53: 'Mäßiger Nieselregen',
+                55: 'Starker Nieselregen',
+                56: 'Leichter gefrierender Nieselregen',
+                57: 'Starker gefrierender Nieselregen',
+                61: 'Leichter Regen',
+                63: 'Mäßiger Regen',
+                65: 'Starker Regen',
+                66: 'Leichter gefrierender Regen',
+                67: 'Starker gefrierender Regen',
+                71: 'Leichter Schneefall',
+                73: 'Mäßiger Schneefall',
+                75: 'Starker Schneefall',
+                77: 'Schneekörner',
+                80: 'Leichte Regenschauer',
+                81: 'Mäßige Regenschauer',
+                82: 'Starke Regenschauer',
+                85: 'Leichte Schneeschauer',
+                86: 'Starke Schneeschauer',
+                95: 'Gewitter',
+                96: 'Gewitter mit leichtem Hagel',
+                99: 'Gewitter mit starkem Hagel'
+            };
+
+            return descriptions[code] || `Wetter-Code: ${code}`;
+        }
+
+        // =================================================================
+        // PROTOKOLL-INTEGRATION
+        // =================================================================
+
+        /**
+         * Überträgt Wetterdaten ins Protokoll
+         */
+        function transferWeatherToProtocol() {
+            const weatherFields = {
+                'protocol-outside-temp': 'outside-temp',
+                'protocol-inside-temp': 'inside-temp',
+                'protocol-wind-speed': 'wind-speed',
+                'protocol-wind-direction': 'wind-direction',
+                'protocol-air-pressure': 'air-pressure',
+                'protocol-humidity': 'humidity'
+            };
+
+            let transferCount = 0;
+            const errors = [];
+
+            Object.entries(weatherFields).forEach(([protocolClass, inputId]) => {
+                try {
+                    const inputElement = document.getElementById(inputId);
+                    const value = inputElement?.value || '--';
+
+                    // Alle Elemente mit der entsprechenden Klasse finden und aktualisieren
+                    const protocolElements = document.querySelectorAll(`.${protocolClass}`);
+
+                    protocolElements.forEach(element => {
+                        element.textContent = value;
+                        transferCount++;
+                    });
+
+                    // Zusätzlich: Einheiten für bestimmte Felder
+                    if (inputId === 'outside-temp' && value !== '--') {
+                        const tempElements = document.querySelectorAll('.protocol-outside-temp-unit');
+                        tempElements.forEach(el => el.textContent = '°C');
+                    }
+
+                    if (inputId === 'wind-speed' && value !== '--') {
+                        const windElements = document.querySelectorAll('.protocol-wind-speed-unit');
+                        windElements.forEach(el => el.textContent = 'm/s');
+                    }
+
+                } catch (error) {
+                    console.error(`Fehler beim Übertragen von ${inputId}:`, error);
+                    errors.push(inputId);
+                }
+            });
+
+            // Status-Nachricht
+            if (errors.length > 0) {
+                updateWeatherStatus(`⚠️ Teilweise übertragen (${transferCount} Felder). Fehler bei: ${errors.join(', ')}`, 'error', 8000);
+            } else if (transferCount > 0) {
+                updateWeatherStatus(`✅ Wetterdaten erfolgreich übertragen! (${transferCount} Felder aktualisiert)`, 'success', 5000);
+            } else {
+                updateWeatherStatus('⚠️ Keine Protokoll-Felder gefunden. Überprüfen Sie die HTML-Struktur.', 'error', 5000);
+            }
+
+            // Automatisch zum Protokoll wechseln
+            setTimeout(() => {
+                showPage('protocol');
+            }, 2000);
+        }
+
+        // =================================================================
+        // INITIALISIERUNG
+        // =================================================================
+
+        /**
+         * Initialisiert das Weather-System beim Laden der Seite
+         */
+        function initWeatherSystem() {
+            console.log('Weather System wird initialisiert...');
+
+            // Standard-Location anzeigen
+            updateLocationDisplay(currentLat, currentLon, 'Berlin, Deutschland (Standard)');
+
+            // Eingabefelder mit Standard-Werten füllen (falls leer)
+            const defaultValues = {
+                'outside-temp': '',
+                'inside-temp': '21',
+                'air-pressure': '1013',
+                'humidity': '50',
+                'wind-speed': '',
+                'wind-direction': ''
+            };
+
+            Object.entries(defaultValues).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element && !element.value) {
+                    element.value = value;
+                }
+            });
+
+            updateWeatherStatus('🚀 Weather-System bereit! Wählen Sie eine Methode zur Standortermittlung.', '', 8000);
+
+            console.log('Weather System initialisiert');
+        }
+
+        // Event Listener für DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function () {
+            // Kurze Verzögerung um sicherzustellen, dass alle Elemente geladen sind
+            setTimeout(initWeatherSystem, 100);
+        });
+
+        // =================================================================
+        // DEBUGGING HILFSFUNKTIONEN
+        // =================================================================
+
+        /**
+         * Debug-Funktion zur Überprüfung der Wetter-Elemente
+         */
+        function debugWeatherElements() {
+            const elements = [
+                'weather-status',
+                'outside-temp',
+                'inside-temp',
+                'wind-speed',
+                'wind-direction',
+                'air-pressure',
+                'humidity',
+                'current-weather-display',
+                'current-temp',
+                'current-wind',
+                'current-weather-desc'
+            ];
+
+            console.log('=== Weather Elements Debug ===');
+            elements.forEach(id => {
+                const element = document.getElementById(id);
+                console.log(`${id}:`, element ? '✅ Found' : '❌ Missing');
+            });
+
+            console.log('Current coordinates:', { lat: currentLat, lon: currentLon });
+        }
+        // Alle JavaScript-Funktionen bleiben unverändert aus der ursprünglichen Datei
+        let isScrolling = false;
+        let lastScrollY = 0;
+        let headerHidden = false;
+
+        function handleScroll() {
+            if (!isScrolling) {
+                window.requestAnimationFrame(() => {
+                    const scrollY = window.scrollY;
+                    const header = document.getElementById('main-header');
+                    const nav = document.getElementById('main-nav');
+
+                    // Ruhezone für Header-Animation (50px Puffer)
+                    const hideThreshold = 150; // Header ausblenden ab 150px
+                    const showThreshold = 100; // Header einblenden ab 100px (50px Ruhezone)
+
+                    // Header ausblenden/einblenden mit Ruhezone
+                    if (scrollY > hideThreshold && !headerHidden) {
+                        header?.classList.add('hidden');
+                        headerHidden = true;
+                    } else if (scrollY < showThreshold && headerHidden) {
+                        header?.classList.remove('hidden');
+                        headerHidden = false;
+                    }
+
+                    // Navigation-Stil ändern (bleibt bei 50px für subtilen Effekt)
+                    if (scrollY > 50) {
+                        nav?.classList.add('scrolled');
+                    } else {
+                        nav?.classList.remove('scrolled');
+                    }
+
+                    lastScrollY = scrollY;
+                    isScrolling = false;
+                });
+            }
+            isScrolling = true;
+        }
+
+        // Scroll-Event Listener mit Debouncing
+        let scrollTimer;
+        window.addEventListener('scroll', () => {
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(handleScroll, 10);
+        }, { passive: true });
+
+        // Globale Variablen
+        let chart = null;
+        let realMeasurements = [];
+        let underpressureMeasurements = [];
+        let overpressureMeasurements = [];
+        let currentSlide = 0;
+        const totalSlides = 8;
+
+        // Navigation
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            if (pageId === 'analysis') {
+                setTimeout(() => {
+                    if (!chart) {
+                        initChart();
+                    } else {
+                        updateChart();
+                    }
+                }, 100);
+            }
+        }
+
+        // Tab switching functionality
+        function switchTab(tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => button.classList.remove('active'));
+
+            const selectedContent = document.getElementById(tabName + '-content');
+            if (selectedContent) {
+                selectedContent.classList.add('active');
+            }
+
+            const selectedButton = document.getElementById('tab-' + tabName);
+            if (selectedButton) {
+                selectedButton.classList.add('active');
+            }
+        }
+
+        // Slide navigation
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlidePosition();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlidePosition();
+            }
+        }
+
+        function updateSlidePosition() {
+            const wrapper = document.querySelector('.swipe-wrapper');
+            if (wrapper) {
+                wrapper.style.transform = `translateY(-${currentSlide * 100}vh)`;
+            }
+
+            const currentSlideElement = document.getElementById('current-slide');
+            if (currentSlideElement) {
+                currentSlideElement.textContent = currentSlide + 1;
+            }
+        }
+
+        // Datum-Funktionen
+        document.addEventListener('DOMContentLoaded', function () {
+            const heute = new Date();
+            const deutschesDatum = heute.toLocaleDateString('de-DE');
+            const aktuelleZeit = heute.toLocaleTimeString('de-DE', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            const datumsfelder = document.querySelectorAll('.auto-datum');
+            datumsfelder.forEach(feld => {
+                feld.textContent = deutschesDatum;
+            });
+
+            const uhrzeitfelder = document.querySelectorAll('.auto-uhrzeit');
+            uhrzeitfelder.forEach(feld => {
+                feld.textContent = aktuelleZeit;
+            });
+
+            initMeasurementTables();
+            initSliders();
+        });
+
+        function setzeDatum() {
+            const datum = prompt("Datum eingeben (TT.MM.JJJJ):");
+            if (datum) {
+                document.querySelectorAll('.auto-datum').forEach(feld => {
+                    feld.textContent = datum;
+                });
+            }
+        }
+
+        function printProtocol() {
+            window.print();
+        }
+
+        // Slider-Funktionalität
+        function initSliders() {
+            const n50Slider = document.getElementById('n50');
+            const volumeSlider = document.getElementById('volume');
+            const pressureSlider = document.getElementById('pressure');
+
+            if (n50Slider) {
+                n50Slider.addEventListener('input', function () {
+                    document.getElementById('n50-value').textContent = this.value;
+                    updateCalculations();
+                });
+            }
+
+            if (volumeSlider) {
+                volumeSlider.addEventListener('input', function () {
+                    document.getElementById('volume-value').textContent = this.value;
+                    updateCalculations();
+                });
+            }
+
+            if (pressureSlider) {
+                pressureSlider.addEventListener('input', function () {
+                    document.getElementById('pressure-value').textContent = this.value;
+                    updateCalculations();
+                });
+            }
+        }
+
+        // Messtabellen
+        function initMeasurementTables() {
+            for (let i = 0; i < 5; i++) {
+                addUnderpressureRow();
+                addOverpressureRow();
+                addMeasurementRow();
+            }
+
+            document.getElementById('addMeasurementRow')?.addEventListener('click', addMeasurementRow);
+            document.getElementById('clearMeasurements')?.addEventListener('click', clearMeasurements);
+        }
+
+        // Underpressure table functions
+        function addUnderpressureRow() {
+            const tableBody = document.getElementById('underpressureTable');
+            if (!tableBody) return;
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="border border-rose-500/30 px-4 py-2">
+                    <input type="number" class="w-full p-2 border border-rose-500/40 rounded underpressure-pressure-input bg-slate-800/80 text-slate-200" placeholder="z.B. -50" step="0.1">
+                </td>
+                <td class="border border-rose-500/30 px-4 py-2">
+                    <input type="number" class="w-full p-2 border border-rose-500/40 rounded underpressure-flow-input bg-slate-800/80 text-slate-200" placeholder="z.B. 1500" step="0.1">
+                </td>
+                <td class="border border-rose-500/30 px-4 py-2 text-center">
+                    <button onclick="removeRow(this)" class="bg-gradient-to-r from-red-600 to-red-500 text-white px-3 py-1 rounded hover:from-red-500 hover:to-red-400 transition-all duration-300">
+                        Entfernen
+                    </button>
+                </td>
+            `;
+
+            tableBody.appendChild(row);
+
+            const inputs = row.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('input', updateUnderpressureMeasurements);
+            });
+        }
+
+        function clearUnderpressure() {
+            const tableBody = document.getElementById('underpressureTable');
+            if (!tableBody) return;
+
+            tableBody.innerHTML = '';
+            underpressureMeasurements = [];
+
+            for (let i = 0; i < 3; i++) {
+                addUnderpressureRow();
+            }
+
+            updateChart();
+        }
+
+        function updateUnderpressureMeasurements() {
+            const pressureInputs = document.querySelectorAll('.underpressure-pressure-input');
+            const flowInputs = document.querySelectorAll('.underpressure-flow-input');
+
+            underpressureMeasurements = [];
+
+            for (let i = 0; i < pressureInputs.length; i++) {
+                const pressure = parseFloat(pressureInputs[i].value);
+                const flow = parseFloat(flowInputs[i].value);
+
+                if (!isNaN(pressure) && !isNaN(flow) && Math.abs(pressure) > 0 && flow > 0) {
+                    underpressureMeasurements.push({ x: Math.abs(pressure), y: flow });
+                }
+            }
+
+            updateChart();
+        }
+
+        // Overpressure table functions
+        function addOverpressureRow() {
+            const tableBody = document.getElementById('overpressureTable');
+            if (!tableBody) return;
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="border border-rose-500/30 px-4 py-2">
+                    <input type="number" class="w-full p-2 border border-rose-500/40 rounded overpressure-pressure-input bg-slate-800/80 text-slate-200" placeholder="z.B. 50" step="0.1">
+                </td>
+                <td class="border border-rose-500/30 px-4 py-2">
+                    <input type="number" class="w-full p-2 border border-rose-500/40 rounded overpressure-flow-input bg-slate-800/80 text-slate-200" placeholder="z.B. 1500" step="0.1">
+                </td>
+                <td class="border border-rose-500/30 px-4 py-2 text-center">
+                    <button onclick="removeRow(this)" class="bg-gradient-to-r from-red-600 to-red-500 text-white px-3 py-1 rounded hover:from-red-500 hover:to-red-400 transition-all duration-300">
+                        Entfernen
+                    </button>
+                </td>
+            `;
+
+            tableBody.appendChild(row);
+
+            const inputs = row.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('input', updateOverpressureMeasurements);
+            });
+        }
+
+        function clearOverpressure() {
+            const tableBody = document.getElementById('overpressureTable');
+            if (!tableBody) return;
+
+            tableBody.innerHTML = '';
+            overpressureMeasurements = [];
+
+            for (let i = 0; i < 3; i++) {
+                addOverpressureRow();
+            }
+
+            updateChart();
+        }
+
+        function updateOverpressureMeasurements() {
+            const pressureInputs = document.querySelectorAll('.overpressure-pressure-input');
+            const flowInputs = document.querySelectorAll('.overpressure-flow-input');
+
+            overpressureMeasurements = [];
+
+            for (let i = 0; i < pressureInputs.length; i++) {
+                const pressure = parseFloat(pressureInputs[i].value);
+                const flow = parseFloat(flowInputs[i].value);
+
+                if (!isNaN(pressure) && !isNaN(flow) && pressure > 0 && flow > 0) {
+                    overpressureMeasurements.push({ x: pressure, y: flow });
+                }
+            }
+
+            updateChart();
+        }
+
+        // Legacy measurement table functions
+        function addMeasurementRow() {
+            const tableBody = document.getElementById('measurementTable');
+            if (!tableBody) return;
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="border border-rose-500/30 px-4 py-2">
+                    <input type="number" class="w-full p-2 border border-rose-500/40 rounded pressure-input bg-slate-800/80 text-slate-200" placeholder="z.B. 50" step="0.1">
+                </td>
+                <td class="border border-rose-500/30 px-4 py-2">
+                    <input type="number" class="w-full p-2 border border-rose-500/40 rounded flow-input bg-slate-800/80 text-slate-200" placeholder="z.B. 1500" step="0.1">
+                </td>
+                <td class="border border-rose-500/30 px-4 py-2 text-center">
+                    <button onclick="removeRow(this)" class="bg-gradient-to-r from-red-600 to-red-500 text-white px-3 py-1 rounded hover:from-red-500 hover:to-red-400 transition-all duration-300">
+                        Entfernen
+                    </button>
+                </td>
+            `;
+
+            tableBody.appendChild(row);
+
+            const inputs = row.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('input', updateMeasurements);
+            });
+        }
+
+        function removeRow(button) {
+            button.closest('tr').remove();
+            updateMeasurements();
+            updateUnderpressureMeasurements();
+            updateOverpressureMeasurements();
+        }
+
+        function clearMeasurements() {
+            const tableBody = document.getElementById('measurementTable');
+            if (!tableBody) return;
+
+            tableBody.innerHTML = '';
+            realMeasurements = [];
+
+            for (let i = 0; i < 3; i++) {
+                addMeasurementRow();
+            }
+
+            updateChart();
+        }
+
+        function updateMeasurements() {
+            const pressureInputs = document.querySelectorAll('.pressure-input');
+            const flowInputs = document.querySelectorAll('.flow-input');
+
+            realMeasurements = [];
+
+            for (let i = 0; i < pressureInputs.length; i++) {
+                const pressure = parseFloat(pressureInputs[i].value);
+                const flow = parseFloat(flowInputs[i].value);
+
+                if (!isNaN(pressure) && !isNaN(flow) && pressure > 0 && flow > 0) {
+                    realMeasurements.push({ x: pressure, y: flow });
+                }
+            }
+
+            updateChart();
+        }
+
+        // Chart-Funktionen
+        function initChart() {
+            const ctx = document.getElementById('chart');
+            if (!ctx) {
+                console.warn('Chart-Element nicht gefunden');
+                return;
+            }
+
+            if (chart) {
+                chart.destroy();
+                chart = null;
+            }
+
+            try {
+                chart = new Chart(ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [
+                            {
+                                label: 'Theoretische Kurve',
+                                data: [],
+                                borderColor: 'rgb(244, 114, 182)',
+                                backgroundColor: 'rgba(244, 114, 182, 0.1)',
+                                showLine: true,
+                                pointRadius: 0,
+                                borderWidth: 3,
+                                tension: 0.1
+                            },
+                            {
+                                label: 'Simulierte Messpunkte',
+                                data: [],
+                                borderColor: 'rgb(252, 211, 77)',
+                                backgroundColor: 'rgba(252, 211, 77, 0.8)',
+                                pointRadius: 6,
+                                showLine: false
+                            },
+                            {
+                                label: 'Reale Messpunkte (Legacy)',
+                                data: [],
+                                borderColor: 'rgb(52, 211, 153)',
+                                backgroundColor: 'rgba(52, 211, 153, 0.8)',
+                                pointRadius: 8,
+                                showLine: false
+                            },
+                            {
+                                label: 'Unterdruckmessungen',
+                                data: [],
+                                borderColor: 'rgb(248, 113, 113)',
+                                backgroundColor: 'rgba(248, 113, 113, 0.8)',
+                                pointRadius: 8,
+                                showLine: false,
+                                pointStyle: 'triangle'
+                            },
+                            {
+                                label: 'Überdruckmessungen',
+                                data: [],
+                                borderColor: 'rgb(196, 181, 253)',
+                                backgroundColor: 'rgba(196, 181, 253, 0.8)',
+                                pointRadius: 8,
+                                showLine: false,
+                                pointStyle: 'rect'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        },
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                title: {
+                                    display: true,
+                                    text: 'Differenzdruck [Pa]',
+                                    color: 'rgb(226, 232, 240)'
+                                },
+                                min: 0,
+                                max: 100,
+                                grid: {
+                                    color: 'rgba(244, 114, 182, 0.2)'
+                                },
+                                ticks: {
+                                    color: 'rgb(226, 232, 240)'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Volumenstrom [m³/h]',
+                                    color: 'rgb(226, 232, 240)'
+                                },
+                                min: 0,
+                                grid: {
+                                    color: 'rgba(244, 114, 182, 0.2)'
+                                },
+                                ticks: {
+                                    color: 'rgb(226, 232, 240)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Blower Door Messung - Druckverlauf (Unter- und Überdruck)',
+                                color: 'rgb(244, 114, 182)'
+                            },
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    color: 'rgb(226, 232, 240)'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                console.log('Chart erfolgreich initialisiert');
+                updateChart();
+
+            } catch (error) {
+                console.error('Chart konnte nicht initialisiert werden:', error);
+                const errorElement = document.getElementById('chart-error');
+                if (errorElement) {
+                    errorElement.classList.remove('hidden');
+                }
+            }
+        }
+
+        function updateChart() {
+            if (!chart) return;
+
+            const n50Element = document.getElementById('n50');
+            const volumeElement = document.getElementById('volume');
+            const pressureElement = document.getElementById('pressure');
+
+            const n50 = n50Element ? parseFloat(n50Element.value) : 3.0;
+            const volume = volumeElement ? parseFloat(volumeElement.value) : 500;
+            const maxPressure = pressureElement ? parseFloat(pressureElement.value) : 100;
+
+            // Theoretische Kurve berechnen
+            const theoreticalData = [];
+            const C = (n50 * volume) / Math.pow(50, 0.65);
+
+            for (let p = 10; p <= maxPressure; p += 2) {
+                const flow = C * Math.pow(p, 0.65);
+                theoreticalData.push({ x: p, y: flow });
+            }
+
+            // Simulierte Messpunkte
+            const simulatedData = [];
+            for (let p = 15; p <= maxPressure; p += 15) {
+                const baseFlow = C * Math.pow(p, 0.65);
+                const deviation = (Math.random() - 0.5) * 0.1;
+                const flow = baseFlow * (1 + deviation);
+                simulatedData.push({ x: p, y: flow });
+            }
+
+            // Chart-Daten aktualisieren
+            const showTheoreticalElement = document.getElementById('showTheoretical');
+            const showSimulatedElement = document.getElementById('showSimulated');
+            const showRealElement = document.getElementById('showReal');
+            const showUnderpressureElement = document.getElementById('showUnderpressure');
+            const showOverpressureElement = document.getElementById('showOverpressure');
+
+            const showTheoretical = showTheoreticalElement ? showTheoreticalElement.checked : true;
+            const showSimulated = showSimulatedElement ? showSimulatedElement.checked : false;
+            const showReal = showRealElement ? showRealElement.checked : true;
+            const showUnderpressure = showUnderpressureElement ? showUnderpressureElement.checked : true;
+            const showOverpressure = showOverpressureElement ? showOverpressureElement.checked : true;
+
+            chart.data.datasets[0].data = showTheoretical ? theoreticalData : [];
+            chart.data.datasets[1].data = showSimulated ? simulatedData : [];
+            chart.data.datasets[2].data = showReal ? realMeasurements : [];
+            chart.data.datasets[3].data = showUnderpressure ? underpressureMeasurements : [];
+            chart.data.datasets[4].data = showOverpressure ? overpressureMeasurements : [];
+
+            // Y-Achse dynamisch anpassen
+            const allData = [
+                ...theoreticalData.map(d => d.y),
+                ...simulatedData.map(d => d.y),
+                ...realMeasurements.map(d => d.y || 0),
+                ...underpressureMeasurements.map(d => d.y || 0),
+                ...overpressureMeasurements.map(d => d.y || 0)
+            ];
+            const maxY = Math.max(...allData);
+            chart.options.scales.y.max = maxY * 1.1;
+
+            chart.update('none');
+
+            updateCalculations();
+        }
+
+        function updateCalculations() {
+            const n50Element = document.getElementById('n50');
+            const volumeElement = document.getElementById('volume');
+
+            const n50 = n50Element ? parseFloat(n50Element.value) : 3.0;
+            const volume = volumeElement ? parseFloat(volumeElement.value) : 500;
+
+            const hullArea = 2.5 * Math.pow(volume, 2 / 3);
+            const v50 = n50 * volume;
+            const q50 = v50 / hullArea;
+
+            const calcN50Element = document.getElementById('calc-n50');
+            const calcQ50Element = document.getElementById('calc-q50');
+            const calcV50Element = document.getElementById('calc-v50');
+
+            if (calcN50Element) calcN50Element.textContent = n50.toFixed(1);
+            if (calcQ50Element) calcQ50Element.textContent = q50.toFixed(2);
+            if (calcV50Element) calcV50Element.textContent = Math.round(v50);
+        }
+
+        // Event Listeners für Checkboxen
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkboxes = ['showTheoretical', 'showSimulated', 'showReal', 'showUnderpressure', 'showOverpressure'];
+            checkboxes.forEach(id => {
+                const checkbox = document.getElementById(id);
+                if (checkbox) {
+                    checkbox.addEventListener('change', function () {
+                        if (chart) {
+                            updateChart();
+                        }
+                    });
+                }
+            });
+
+            setTimeout(() => {
+                const analysisPage = document.getElementById('analysis');
+                if (analysisPage && analysisPage.classList.contains('active')) {
+                    initChart();
+                }
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>
