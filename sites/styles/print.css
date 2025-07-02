@@ -1,0 +1,368 @@
+/* Print CSS for A4 Landscape Printing - Protokoll Section */
+/* Optimized for Blower Door Messprotokoll nach ISO 9972 */
+
+@media print {
+    /* Hide non-printable elements */
+    .no-print {
+        display: none !important;
+    }
+
+    /* Reset page margins and setup for A4 landscape with 35mm margin */
+    @page {
+        size: A4 landscape;
+        margin: 35mm; /* 35mm margin on all sides */
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    /* Reset body and html for print */
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: white !important;
+        font-size: 12pt !important;
+        line-height: 1.4 !important;
+    }
+
+    /* Protocol page styling for print */
+    .protocol-page {
+        page-break-after: always;
+        page-break-inside: avoid;
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        min-height: auto !important;
+        height: auto !important;
+        background: white !important;
+        font-size: 10pt !important;
+        color: black !important;
+    }
+
+    .protocol-page:last-child {
+        page-break-after: auto;
+    }
+
+    /* Adjust content within protocol pages */
+    .protocol-page * {
+        max-width: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+    }
+
+    /* Typography for print */
+    .protocol-page h1 {
+        font-size: 16pt !important;
+        margin: 0 0 15pt 0 !important;
+        text-align: center !important;
+        color: black !important;
+        font-weight: bold !important;
+    }
+
+    .protocol-page h2 {
+        font-size: 12pt !important;
+        margin: 10pt 0 8pt 0 !important;
+        color: black !important;
+        border-bottom: 1pt solid black !important;
+        padding-bottom: 2pt !important;
+        font-weight: bold !important;
+    }
+
+    .protocol-page h3 {
+        font-size: 11pt !important;
+        margin: 8pt 0 6pt 0 !important;
+        color: black !important;
+        font-weight: bold !important;
+    }
+
+    .protocol-page p {
+        margin: 4pt 0 !important;
+        line-height: 1.3 !important;
+        font-size: 10pt !important;
+        color: black !important;
+    }
+
+    /* Grid layouts for print */
+    .protocol-page .grid {
+        display: block !important;
+    }
+
+    .protocol-page .grid-cols-2 > div {
+        width: 48% !important;
+        float: left !important;
+        margin-right: 4% !important;
+        margin-bottom: 10pt !important;
+    }
+
+    .protocol-page .grid-cols-2 > div:nth-child(2n) {
+        margin-right: 0 !important;
+    }
+
+    .protocol-page .grid-cols-3 > div {
+        width: 31% !important;
+        float: left !important;
+        margin-right: 3.5% !important;
+        margin-bottom: 10pt !important;
+    }
+
+    .protocol-page .grid-cols-3 > div:nth-child(3n) {
+        margin-right: 0 !important;
+    }
+
+    /* Tables for print */
+    .protocol-page table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin: 10pt 0 !important;
+        font-size: 9pt !important;
+        page-break-inside: avoid;
+    }
+
+    .protocol-page table th,
+    .protocol-page table td {
+        border: 1pt solid black !important;
+        padding: 4pt !important;
+        text-align: left !important;
+        vertical-align: top !important;
+        color: black !important;
+    }
+
+    .protocol-page table th {
+        background: #f0f0f0 !important;
+        font-weight: bold !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    /* Input fields for print */
+    .input-field {
+        border-bottom: 1pt solid black !important;
+        min-width: 50mm !important;
+        display: inline-block !important;
+        padding: 1pt 2pt !important;
+        background: transparent !important;
+        font-size: 10pt !important;
+        height: 12pt !important;
+        color: black !important;
+    }
+
+    /* Stamp boxes for print */
+    .stamp-box {
+        border: 1pt dashed black !important;
+        height: 30mm !important;
+        display: block !important;
+        margin: 5pt 0 !important;
+        padding: 5pt !important;
+        text-align: center !important;
+        font-style: italic !important;
+        color: #666 !important;
+        page-break-inside: avoid;
+    }
+
+    /* Page headers for print */
+    .protocol-page .flex.justify-between {
+        display: block !important;
+        border-bottom: 1pt solid black !important;
+        padding-bottom: 5pt !important;
+        margin-bottom: 10pt !important;
+        font-size: 9pt !important;
+    }
+
+    /* Clear floats */
+    .protocol-page::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    /* Swipe container adjustments for print */
+    .swipe-container {
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+        background: white !important;
+    }
+
+    .swipe-wrapper {
+        display: block !important;
+        height: auto !important;
+        transform: none !important;
+    }
+
+    .swipe-slide {
+        flex: none !important;
+        height: auto !important;
+        display: block !important;
+        padding: 0 !important;
+        page-break-after: always;
+    }
+
+    .swipe-slide:last-child {
+        page-break-after: auto;
+    }
+
+    /* Force black text for all elements */
+    .protocol-page * {
+        color: black !important;
+    }
+
+    /* Ensure borders are visible */
+    .protocol-page .border,
+    .protocol-page .border-gray-300,
+    .protocol-page .border-gray-800 {
+        border-color: black !important;
+    }
+
+    /* Background colors for print */
+    .protocol-page .bg-gray-50,
+    .protocol-page .bg-blue-50,
+    .protocol-page .bg-green-100 {
+        background: #f8f8f8 !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    /* Form elements styling for print */
+    .protocol-page input[type="text"],
+    .protocol-page input[type="number"],
+    .protocol-page input[type="date"],
+    .protocol-page textarea,
+    .protocol-page select {
+        border: 1pt solid black !important;
+        background: white !important;
+        color: black !important;
+        font-size: 10pt !important;
+        padding: 2pt !important;
+    }
+
+    /* Checkbox and radio button styling for print */
+    .protocol-page input[type="checkbox"],
+    .protocol-page input[type="radio"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 12pt !important;
+        height: 12pt !important;
+        border: 1pt solid black !important;
+        background: white !important;
+        margin-right: 4pt !important;
+    }
+
+    .protocol-page input[type="checkbox"]:checked::after {
+        content: "✓";
+        display: block;
+        text-align: center;
+        font-size: 10pt;
+        line-height: 10pt;
+        color: black;
+    }
+
+    .protocol-page input[type="radio"] {
+        border-radius: 50% !important;
+    }
+
+    .protocol-page input[type="radio"]:checked::after {
+        content: "●";
+        display: block;
+        text-align: center;
+        font-size: 8pt;
+        line-height: 8pt;
+        color: black;
+    }
+
+    /* Navigation and interactive elements - hide for print */
+    .swipe-nav,
+    .page-indicator,
+    .swipe-pagination,
+    .no-print,
+    button:not(.print-button),
+    .slider-blue,
+    .slider-green,
+    .slider-purple {
+        display: none !important;
+    }
+
+    /* Ensure proper page breaks */
+    .page-break-before {
+        page-break-before: always;
+    }
+
+    .page-break-after {
+        page-break-after: always;
+    }
+
+    .page-break-inside-avoid {
+        page-break-inside: avoid;
+    }
+
+    /* Chart and canvas elements for print */
+    .protocol-page canvas {
+        max-width: 100% !important;
+        height: auto !important;
+        page-break-inside: avoid;
+    }
+
+    /* Signature areas */
+    .signature-area {
+        border-top: 1pt solid black !important;
+        margin-top: 20pt !important;
+        padding-top: 5pt !important;
+        text-align: center !important;
+        font-size: 9pt !important;
+        color: black !important;
+    }
+
+    /* Date and time fields */
+    .date-field,
+    .time-field {
+        border-bottom: 1pt solid black !important;
+        min-width: 30mm !important;
+        display: inline-block !important;
+        padding: 1pt 2pt !important;
+        background: transparent !important;
+        font-size: 10pt !important;
+        color: black !important;
+    }
+
+    /* Measurement result boxes */
+    .result-box {
+        border: 2pt solid black !important;
+        padding: 8pt !important;
+        margin: 5pt 0 !important;
+        background: #f8f8f8 !important;
+        font-weight: bold !important;
+        text-align: center !important;
+        page-break-inside: avoid;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    /* Protocol specific sections */
+    .protocol-section {
+        margin-bottom: 15pt !important;
+        page-break-inside: avoid;
+    }
+
+    .protocol-subsection {
+        margin-bottom: 10pt !important;
+    }
+
+    /* Footer information */
+    .protocol-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        font-size: 8pt !important;
+        text-align: center !important;
+        color: #666 !important;
+        border-top: 1pt solid #ccc !important;
+        padding-top: 2pt !important;
+    }
+}
+

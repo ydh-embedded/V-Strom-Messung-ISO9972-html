@@ -1,0 +1,2464 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blower Door Messprotokoll nach ISO 9972</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"></script>
+    <style>
+        /* Custom Styles */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Print Styles */
+        @media print {
+            /* Hide non-printable elements */
+            .no-print {
+                display: none !important;
+            }
+
+            /* Reset page margins and setup for A4 landscape with 35mm margin */
+            @page {
+                size: A4 landscape;
+                margin: 35mm; /* 35mm margin on all sides */
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+
+            /* Reset body and html for print */
+            html, body {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                background: white !important;
+                font-size: 12pt !important;
+                line-height: 1.4 !important;
+            }
+
+            /* Protocol page styling for print */
+            .protocol-page {
+                page-break-after: always;
+                page-break-inside: avoid;
+                box-shadow: none !important;
+                border: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+                min-height: auto !important;
+                height: auto !important;
+                background: white !important;
+                font-size: 10pt !important;
+                color: black !important;
+            }
+
+            .protocol-page:last-child {
+                page-break-after: auto;
+            }
+
+            /* Adjust content within protocol pages */
+            .protocol-page * {
+                max-width: none !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                background: transparent !important;
+            }
+
+            /* Ensure proper spacing for print */
+            .protocol-page h1 {
+                font-size: 16pt !important;
+                margin: 0 0 15pt 0 !important;
+                text-align: center !important;
+                color: black !important;
+            }
+
+            .protocol-page h2 {
+                font-size: 12pt !important;
+                margin: 10pt 0 8pt 0 !important;
+                color: black !important;
+                border-bottom: 1pt solid black !important;
+                padding-bottom: 2pt !important;
+            }
+
+            .protocol-page h3 {
+                font-size: 11pt !important;
+                margin: 8pt 0 6pt 0 !important;
+                color: black !important;
+            }
+
+            /* Grid layouts for print */
+            .protocol-page .grid {
+                display: block !important;
+            }
+
+            .protocol-page .grid-cols-2 > div {
+                width: 48% !important;
+                float: left !important;
+                margin-right: 4% !important;
+                margin-bottom: 10pt !important;
+            }
+
+            .protocol-page .grid-cols-2 > div:nth-child(2n) {
+                margin-right: 0 !important;
+            }
+
+            /* Tables for print */
+            .protocol-page table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                margin: 10pt 0 !important;
+                font-size: 9pt !important;
+            }
+
+            .protocol-page table th,
+            .protocol-page table td {
+                border: 1pt solid black !important;
+                padding: 4pt !important;
+                text-align: left !important;
+                vertical-align: top !important;
+            }
+
+            .protocol-page table th {
+                background: #f0f0f0 !important;
+                font-weight: bold !important;
+            }
+
+            /* Input fields for print */
+            .input-field {
+                border-bottom: 1pt solid black !important;
+                min-width: 50mm !important;
+                display: inline-block !important;
+                padding: 1pt 2pt !important;
+                background: transparent !important;
+                font-size: 10pt !important;
+                height: 12pt !important;
+            }
+
+            /* Stamp boxes for print */
+            .stamp-box {
+                border: 1pt dashed black !important;
+                height: 30mm !important;
+                display: block !important;
+                margin: 5pt 0 !important;
+                padding: 5pt !important;
+                text-align: center !important;
+                font-style: italic !important;
+                color: #666 !important;
+            }
+
+            /* Page headers for print */
+            .protocol-page .flex.justify-between {
+                display: block !important;
+                border-bottom: 1pt solid black !important;
+                padding-bottom: 5pt !important;
+                margin-bottom: 10pt !important;
+                font-size: 9pt !important;
+            }
+
+            /* Ensure proper text wrapping */
+            .protocol-page p {
+                margin: 4pt 0 !important;
+                line-height: 1.3 !important;
+                font-size: 10pt !important;
+            }
+
+            /* Clear floats */
+            .protocol-page::after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
+            /* Swipe container adjustments for print */
+            .swipe-container {
+                position: static !important;
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
+                background: white !important;
+            }
+
+            .swipe-wrapper {
+                display: block !important;
+                height: auto !important;
+                transform: none !important;
+            }
+
+            .swipe-slide {
+                flex: none !important;
+                height: auto !important;
+                display: block !important;
+                padding: 0 !important;
+                page-break-after: always;
+            }
+
+            .swipe-slide:last-child {
+                page-break-after: auto;
+            }
+
+            /* Force black text for all elements */
+            .protocol-page * {
+                color: black !important;
+            }
+
+            /* Ensure borders are visible */
+            .protocol-page .border,
+            .protocol-page .border-gray-300,
+            .protocol-page .border-gray-800 {
+                border-color: black !important;
+            }
+
+            /* Background colors for print */
+            .protocol-page .bg-gray-50,
+            .protocol-page .bg-blue-50,
+            .protocol-page .bg-green-100 {
+                background: #f8f8f8 !important;
+            }
+        }
+
+        /* Protocol specific styles */
+        .input-field {
+            border-bottom: 1px solid #333;
+            min-width: 200px;
+            display: inline-block;
+            padding: 2px 5px;
+            background: transparent;
+        }
+
+        .stamp-box {
+            border: 2px dashed #ccc;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        /* A4 Landscape dimensions */
+        .w-a4-landscape {
+            width: 297mm;
+        }
+
+        .min-h-a4-landscape {
+            min-height: 210mm;
+        }
+
+        .max-h-a4-section {
+            max-height: 180mm;
+        }
+
+        /* Custom Slider Styles */
+        .slider-blue {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #e5f3ff 0%, #3b82f6 100%);
+            outline: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+        }
+
+        .slider-blue:hover {
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .slider-blue::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .slider-blue::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.6);
+        }
+
+        .slider-blue::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .slider-green {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #f0fdf4 0%, #22c55e 100%);
+            outline: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);
+        }
+
+        .slider-green:hover {
+            box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .slider-green::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .slider-green::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(34, 197, 94, 0.6);
+        }
+
+        .slider-green::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+        }
+
+        .slider-purple {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #faf5ff 0%, #a855f7 100%);
+            outline: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(168, 85, 247, 0.2);
+        }
+
+        .slider-purple:hover {
+            box-shadow: 0 4px 8px rgba(168, 85, 247, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .slider-purple::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7, #9333ea);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .slider-purple::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(168, 85, 247, 0.6);
+        }
+
+        .slider-purple::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7, #9333ea);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+        }
+
+        /* Swipe Container Styles */
+        .swipe-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: #f8fafc;
+        }
+
+        .swipe-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: transform 0.3s ease-out;
+            will-change: transform;
+        }
+
+        .swipe-slide {
+            flex: 0 0 100vh;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 5vh 20px 20px 20px; /* Adjusted padding-top to 5vh */
+            box-sizing: border-box;
+        }
+
+        /* Navigation Buttons */
+        .swipe-nav {
+            position: fixed;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #e2e8f0;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .swipe-nav:hover {
+            background: rgba(255, 255, 255, 1);
+            border-color: #3b82f6;
+            color: #3b82f6;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .swipe-nav:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .swipe-nav.prev {
+            top: 50%;
+            transform: translateY(-50%) rotate(90deg);
+        }
+
+        .swipe-nav.next {
+            bottom: 50%;
+            transform: translateY(50%) rotate(90deg);
+        }
+
+        .swipe-nav.prev:hover {
+            transform: translateY(-50%) rotate(90deg) scale(1.1);
+        }
+
+        .swipe-nav.next:hover {
+            transform: translateY(50%) rotate(90deg) scale(1.1);
+        }
+
+        /* Page Indicator */
+        .page-indicator {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            color: #475569;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        /* Pagination Dots */
+        .swipe-pagination {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        .swipe-pagination-bullet {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(148, 163, 184, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .swipe-pagination-bullet:hover {
+            background: rgba(59, 130, 246, 0.7);
+            transform: scale(1.2);
+        }
+
+        .swipe-pagination-bullet.active {
+            background: #3b82f6;
+            transform: scale(1.3);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Touch and Mouse Interaction */
+        .swipe-wrapper {
+            touch-action: pan-y;
+            user-select: none;
+        }
+
+        /* Smooth scrolling for better UX */
+        .swipe-container * {
+            scroll-behavior: smooth;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .swipe-nav {
+                width: 50px;
+                height: 50px;
+                right: 20px;
+                font-size: 20px;
+            }
+
+            .page-indicator {
+                right: 20px;
+                top: 20px;
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+
+            .swipe-pagination {
+                right: 20px;
+            }
+
+            .swipe-pagination-bullet {
+                width: 10px;
+                height: 10px;
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    maxHeight: {
+                        'a4-section': '180mm',
+                    },
+                    width: {
+                        'a4-landscape': '297mm',
+                    },
+                    height: {
+                        'a4-landscape': '210mm',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="font-sans bg-gray-50">
+
+    <!DOCTYPE html>
+    <html lang="de">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ISO 9972 Navigation</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet">
+        <style>
+            * {
+                font-family: 'Inter', sans-serif;
+            }
+
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .elegant-button {
+                position: relative;
+                overflow: hidden;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                border: 1px solid rgba(148, 163, 184, 0.2);
+                box-shadow: 0 2px 8px rgba(15, 23, 42, 0.1);
+            }
+
+            .elegant-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 20px rgba(15, 23, 42, 0.15);
+                background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+            }
+
+            .elegant-button::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+                transition: left 0.5s;
+            }
+
+            .elegant-button:hover::before {
+                left: 100%;
+            }
+
+            .logo-glow {
+                box-shadow: 0 0 20px rgba(99, 102, 241, 0.3), 0 0 40px rgba(99, 102, 241, 0.1);
+                transition: all 0.3s ease;
+            }
+
+            .logo-glow:hover {
+                box-shadow: 0 0 30px rgba(99, 102, 241, 0.4), 0 0 60px rgba(99, 102, 241, 0.2);
+            }
+
+            .shine-effect {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .shine-effect::after {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+                animation: shine 3s infinite;
+                pointer-events: none;
+            }
+
+            @keyframes shine {
+                0% {
+                    transform: translate(-50%, -50%) rotate(0deg);
+                }
+
+                100% {
+                    transform: translate(-50%, -50%) rotate(360deg);
+                }
+            }
+
+            .nav-container {
+                background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+                border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            }
+        </style>
+    </head>
+
+    <body class="bg-gray-50">
+        <!-- Navigation -->
+        <nav class="nav-container shadow-lg sticky top-0 z-50 no-print">
+            <div class="glass-effect rounded-none shadow-xl">
+                <div class="max-w-7xl mx-auto px-6 py-6">
+
+                    <!-- Logo und Titel -->
+                    <div class="flex items-center ml-11 mb-6">
+                        <div
+                            class="logo-glow shine-effect w-24 h-16 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-2xl flex items-center justify-center mr-4">
+                            <span class="text-white font-semibold text-sm tracking-wider">ISO</span>
+                            <span class="text-white font-semibold text-sm tracking-wider ml-2">9972</span>
+                        </div>
+                    </div>
+
+                    <h1 class="text-2xl font-light text-slate-700 text-center mb-8 tracking-wide">
+                        Luftdurchlässigkeit - Zertifizierung nach ISO 9972:2018
+                    </h1>
+
+                    <!-- Navigation Menu -->
+                    <div class="flex flex-wrap justify-center gap-3">
+
+                        <button onclick="showPage('home')"
+                            class="elegant-button text-slate-700 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:text-indigo-700">
+                            <span class="relative z-10 flex items-center gap-2">
+                                <span class="text-lg">🏠</span>
+                                Startseite
+                            </span>
+                        </button>
+
+                        <button onclick="showPage('measurement')"
+                            class="elegant-button text-slate-700 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:text-indigo-700">
+                            <span class="relative z-10 flex items-center gap-2">
+                                <span class="text-lg">📊</span>
+                                Messung
+                            </span>
+                        </button>
+
+                        <button onclick="showPage('analysis')"
+                            class="elegant-button text-slate-700 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:text-indigo-700">
+                            <span class="relative z-10 flex items-center gap-2">
+                                <span class="text-lg">📈</span>
+                                Analyse
+                            </span>
+                        </button>
+
+                        <button onclick="showPage('swipe')"
+                            class="elegant-button text-slate-700 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:text-indigo-700">
+                            <span class="relative z-10 flex items-center gap-2">
+                                <span class="text-lg">📋</span>
+                                Protokoll
+                            </span>
+                        </button>
+
+                        <button onclick="printProtocol()"
+                            class="elegant-button text-slate-700 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:text-indigo-700">
+                            <span class="relative z-10 flex items-center gap-2">
+                                <span class="text-lg">🖨️</span>
+                                Drucken
+                            </span>
+                        </button>
+
+                        <button onclick="setzeDatum()"
+                            class="elegant-button text-slate-700 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:text-indigo-700">
+                            <span class="relative z-10 flex items-center gap-2">
+                                <span class="text-lg">📅</span>
+                                <span class="auto-datum font-semibold">Datum</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+
+
+        <script>
+            // Placeholder functions - ersetze diese mit deinen echten Funktionen
+            function showPage(page) {
+                console.log('Zeige Seite:', page);
+            }
+
+            function printProtocol() {
+                console.log('Drucke Protokoll');
+            }
+
+            function setzeDatum() {
+                const datum = new Date().toLocaleDateString('de-DE');
+                document.querySelector('.auto-datum').textContent = datum;
+            }
+
+            // Setze Datum beim Laden
+            setzeDatum();
+        </script>
+    </body>
+
+    </html>
+
+    <!-- Startseite -->
+    <div id="home" class="page active">
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <div class="bg-white rounded-xl shadow-xl p-8 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+
+                    <div class="bg-purple-50 rounded-lg p-6 text-center">
+                        <div class="text-4xl mb-4">📊</div>
+                        <h3 class="text-xl font-bold text-green-800 mb-2">Messung</h3>
+                        <p class="text-gray-600 mb-4">Eingabe und Verwaltung von Messdaten mit interaktiven Parametern
+                        </p>
+                        <button onclick="showPage('measurement')"
+                            class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">
+                            Zur Messung
+                        </button>
+                    </div>
+
+                    <div class="bg-orange-50 rounded-lg p-6 text-center">
+                        <div class="text-4xl mb-4">📈</div>
+                        <h3 class="text-xl font-bold text-orange-800 mb-2">Analyse</h3>
+                        <p class="text-gray-600 mb-4">Grafische Auswertung und Berechnung der Kennwerte</p>
+                        <button onclick="showPage('analysis')"
+                            class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
+                            Zur Analyse
+                        </button>
+                    </div>
+
+                    <div class="bg-green-50 rounded-lg p-6 text-center">
+                        <div class="text-4xl mb-4">📋</div>
+                        <h3 class="text-xl font-bold text-green-800 mb-2">Protokoll</h3>
+                        <p class="text-gray-600 mb-4">Vollständiges 8-seitiges Messprotokoll nach ISO 9972 Standard</p>
+                        <button onclick="showPage('protocol')"
+                            class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                            Zum Protokoll
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Über die Blower Door Messung</h3>
+                    <p class="text-gray-600 mb-4">
+                        Die Blower Door Messung ist ein Verfahren zur Bestimmung der Luftdurchlässigkeit von Gebäuden
+                        nach ISO 9972.
+                        Sie wird eingesetzt zur Qualitätskontrolle der Bauausführung und zur Überprüfung von
+                        Anforderungen nach KfW-Richtlinien.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-bold text-gray-700 mb-2">Kennwerte:</h4>
+                            <ul class="text-gray-600 space-y-1">
+                                <li>• n₅₀-Wert: Luftwechselrate bei 50 Pa</li>
+                                <li>• q₅₀-Wert: Spezifischer Leckagestrom</li>
+                                <li>• V₅₀: Volumenstrom bei 50 Pa</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 mb-2">Anwendungen:</h4>
+                            <ul class="text-gray-600 space-y-1">
+                                <li>• KfW-Nachweis</li>
+                                <li>• Passivhaus-Standard</li>
+                                <li>• Leckageortung</li>
+                                <li>• Qualitätskontrolle</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Placeholder Content -->
+                    <div class="max-w-7xl mx-auto px-6 py-12">
+                        <div class="bg-white rounded-xl shadow-sm p-8">
+                            <h2 class="text-2xl font-light text-slate-700 mb-4"></h2>
+                            <p class="text-slate-600"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protokoll Seite -->
+    <!-- extern in sites/protokoll.html verlegt -->
+    <!-- Swipe Protokoll Seite -->
+    <div id="swipe" class="page">
+        <div class="swipe-container">
+            <!-- Page Indicator -->
+            <div class="page-indicator no-print">
+                Seite <span id="current-page">1</span> von <span id="total-pages">8</span>
+            </div>
+
+            <!-- Navigation Arrows -->
+            <button class="swipe-nav prev no-print" onclick="prevSlide()">‹</button>
+            <button class="swipe-nav next no-print" onclick="nextSlide()">›</button>
+
+            <!-- Swipe Wrapper -->
+            <div class="swipe-wrapper" id="swipeWrapper">
+
+                <!-- Seite 1 -->
+                <div class="swipe-slide">
+                    <div class="max-w-none">
+                        <div
+                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none max-w-4xl min-h-screen mx-auto min-h-a4-landscape mx-auto">
+                            <div
+                                class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
+                                <span>Seite 1 von 8</span>
+                                <span>Blower Door Messprotokoll</span>
+                                <span><strong>Datum:</strong> <span
+                                        class="auto-datum bg-yellow-100 px-2 py-1 rounded"></span></span>
+                            </div>
+
+                            <h1 class="text-2xl text-blue-900 text-center mb-8">Blower door Messung nach ISO 9972</h1>
+
+                            <div class="grid grid-cols-2 gap-5 my-5 max-h-a4-section">
+                                <div class="border border-gray-300 p-4 bg-gray-50">
+                                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                        Geprüftes Objekt</h2>
+                                    <p class="my-2 text-xs"><strong>Objektbezeichnung:</strong> <span
+                                            class="input-field"></span></p>
+                                    <p class="my-2 text-xs"><strong>Adresse:</strong> <span class="input-field"></span>
+                                    </p>
+                                    <p class="my-2 text-xs"><strong>PLZ/Ort:</strong> <span class="input-field"></span>
+                                    </p>
+                                    <p class="my-2 text-xs"><strong>Baujahr:</strong> <span class="input-field"></span>
+                                    </p>
+                                    <p class="my-2 text-xs"><strong>Gebäudeart:</strong> <span
+                                            class="input-field"></span></p>
+                                </div>
+
+                                <div class="border border-gray-300 p-4 bg-gray-50">
+                                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                        Auftraggeber</h2>
+                                    <p class="my-2 text-xs"><strong>Name/Firma:</strong> <span
+                                            class="input-field"></span></p>
+                                    <p class="my-2 text-xs"><strong>Ansprechpartner:</strong> <span
+                                            class="input-field"></span></p>
+                                    <p class="my-2 text-xs"><strong>Adresse:</strong> <span class="input-field"></span>
+                                    </p>
+                                    <p class="my-2 text-xs"><strong>PLZ/Ort:</strong> <span class="input-field"></span>
+                                    </p>
+                                    <p class="my-2 text-xs"><strong>Telefon:</strong> <span class="input-field"></span>
+                                    </p>
+                                    <p class="my-2 text-xs"><strong>E-Mail:</strong> <span class="input-field"></span>
+                                    </p>
+                                </div>
+
+                                <div class="border border-gray-300 p-4 bg-gray-50">
+                                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                        Auftragnehmer</h2>
+                                    <p class="my-2 text-xs"><strong>Firma:</strong> <span class="input-field"></span>
+                                    </p>
+                                    <p class="my-2 text-xs"><strong>Ansprechpartner:</strong> <span
+                                            class="input-field"></span></p>
+                                    <p class="my-2 text-xs"><strong>Adresse:</strong> <span class="input-field"></span>
+                                    </p>
+                                    <p class="my-2 text-xs"><strong>PLZ/Ort:</strong> <span class="input-field"></span>
+                                    </p>
+                                    <p class="my-2 text-xs"><strong>Telefon:</strong> <span class="input-field"></span>
+                                    </p>
+                                    <p class="my-2 text-xs"><strong>E-Mail:</strong> <span class="input-field"></span>
+                                    </p>
+                                </div>
+
+                                <div class="border border-gray-300 p-4 bg-gray-50">
+                                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                        Messung durchgeführt von</h2>
+                                    <p class="my-2 text-xs"><strong>Name:</strong> <span class="input-field"></span></p>
+                                    <p class="my-2 text-xs"><strong>Qualifikation:</strong> <span
+                                            class="input-field"></span></p>
+                                    <p class="my-2 text-xs"><strong>Unterschrift:</strong> <span
+                                            class="input-field"></span></p>
+                                </div>
+
+                                <div class="col-span-2 border border-gray-300 p-4 bg-gray-50">
+                                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                        Messdatum und Stempel</h2>
+                                    <p class="my-2 text-xs"><strong>Messdatum:</strong> <span
+                                            class="auto-datum bg-yellow-100 px-2 py-1 rounded"></span></p>
+                                    <p class="my-2 text-xs"><strong>Uhrzeit:</strong> <span
+                                            class="auto-uhrzeit bg-yellow-100 px-2 py-1 rounded"></span></p>
+                                    <p class="my-2 text-xs"><strong>Firmenstempel:</strong></p>
+                                    <div class="stamp-box">Platz für Firmenstempel</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seite 2 -->
+                <div class="swipe-slide">
+                    <div class="max-w-none">
+                        <div
+                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none max-w-4xl min-h-screen mx-auto min-h-a4-landscape mx-auto">
+                            <div
+                                class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
+                                <span>Seite 2 von 8</span>
+                                <span>Blower Door Messprotokoll</span>
+                                <span><strong>Datum:</strong> <span
+                                        class="auto-datum bg-yellow-100 px-2 py-1 rounded"></span></span>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-5 my-5 max-h-a4-section">
+                                <div class="border border-gray-300 p-4 bg-gray-50">
+                                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">Zweck
+                                        der Messung</h2>
+                                    <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Überprüfung der
+                                        Anforderungen nach KfW-Richtlinien</p>
+                                    <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Nachweis
+                                        Passivhaus-Standard</p>
+                                    <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Qualitätskontrolle
+                                        Bauausführung</p>
+                                    <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Leckageortung</p>
+                                    <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Sonstiges: <span
+                                            class="input-field"></span></p>
+                                </div>
+
+                                <div class="border border-gray-300 p-4 bg-gray-50">
+                                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                        Prüfnorm und Verfahren</h2>
+                                    <p class="my-2 text-xs"><strong>Prüfnorm:</strong> Bestimmung der
+                                        Luftdurchlässigkeit von Gebäuden - Differenzdruckverfahren ISO 9972</p>
+                                    <p class="my-2 text-xs"><strong>Gebäudevorbereitung:</strong> Verfahren 1 - Prüfung
+                                        des Gebäudes im Nutzungszustand</p>
+                                    <p class="my-2 text-xs"><strong>Prüfverfahren:</strong></p>
+                                    <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Methode A
+                                        (Einzelmessung)</p>
+                                    <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Methode B
+                                        (Mehrfachmessung)</p>
+                                </div>
+
+                                <div class="col-span-2 border border-gray-300 p-4 bg-gray-50">
+                                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                        Messergebnisse</h2>
+                                    <p class="my-2 text-xs">Die Messergebnisse werden auf einen Differenzdruck zwischen
+                                        Gebäudeinneren und Umgebung von <strong>50 Pa</strong> bezogen.</p>
+
+                                    <h3 class="text-sm text-blue-900 mt-4 mb-2">Wichtige Kennwerte:</h3>
+
+                                    <table class="w-full border-collapse my-4 text-xs">
+                                        <thead>
+                                            <tr class="bg-gray-200">
+                                                <th class="border border-gray-800 p-2 text-left font-bold">Parameter
+                                                </th>
+                                                <th class="border border-gray-800 p-2 text-left font-bold">Einheit</th>
+                                                <th class="border border-gray-800 p-2 text-left font-bold">Grenzwert
+                                                </th>
+                                                <th class="border border-gray-800 p-2 text-left font-bold">Messwert</th>
+                                                <th class="border border-gray-800 p-2 text-left font-bold">Bewertung
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="border border-gray-800 p-2">n₅₀</td>
+                                                <td class="border border-gray-800 p-2">1/h</td>
+                                                <td class="border border-gray-800 p-2"></td>
+                                                <td class="border border-gray-800 p-2"></td>
+                                                <td class="border border-gray-800 p-2"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 p-2">q₅₀</td>
+                                                <td class="border border-gray-800 p-2">m³/(h·m²)</td>
+                                                <td class="border border-gray-800 p-2"></td>
+                                                <td class="border border-gray-800 p-2"></td>
+                                                <td class="border border-gray-800 p-2"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 p-2">w₅₀</td>
+                                                <td class="border border-gray-800 p-2">m³/(h·m²)</td>
+                                                <td class="border border-gray-800 p-2"></td>
+                                                <td class="border border-gray-800 p-2"></td>
+                                                <td class="border border-gray-800 p-2"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="bg-green-100 border border-green-400 p-3 my-3">
+                                        <p class="my-2 text-xs"><strong>Bewertung:</strong></p>
+                                        <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Anforderungen
+                                            erfüllt</p>
+                                        <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Anforderungen nicht
+                                            erfüllt</p>
+                                        <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Nachbesserung
+                                            erforderlich</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seite 3 -->
+                <div class="swipe-slide">
+                    <div class="max-w-none">
+                        <div
+                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none max-w-4xl min-h-screen mx-auto min-h-a4-landscape mx-auto">
+                            <div
+                                class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
+                                <span>Seite 3 von 8</span>
+                                <span>Blower Door Messprotokoll</span>
+                                <span><strong>Datum:</strong> <span
+                                        class="auto-datum bg-yellow-100 px-2 py-1 rounded"></span></span>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-5 my-5 max-h-a4-section">
+                                <div class="border border-gray-300 p-4 bg-gray-50">
+                                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                        Auftraggeber Kontakt</h2>
+                                    <div class="bg-gray-100 border border-gray-300 p-3 my-2 font-mono text-xs">
+                                        <strong>Vollständige Anschrift:</strong><br>
+                                        Name: <span class="input-field"></span><br>
+                                        Firma: <span class="input-field"></span><br>
+                                        Straße: <span class="input-field"></span><br>
+                                        PLZ/Ort: <span class="input-field"></span><br>
+                                        Telefon: <span class="input-field"></span><br>
+                                        Mobil: <span class="input-field"></span><br>
+                                        E-Mail: <span class="input-field"></span>
+                                    </div>
+                                </div>
+
+                                <div class="border border-gray-300 p-4 bg-gray-50">
+                                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                        Auftragnehmer Kontakt</h2>
+                                    <div class="bg-gray-100 border border-gray-300 p-3 my-2 font-mono text-xs">
+                                        <strong>Vollständige Anschrift:</strong><br>
+                                        Firma: <span class="input-field"></span><br>
+                                        Ansprechpartner: <span class="input-field"></span><br>
+                                        Straße: <span class="input-field"></span><br>
+                                        PLZ/Ort: <span class="input-field"></span><br>
+                                        Telefon: <span class="input-field"></span><br>
+                                        Fax: <span class="input-field"></span><br>
+                                        E-Mail: <span class="input-field"></span><br>
+                                        Website: <span class="input-field"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-span-2 border border-gray-300 p-4 bg-gray-50">
+                                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                        Geprüftes Objekt</h2>
+                                    <p class="my-2 text-xs"><strong>Detaillierte Objektbeschreibung:</strong></p>
+                                    <p class="my-2 text-xs"><strong>Gebäudetyp:</strong> <span
+                                            class="input-field"></span></p>
+                                    <p class="my-2 text-xs"><strong>Nutzfläche:</strong> <span
+                                            class="input-field"></span></p>
+                                    <p class="my-2 text-xs"><strong>Umhüllende Fläche:</strong> <span
+                                            class="input-field"></span></p>
+                                    <p class="my-2 text-xs"><strong>Volumen:</strong> <span class="input-field"></span>
+                                    </p>
+                                    <p class="my-2 text-xs"><strong>Anzahl Wohneinheiten:</strong> <span
+                                            class="input-field"></span></p>
+                                    <p class="my-2 text-xs"><strong>Besonderheiten:</strong></p>
+                                    <div class="bg-gray-100 border border-gray-300 p-3 my-2">
+                                        <span class="input-field w-full h-16 block"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seite 4 -->
+                <div class="swipe-slide">
+                    <div class="max-w-none">
+                        <div
+                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none max-w-4xl min-h-screen mx-auto min-h-a4-landscape mx-auto">
+                            <div class="text-center">
+                                <h2 class="text-2xl font-bold mb-4">Seite 4 - Messergebnisse</h2>
+                                <div class="space-y-4 text-left">
+                                    <div>
+                                        <label class="font-bold">n₅₀-Wert:</label>
+                                        <span class="input-field" contenteditable="true"></span> h⁻¹
+                                    </div>
+                                    <div>
+                                        <label class="font-bold">q₅₀-Wert:</label>
+                                        <span class="input-field" contenteditable="true"></span> m³/(h·m²)
+                                    </div>
+                                    <div>
+                                        <label class="font-bold">V₅₀-Wert:</label>
+                                        <span class="input-field" contenteditable="true"></span> m³/h
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border border-gray-300 p-4 bg-gray-50">
+                                <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                    Diagramm und Dokumentation</h2>
+                                <p class="my-2 text-xs"><strong>Messwerte-Darstellung:</strong></p>
+                                <div
+                                    class="bg-gray-100 border border-gray-300 p-6 my-3 text-center text-gray-500 italic">
+                                    Hier soll das Druckverlauf-Diagramm eingebettet werden<br>
+                                    <small class="text-xs">Diagramm zeigt: Druckdifferenz (Pa) vs. Volumenstrom
+                                        (m³/h)<br>
+                                        Unter- und Überdruckmessungen, Regressionsgeraden,
+                                        Korrelationskoeffizient</small>
+                                </div>
+
+                                <p class="my-3 text-xs"><strong>Foto-Dokumentation:</strong></p>
+                                <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Messaufbau dokumentiert
+                                </p>
+                                <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Leckagen fotografiert
+                                </p>
+                                <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Besonderheiten
+                                    dokumentiert</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <!-- Seite 5 -->
+                <div class="swipe-slide">
+                    <div class="max-w-none">
+                        <div
+                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none max-w-4xl min-h-screen mx-auto min-h-a4-landscape mx-auto">
+                            <div
+                                class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
+                                <span>Seite 5 von 8</span>
+                                <span>Blower Door Messprotokoll</span>
+                                <span><strong>Datum:</strong> <span
+                                        class="auto-datum bg-yellow-100 px-2 py-1 rounded"></span></span>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-5 my-5 max-h-a4-section">
+                                <div class="border border-gray-300 p-4 bg-gray-50">
+                                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                        Leckageortung</h2>
+                                    <p class="my-2 text-xs"><strong>Leckageortung durchgeführt:</strong></p>
+                                    <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Ja</p>
+                                    <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Nein</p>
+
+                                    <p class="my-3 text-xs"><strong>Detektierte Leckagen:</strong></p>
+                                    <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Es wurden keine großen
+                                        Leckagen detektiert</p>
+                                    <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Folgende Leckagen
+                                        wurden festgestellt:</p>
+                                </div>
+
+                                <div class="border border-gray-300 p-4 bg-gray-50">
+                                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                        Leckagen-Übersicht</h2>
+
+                                    <table class="w-full border-collapse my-4 text-xs">
+                                        <thead>
+                                            <tr class="bg-gray-200">
+                                                <th class="border border-gray-800 p-2 text-left font-bold">Leckage-Nr.
+                                                </th>
+                                                <th class="border border-gray-800 p-2 text-left font-bold">Ort der
+                                                    Leckage</th>
+                                                <th class="border border-gray-800 p-2 text-left font-bold">Beschreibung
+                                                </th>
+                                                <th class="border border-gray-800 p-2 text-left font-bold">Schweregrad
+                                                </th>
+                                                <th class="border border-gray-800 p-2 text-left font-bold">Behoben</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="border border-gray-800 p-2">1</td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+                                                <td class="border border-gray-800 p-2 text-xs">
+                                                    <input type="checkbox" class="mr-1"> gering
+                                                    <input type="checkbox" class="mr-1"> mittel
+                                                    <input type="checkbox" class="mr-1"> schwer
+                                                </td>
+                                                <td class="border border-gray-800 p-2 text-xs">
+                                                    <input type="checkbox" class="mr-1"> Ja
+                                                    <input type="checkbox" class="mr-1"> Nein
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 p-2">2</td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+                                                <td class="border border-gray-800 p-2 text-xs">
+                                                    <input type="checkbox" class="mr-1"> gering
+                                                    <input type="checkbox" class="mr-1"> mittel
+                                                    <input type="checkbox" class="mr-1"> schwer
+                                                </td>
+                                                <td class="border border-gray-800 p-2 text-xs">
+                                                    <input type="checkbox" class="mr-1"> Ja
+                                                    <input type="checkbox" class="mr-1"> Nein
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 p-2">3</td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+                                                <td class="border border-gray-800 p-2 text-xs">
+                                                    <input type="checkbox" class="mr-1"> gering
+                                                    <input type="checkbox" class="mr-1"> mittel
+                                                    <input type="checkbox" class="mr-1"> schwer
+                                                </td>
+                                                <td class="border border-gray-800 p-2 text-xs">
+                                                    <input type="checkbox" class="mr-1"> Ja
+                                                    <input type="checkbox" class="mr-1"> Nein
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 p-2">4</td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+                                                <td class="border border-gray-800 p-2 text-xs">
+                                                    <input type="checkbox" class="mr-1"> gering
+                                                    <input type="checkbox" class="mr-1"> mittel
+                                                    <input type="checkbox" class="mr-1"> schwer
+                                                </td>
+                                                <td class="border border-gray-800 p-2 text-xs">
+                                                    <input type="checkbox" class="mr-1"> Ja
+                                                    <input type="checkbox" class="mr-1"> Nein
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="bg-gray-100 border border-gray-300 p-3 my-3">
+                                        <p class="my-2 text-xs"><strong>Empfohlene Maßnahmen:</strong></p>
+                                        <span class="input-field w-full h-16 block"></span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seite 6 -->
+                <div class="swipe-slide">
+                    <div class="max-w-none">
+                        <div
+                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none max-w-4xl min-h-screen mx-auto min-h-a4-landscape mx-auto">
+                            <div
+                                class="flex justify-between items-center border-b border-gray-800 pb-2 mb-5 font-bold text-xs">
+                                <span>Seite 6 von 8</span>
+                                <span>Blower Door Messprotokoll</span>
+                                <span><strong>Datum:</strong> <span
+                                        class="auto-datum bg-yellow-100 px-2 py-1 rounded"></span></span>
+                            </div>
+
+                            <div class="border border-gray-300 p-4 bg-gray-50">
+                                <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                    Natürliche Druckdifferenzen vor der Messung</h2>
+
+                                <h3 class="text-sm text-blue-900 mt-4 mb-2">Messung bei 0,1 Pa Sollwert:</h3>
+                                <table class="w-full border-collapse my-4 text-xs">
+                                    <thead>
+                                        <tr class="bg-gray-200">
+                                            <th class="border border-gray-800 p-2 text-left font-bold">Messung</th>
+                                            <th class="border border-gray-800 p-2 text-left font-bold">Δp +0,1 Pa
+                                            </th>
+                                            <th class="border border-gray-800 p-2 text-left font-bold">Δp -0,1 Pa
+                                            </th>
+                                            <th class="border border-gray-800 p-2 text-left font-bold">Δp Mittelwert
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="border border-gray-800 p-2">1</td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border border-gray-800 p-2">2</td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border border-gray-800 p-2">3</td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                        </tr>
+                                        <tr class="bg-blue-50">
+                                            <td class="border border-gray-800 p-2 font-bold">Mittelwert</td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <h3 class="text-sm text-blue-900 mt-4 mb-2">Messung bei 0,2 Pa Sollwert:</h3>
+                                <table class="w-full border-collapse my-4 text-xs">
+                                    <thead>
+                                        <tr class="bg-gray-200">
+                                            <th class="border border-gray-800 p-2 text-left font-bold">Messung</th>
+                                            <th class="border border-gray-800 p-2 text-left font-bold">Δp +0,2 Pa
+                                            </th>
+                                            <th class="border border-gray-800 p-2 text-left font-bold">Δp -0,2 Pa
+                                            </th>
+                                            <th class="border border-gray-800 p-2 text-left font-bold">Δp Mittelwert
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="border border-gray-800 p-2">1</td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border border-gray-800 p-2">2</td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border border-gray-800 p-2">3</td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                        </tr>
+                                        <tr class="bg-blue-50">
+                                            <td class="border border-gray-800 p-2 font-bold">Mittelwert</td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                            <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="bg-green-100 border border-green-400 p-3 my-3">
+                                    <p class="my-2 text-xs"><strong>Bewertung der natürlichen
+                                            Druckdifferenzen:</strong></p>
+                                    <p class="my-2 text-xs"><input type="checkbox" class="mr-2"> Messbedingungen
+                                        geeignet (Δp < 5 Pa)</p>
+                                            <p class="my-2 text-xs"><input type="checkbox" class="mr-2">
+                                                Messbedingungen bedingt geeignet</p>
+                                            <p class="my-2 text-xs"><input type="checkbox" class="mr-2">
+                                                Messbedingungen ungeeignet</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seite 7 -->
+                <div class="swipe-slide">
+                    <div class="max-w-none">
+                        <div
+                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none max-w-4xl min-h-screen mx-auto min-h-a4-landscape mx-auto">
+                            <div class="text-center">
+                                <h2 class="text-2xl font-bold mb-4">Seite 7 - Bewertung</h2>
+                                <div class="space-y-4 text-left">
+                                    <div>
+                                        <label class="font-bold">Bewertung nach DIN 4108-7:</label>
+                                        <div class="mt-2">
+                                            <div class="grid grid-cols-3 gap-4">
+                                                <label class="flex items-center">
+                                                    <input type="radio" name="bewertung" class="mr-2">
+                                                    Kategorie I (≤ 1,0)
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="radio" name="bewertung" class="mr-2">
+                                                    Kategorie II (≤ 1,5)
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="radio" name="bewertung" class="mr-2">
+                                                    Kategorie III (≤ 3,0)
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-5 my-5 max-h-a4-section">
+                                <div class="border border-gray-300 p-4 bg-gray-50">
+                                    <h2 class="mt-0 text-base text-blue-900 border-b-2 border-blue-500 pb-1 mb-3">
+                                        Klimabedingungen</h2>
+
+                                    <table class="w-full border-collapse my-4 text-xs">
+                                        <thead>
+                                            <tr class="bg-gray-200">
+                                                <th class="border border-gray-800 p-2 text-left font-bold">Messung</th>
+                                                <th class="border border-gray-800 p-2 text-left font-bold">Innentemp.
+                                                    (°C)</th>
+                                                <th class="border border-gray-800 p-2 text-left font-bold">Außentemp.
+                                                    (°C)</th>
+                                                <th class="border border-gray-800 p-2 text-left font-bold">
+                                                    Barometrischer Druck (Pa)</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="border border-gray-800 p-2">Beginn</td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 p-2">Mitte</td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 p-2">Ende</td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+
+                                            </tr>
+                                            <tr class="bg-blue-50">
+                                                <td class="border border-gray-800 p-2 font-bold">Mittelwert</td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+                                                <td class="border border-gray-800 p-2"><span class="input-field"></span>
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <p class="my-2 text-xs"><strong>Wetterbedingungen:</strong> <span
+                                            class="input-field"></span></p>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seite 8 -->
+                <div class="swipe-slide">
+                    <div class="max-w-none">
+                        <div
+                            class="protocol-page bg-white border-2 border-gray-800 p-4 m-2 shadow-lg max-w-none max-w-4xl min-h-screen mx-auto min-h-a4-landscape mx-auto">
+                            <div class="text-center">
+                                <h2 class="text-2xl font-bold mb-4">Seite 8 - Unterschriften</h2>
+                                <div class="space-y-8 text-left mt-16">
+                                    <div>
+                                        <label class="font-bold">Prüfer:</label>
+                                        <div class="stamp-box mt-4">Unterschrift Prüfer</div>
+                                    </div>
+                                    <div>
+                                        <label class="font-bold">Auftraggeber:</label>
+                                        <div class="stamp-box mt-4">Unterschrift Auftraggeber</div>
+                                    </div>
+                                    <div class="mt-8">
+                                        <p class="text-sm text-gray-600">
+                                            Datum: <span class="auto-datum font-bold"></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Pagination Dots -->
+            <div class="swipe-pagination no-print" id="pagination">
+                <!-- Dots werden dynamisch generiert -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentSlide = 0;
+        const totalSlides = 8; // Korrigiert auf 8 Slides
+        let startY = 0;
+        let currentY = 0;
+        let isDragging = false;
+        let isMoving = false;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function () {
+            const heute = new Date();
+            const deutschesDatum = heute.toLocaleDateString('de-DE');
+
+            document.querySelectorAll('.auto-datum').forEach(feld => {
+                feld.textContent = deutschesDatum;
+            });
+
+            // Initialize swipe functionality
+            initSwipe();
+            initPagination();
+            updateSlidePosition();
+        });
+
+        // Page navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // Date setting
+        function setzeDatum() {
+            const datum = prompt("Datum eingeben (TT.MM.JJJJ):");
+            if (datum) {
+                document.querySelectorAll('.auto-datum').forEach(feld => {
+                    feld.textContent = datum;
+                });
+            }
+        }
+
+        // Print function
+        function printProtocol() {
+            window.print();
+        }
+
+        // Initialize pagination dots
+        function initPagination() {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            for (let i = 0; i < totalSlides; i++) {
+                const bullet = document.createElement('div');
+                bullet.className = 'swipe-pagination-bullet';
+                if (i === 0) bullet.classList.add('active');
+                bullet.onclick = () => goToSlide(i);
+                pagination.appendChild(bullet);
+            }
+        }
+
+        // Swipe functionality for vertical scrolling
+        function initSwipe() {
+            const swipeWrapper = document.getElementById('swipeWrapper');
+            if (!swipeWrapper) return;
+
+            // Touch events
+            swipeWrapper.addEventListener('touchstart', handleTouchStart, { passive: false });
+            swipeWrapper.addEventListener('touchmove', handleTouchMove, { passive: false });
+            swipeWrapper.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+            // Mouse events for desktop
+            swipeWrapper.addEventListener('mousedown', handleMouseStart);
+            swipeWrapper.addEventListener('mousemove', handleMouseMove);
+            swipeWrapper.addEventListener('mouseup', handleMouseEnd);
+            swipeWrapper.addEventListener('mouseleave', handleMouseEnd);
+
+            // Keyboard navigation
+            document.addEventListener('keydown', handleKeyDown);
+
+            // Prevent context menu on long press
+            swipeWrapper.addEventListener('contextmenu', e => e.preventDefault());
+
+            // Mouse wheel support for vertical scrolling
+            swipeWrapper.addEventListener('wheel', handleWheel, { passive: false });
+        }
+
+        function handleTouchStart(e) {
+            if (isMoving) return;
+            startY = e.touches[0].clientY;
+            isDragging = true;
+        }
+
+        function handleTouchMove(e) {
+            if (!isDragging || isMoving) return;
+
+            // Prevent scrolling while swiping vertically
+            const diffY = Math.abs(e.touches[0].clientY - startY);
+            const diffX = Math.abs(e.touches[0].clientX - (e.touches[0].clientX || startY));
+
+            if (diffY > diffX) {
+                e.preventDefault();
+            }
+
+            currentY = e.touches[0].clientY;
+        }
+
+        function handleTouchEnd(e) {
+            if (!isDragging) return;
+
+            const diffY = currentY - startY;
+            const threshold = 50; // Minimum swipe distance
+
+            if (Math.abs(diffY) > threshold) {
+                if (diffY > 0) {
+                    // Swipe down - go to previous slide
+                    prevSlide();
+                } else {
+                    // Swipe up - go to next slide
+                    nextSlide();
+                }
+            }
+
+            isDragging = false;
+            startY = 0;
+            currentY = 0;
+        }
+
+        function handleMouseStart(e) {
+            if (isMoving) return;
+            startY = e.clientY;
+            isDragging = true;
+            e.preventDefault();
+        }
+
+        function handleMouseMove(e) {
+            if (!isDragging || isMoving) return;
+            currentY = e.clientY;
+        }
+
+        function handleMouseEnd(e) {
+            if (!isDragging) return;
+
+            const diffY = currentY - startY;
+            const threshold = 50;
+
+            if (Math.abs(diffY) > threshold) {
+                if (diffY > 0) {
+                    prevSlide();
+                } else {
+                    nextSlide();
+                }
+            }
+
+            isDragging = false;
+            startY = 0;
+            currentY = 0;
+        }
+
+        function handleKeyDown(e) {
+            if (!document.getElementById('swipe').classList.contains('active')) return;
+
+            switch (e.key) {
+                case 'ArrowUp':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'ArrowDown':
+                case 'PageDown':
+                case ' ':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+            }
+        }
+
+        function handleWheel(e) {
+            if (!document.getElementById('swipe').classList.contains('active')) return;
+            
+            e.preventDefault();
+            
+            if (isMoving) return;
+            
+            if (e.deltaY > 0) {
+                nextSlide();
+            } else {
+                prevSlide();
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1 && !isMoving) {
+                currentSlide++;
+                updateSlidePosition();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0 && !isMoving) {
+                currentSlide--;
+                updateSlidePosition();
+            }
+        }
+
+        function goToSlide(slideIndex) {
+            if (slideIndex >= 0 && slideIndex < totalSlides && !isMoving) {
+                currentSlide = slideIndex;
+                updateSlidePosition();
+            }
+        }
+
+        function updateSlidePosition() {
+            if (isMoving) return;
+            isMoving = true;
+
+            const swipeWrapper = document.getElementById('swipeWrapper');
+            const translateY = -currentSlide * 100;
+            swipeWrapper.style.transform = `translateY(${translateY}vh)`;
+
+            // Update pagination
+            document.querySelectorAll('.swipe-pagination-bullet').forEach((bullet, index) => {
+                bullet.classList.toggle('active', index === currentSlide);
+            });
+
+            // Update page indicator
+            const currentPageElement = document.getElementById('current-page');
+            const totalPagesElement = document.getElementById('total-pages');
+            if (currentPageElement) currentPageElement.textContent = currentSlide + 1;
+            if (totalPagesElement) totalPagesElement.textContent = totalSlides;
+
+            // Update navigation buttons
+            const prevBtn = document.querySelector('.swipe-nav.prev');
+            const nextBtn = document.querySelector('.swipe-nav.next');
+
+            if (prevBtn) {
+                prevBtn.disabled = currentSlide === 0;
+                prevBtn.style.opacity = currentSlide === 0 ? '0.3' : '1';
+            }
+
+            if (nextBtn) {
+                nextBtn.disabled = currentSlide === totalSlides - 1;
+                nextBtn.style.opacity = currentSlide === totalSlides - 1 ? '0.3' : '1';
+            }
+
+            // Reset moving flag after animation
+            setTimeout(() => {
+                isMoving = false;
+            }, 300);
+        }
+
+        // Utility function to handle swipe navigation from external calls
+        function swipe(pageId) {
+            showPage(pageId);
+        }
+    </script>
+
+
+
+
+
+    <!-- Messung Seite -->
+    <div id="measurement" class="page">
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <!-- Anzeigeoptionen -->
+            <div class="bg-white rounded-xl shadow-xl p-6 border border-gray-200 mb-8">
+                <h3 class="text-xl font-bold mb-4 text-gray-800">Anzeigeoptionen</h3>
+                <div class="flex items-center justify-center space-x-6 flex-wrap">
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="showTheoretical" checked
+                            class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded">
+                        <label for="showTheoretical"
+                            class="text-sm font-medium text-gray-700 cursor-pointer flex items-center">
+                            <span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
+                            Theoretische Kurve anzeigen
+                        </label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="showSimulated"
+                            class="w-5 h-5 text-amber-600 bg-gray-100 border-gray-300 rounded">
+                        <label for="showSimulated"
+                            class="text-sm font-medium text-gray-700 cursor-pointer flex items-center">
+                            <span class="w-3 h-3 bg-amber-500 rounded-full mr-2"></span>
+                            Simulierte Messpunkte anzeigen
+                        </label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="showReal" checked
+                            class="w-5 h-5 text-green-600 bg-gray-100 border-gray-300 rounded">
+                        <label for="showReal"
+                            class="text-sm font-medium text-gray-700 cursor-pointer flex items-center">
+                            <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                            Reale Messpunkte anzeigen
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Eingabeparameter -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <div
+                    class="bg-white rounded-xl shadow-xl p-6 border border-gray-200 transform hover:scale-105 transition-transform duration-300">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 flex items-center">
+                        <span class="w-3 h-3 bg-blue-500 rounded-full mr-3"></span>
+                        n₅₀-Wert
+                    </h3>
+                    <label for="n50" class="block text-sm font-medium text-gray-700 mb-3">n₅₀-Wert [1/h]</label>
+                    <input type="range" id="n50" min="0.5" max="10" step="0.1" value="3.0"
+                        class="w-full slider-blue mb-4">
+                    <div class="text-center bg-blue-50 rounded-lg p-3">
+                        <span class="text-3xl font-bold text-blue-600" id="n50-value">3.0</span>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white rounded-xl shadow-xl p-6 border border-gray-200 transform hover:scale-105 transition-transform duration-300">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 flex items-center">
+                        <span class="w-3 h-3 bg-green-500 rounded-full mr-3"></span>
+                        Gebäudevolumen
+                    </h3>
+                    <label for="volume" class="block text-sm font-medium text-gray-700 mb-3">Gebäudevolumen
+                        [m³]</label>
+                    <input type="range" id="volume" min="100" max="2000" step="50" value="500"
+                        class="w-full slider-green mb-4">
+                    <div class="text-center bg-green-50 rounded-lg p-3">
+                        <span class="text-3xl font-bold text-green-600" id="volume-value">500</span>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white rounded-xl shadow-xl p-6 border border-gray-200 transform hover:scale-105 transition-transform duration-300">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 flex items-center">
+                        <span class="w-3 h-3 bg-purple-500 rounded-full mr-3"></span>
+                        Max. Druck
+                    </h3>
+                    <label for="pressure" class="block text-sm font-medium text-gray-700 mb-3">Max. Druck
+                        [Pa]</label>
+                    <input type="range" id="pressure" min="50" max="200" step="10" value="100"
+                        class="w-full slider-purple mb-4">
+                    <div class="text-center bg-purple-50 rounded-lg p-3">
+                        <span class="text-3xl font-bold text-purple-600" id="pressure-value">100</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messpunkte Eingabe -->
+            <div class="bg-white rounded-xl shadow-xl p-6 border border-gray-200 mb-8">
+                <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
+                    <h3 class="text-xl font-bold text-gray-800 flex items-center">
+                        <span class="w-3 h-3 bg-red-500 rounded-full mr-3"></span>
+                        Reale Messpunkte eingeben
+                    </h3>
+                    <div class="flex space-x-2">
+                        <button id="clearMeasurements"
+                            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200">
+                            Alle löschen
+                        </button>
+                        <button id="addMeasurementRow"
+                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200">
+                            + Zeile hinzufügen
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="border border-gray-300 px-4 py-2 text-left text-gray-700 font-semibold">
+                                    Differenzdruck [Pa]
+                                </th>
+                                <th class="border border-gray-300 px-4 py-2 text-left text-gray-700 font-semibold">
+                                    Volumenstrom [m³/h]
+                                </th>
+                                <th class="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
+                                    Aktionen
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="measurementTable">
+                            <!-- Initial rows will be added by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 text-sm text-gray-600">
+                    <p><strong>Hinweis:</strong> Geben Sie Ihre gemessenen Werte ein. Leere Zeilen werden
+                        ignoriert.</p>
+                    <p><strong>Tipp:</strong> Drücken Sie Tab, um zwischen den Feldern zu wechseln.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analyse Seite -->
+    <div id="analysis" class="page">
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <!-- Diagramm -->
+            <div class="bg-white rounded-xl shadow-xl p-8 border border-gray-200 mb-8">
+                <div class="chart-container h-80 min-h-[600px] max-h-[600px]">
+                    <canvas id="chart"></canvas>
+                </div>
+
+                <!-- Berechnete Werte -->
+                <div
+                    class="bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 rounded-xl shadow-2xl p-4 mb-8 relative overflow-hidden max-h-[25000px]">
+                    <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+                    <div class="relative z-10 max-h-[200px] overflow-hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div
+                                class="bg-white/20 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 hover:bg-white/30 transition-all duration-300">
+                                <div class="text-4xl font-bold text-white mb-3" id="calc-n50">3.0</div>
+                                <div class="text-white/90 text-sm font-medium">n₅₀-Wert [1/h]</div>
+                            </div>
+                            <div
+                                class="bg-white/20 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 hover:bg-white/30 transition-all duration-300">
+                                <div class="text-4xl font-bold text-white mb-3" id="calc-q50">1.20</div>
+                                <div class="text-white/90 text-sm font-medium">q₅₀-Wert [m³/(h·m²)]</div>
+                            </div>
+                            <div
+                                class="bg-white/20 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 hover:bg-white/30 transition-all duration-300">
+                                <div class="text-4xl font-bold text-white mb-3" id="calc-v50">1500</div>
+                                <div class="text-white/90 text-sm font-medium">V₅₀ [m³/h]</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="chart-error"
+                    class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4">
+                    <p><strong>Fehler:</strong> Das Diagramm konnte nicht geladen werden. Bitte überprüfen Sie
+                        die
+                        Konsole für weitere Details.</p>
+                </div>
+
+                <!-- Erläuterungen -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div
+                        class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-xl p-6 border border-blue-200">
+                        <h4 class="text-xl font-bold mb-4 text-blue-800 flex items-center">
+                            <span class="w-4 h-4 bg-blue-500 rounded-full mr-3"></span>
+                            Grundlegende Definitionen
+                        </h4>
+                        <div class="space-y-4 text-sm text-blue-700">
+                            <div class="p-3 bg-white/50 rounded-lg">
+                                <strong>n₅₀-Wert:</strong> Luftwechselrate bei 50 Pa Druckdifferenz
+                            </div>
+                            <div class="p-3 bg-white/50 rounded-lg">
+                                <strong>q₅₀-Wert:</strong> Spezifischer Leckagestrom pro m² Hüllfläche
+                            </div>
+                            <div class="p-3 bg-white/50 rounded-lg">
+                                <strong>V₅₀:</strong> Volumenstrom bei 50 Pa Druckdifferenz
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-xl p-6 border border-green-200">
+                        <h4 class="text-xl font-bold mb-4 text-green-800 flex items-center">
+                            <span class="w-4 h-4 bg-green-500 rounded-full mr-3"></span>
+                            Technische Parameter
+                        </h4>
+                        <div class="space-y-4 text-sm text-green-700">
+                            <div class="p-3 bg-white/50 rounded-lg">
+                                <strong>Potenzfunktion:</strong> V = C × ΔP^n
+                            </div>
+                            <div class="p-3 bg-white/50 rounded-lg">
+                                <strong>Typischer n-Wert:</strong> 0,65 (für turbulente Strömung)
+                            </div>
+                            <div class="p-3 bg-white/50 rounded-lg">
+                                <strong>Messbereich:</strong> 10-100 Pa (nach ISO 9972)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript für die Website-Funktionalität
+
+        // Globale Variablen
+        let chart = null;
+        let realMeasurements = [];
+
+        // Navigation
+        function showPage(pageId) {
+            // Alle Seiten verstecken
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+
+            // Gewählte Seite anzeigen
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            // Navigation Buttons aktualisieren
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(btn => {
+                btn.classList.remove('bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500');
+                btn.classList.add('bg-gray-400');
+            });
+
+            // Chart initialisieren wenn Analyse-Seite geladen wird
+            if (pageId === 'analysis') {
+                setTimeout(() => {
+                    if (!chart) {
+                        initChart();
+                    } else {
+                        updateChart();
+                    }
+                }, 100);
+            }
+        }
+
+        // Datum-Funktionen
+        document.addEventListener('DOMContentLoaded', function () {
+            const heute = new Date();
+            const deutschesDatum = heute.toLocaleDateString('de-DE');
+            const aktuelleZeit = heute.toLocaleTimeString('de-DE', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            // Alle Datumsfelder füllen
+            const datumsfelder = document.querySelectorAll('.auto-datum');
+            datumsfelder.forEach(feld => {
+                feld.textContent = deutschesDatum;
+            });
+
+            // Alle Uhrzeitfelder füllen
+            const uhrzeitfelder = document.querySelectorAll('.auto-uhrzeit');
+            uhrzeitfelder.forEach(feld => {
+                feld.textContent = aktuelleZeit;
+            });
+
+            // Messtabelle initialisieren
+            initMeasurementTable();
+
+            // Event Listeners für Slider
+            initSliders();
+        });
+
+        function setzeDatum() {
+            const datum = prompt("Datum eingeben (TT.MM.JJJJ):");
+            if (datum) {
+                document.querySelectorAll('.auto-datum').forEach(feld => {
+                    feld.textContent = datum;
+                });
+            }
+        }
+
+        function printProtocol() {
+            window.print();
+        }
+
+        // Slider-Funktionalität
+        function initSliders() {
+            const n50Slider = document.getElementById('n50');
+            const volumeSlider = document.getElementById('volume');
+            const pressureSlider = document.getElementById('pressure');
+
+            if (n50Slider) {
+                n50Slider.addEventListener('input', function () {
+                    document.getElementById('n50-value').textContent = this.value;
+                    updateCalculations();
+                });
+            }
+
+            if (volumeSlider) {
+                volumeSlider.addEventListener('input', function () {
+                    document.getElementById('volume-value').textContent = this.value;
+                    updateCalculations();
+                });
+            }
+
+            if (pressureSlider) {
+                pressureSlider.addEventListener('input', function () {
+                    document.getElementById('pressure-value').textContent = this.value;
+                    updateCalculations();
+                });
+            }
+        }
+
+        // Messtabelle
+        function initMeasurementTable() {
+            const tableBody = document.getElementById('measurementTable');
+            if (!tableBody) return;
+
+            // Initial 5 Zeilen hinzufügen
+            for (let i = 0; i < 5; i++) {
+                addMeasurementRow();
+            }
+
+            // Event Listeners für Buttons
+            document.getElementById('addMeasurementRow')?.addEventListener('click', addMeasurementRow);
+            document.getElementById('clearMeasurements')?.addEventListener('click', clearMeasurements);
+        }
+
+        function addMeasurementRow() {
+            const tableBody = document.getElementById('measurementTable');
+            if (!tableBody) return;
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="border border-gray-300 px-4 py-2">
+                    <input type="number" class="w-full p-2 border rounded pressure-input" placeholder="z.B. 50" step="0.1">
+                </td>
+                <td class="border border-gray-300 px-4 py-2">
+                    <input type="number" class="w-full p-2 border rounded flow-input" placeholder="z.B. 1500" step="0.1">
+                </td>
+                <td class="border border-gray-300 px-4 py-2 text-center">
+                    <button onclick="removeRow(this)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                        Entfernen
+                    </button>
+                </td>
+            `;
+
+            tableBody.appendChild(row);
+
+            // Event Listeners für neue Eingabefelder
+            const inputs = row.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('input', updateMeasurements);
+            });
+        }
+
+        function removeRow(button) {
+            button.closest('tr').remove();
+            updateMeasurements();
+        }
+
+        function clearMeasurements() {
+            const tableBody = document.getElementById('measurementTable');
+            if (!tableBody) return;
+
+            tableBody.innerHTML = '';
+            realMeasurements = [];
+
+            // 3 leere Zeilen hinzufügen
+            for (let i = 0; i < 3; i++) {
+                addMeasurementRow();
+            }
+
+            updateChart();
+        }
+
+        function updateMeasurements() {
+            const pressureInputs = document.querySelectorAll('.pressure-input');
+            const flowInputs = document.querySelectorAll('.flow-input');
+
+            realMeasurements = [];
+
+            for (let i = 0; i < pressureInputs.length; i++) {
+                const pressure = parseFloat(pressureInputs[i].value);
+                const flow = parseFloat(flowInputs[i].value);
+
+                if (!isNaN(pressure) && !isNaN(flow) && pressure > 0 && flow > 0) {
+                    realMeasurements.push({ x: pressure, y: flow });
+                }
+            }
+
+            updateChart();
+        }
+
+        // Chart-Funktionen
+        function initChart() {
+            const ctx = document.getElementById('chart');
+            if (!ctx) {
+                console.warn('Chart-Element nicht gefunden');
+                return;
+            }
+
+            // Wenn Chart bereits existiert, zerstören
+            if (chart) {
+                chart.destroy();
+                chart = null;
+            }
+
+            try {
+                chart = new Chart(ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [
+                            {
+                                label: 'Theoretische Kurve',
+                                data: [],
+                                borderColor: 'rgb(59, 130, 246)',
+                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                showLine: true,
+                                pointRadius: 0,
+                                borderWidth: 3,
+                                tension: 0.1
+                            },
+                            {
+                                label: 'Simulierte Messpunkte',
+                                data: [],
+                                borderColor: 'rgb(245, 158, 11)',
+                                backgroundColor: 'rgba(245, 158, 11, 0.8)',
+                                pointRadius: 6,
+                                showLine: false
+                            },
+                            {
+                                label: 'Reale Messpunkte',
+                                data: [],
+                                borderColor: 'rgb(34, 197, 94)',
+                                backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                                pointRadius: 8,
+                                showLine: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        },
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                title: {
+                                    display: true,
+                                    text: 'Differenzdruck [Pa]'
+                                },
+                                min: 0,
+                                max: 100
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Volumenstrom [m³/h]'
+                                },
+                                min: 0
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Blower Door Messung - Druckverlauf'
+                            },
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            }
+                        }
+                    }
+                });
+
+                console.log('Chart erfolgreich initialisiert');
+                updateChart();
+
+            } catch (error) {
+                console.error('Chart konnte nicht initialisiert werden:', error);
+                const errorElement = document.getElementById('chart-error');
+                if (errorElement) {
+                    errorElement.classList.remove('hidden');
+                }
+            }
+        }
+
+        function updateChart() {
+            if (!chart) return;
+
+            // Sichere Werte-Extraktion mit Fallback
+            const n50Element = document.getElementById('n50');
+            const volumeElement = document.getElementById('volume');
+            const pressureElement = document.getElementById('pressure');
+
+            const n50 = n50Element ? parseFloat(n50Element.value) : 3.0;
+            const volume = volumeElement ? parseFloat(volumeElement.value) : 500;
+            const maxPressure = pressureElement ? parseFloat(pressureElement.value) : 100;
+
+            // Theoretische Kurve berechnen
+            const theoreticalData = [];
+            const C = (n50 * volume) / Math.pow(50, 0.65); // Konstante C
+
+            for (let p = 10; p <= maxPressure; p += 2) {
+                const flow = C * Math.pow(p, 0.65);
+                theoreticalData.push({ x: p, y: flow });
+            }
+
+            // Simulierte Messpunkte
+            const simulatedData = [];
+            for (let p = 15; p <= maxPressure; p += 15) {
+                const baseFlow = C * Math.pow(p, 0.65);
+                // Zufällige Abweichung ±5%
+                const deviation = (Math.random() - 0.5) * 0.1;
+                const flow = baseFlow * (1 + deviation);
+                simulatedData.push({ x: p, y: flow });
+            }
+
+            // Chart-Daten aktualisieren - Sichere Checkbox-Abfrage
+            const showTheoreticalElement = document.getElementById('showTheoretical');
+            const showSimulatedElement = document.getElementById('showSimulated');
+            const showRealElement = document.getElementById('showReal');
+
+            const showTheoretical = showTheoreticalElement ? showTheoreticalElement.checked : true;
+            const showSimulated = showSimulatedElement ? showSimulatedElement.checked : false;
+            const showReal = showRealElement ? showRealElement.checked : true;
+
+            chart.data.datasets[0].data = showTheoretical ? theoreticalData : [];
+            chart.data.datasets[1].data = showSimulated ? simulatedData : [];
+            chart.data.datasets[2].data = showReal ? realMeasurements : [];
+
+            // Y-Achse dynamisch anpassen
+            const maxY = Math.max(...theoreticalData.map(d => d.y), ...simulatedData.map(d => d.y), ...realMeasurements.map(d => d.y || 0));
+            chart.options.scales.y.max = maxY * 1.1;
+
+            chart.update('none'); // 'none' für bessere Performance
+
+            updateCalculations();
+        }
+
+        function updateCalculations() {
+            // Sichere Element-Abfrage
+            const n50Element = document.getElementById('n50');
+            const volumeElement = document.getElementById('volume');
+
+            const n50 = n50Element ? parseFloat(n50Element.value) : 3.0;
+            const volume = volumeElement ? parseFloat(volumeElement.value) : 500;
+
+            // Angenommene Hüllfläche (vereinfacht als 2.5 * Volumen^(2/3))
+            const hullArea = 2.5 * Math.pow(volume, 2 / 3);
+
+            // V50 berechnen
+            const v50 = n50 * volume;
+
+            // q50 berechnen
+            const q50 = v50 / hullArea;
+
+            // Werte anzeigen - Sichere Element-Abfrage
+            const calcN50Element = document.getElementById('calc-n50');
+            const calcQ50Element = document.getElementById('calc-q50');
+            const calcV50Element = document.getElementById('calc-v50');
+
+            if (calcN50Element) calcN50Element.textContent = n50.toFixed(1);
+            if (calcQ50Element) calcQ50Element.textContent = q50.toFixed(2);
+            if (calcV50Element) calcV50Element.textContent = Math.round(v50);
+        }
+
+        // Event Listeners für Checkboxen
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkboxes = ['showTheoretical', 'showSimulated', 'showReal'];
+            checkboxes.forEach(id => {
+                const checkbox = document.getElementById(id);
+                if (checkbox) {
+                    checkbox.addEventListener('change', function () {
+                        if (chart) {
+                            updateChart();
+                        }
+                    });
+                }
+            });
+
+            // Initial Chart Setup wenn auf Analyse-Seite
+            setTimeout(() => {
+                const analysisPage = document.getElementById('analysis');
+                if (analysisPage && analysisPage.classList.contains('active')) {
+                    initChart();
+                }
+            }, 500);
+        });
+    </script>
+
+</body>
+
+</html>
