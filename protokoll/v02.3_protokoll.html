@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blower-Door Prüfverfahren gem. ISO 9972:2018</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.4;
+            color: #333;
+            background: #f5f5f5;
+        }
+        
+        .page {
+            width: 210mm;
+            height: 297mm;
+            margin: 20px auto;
+            background: white;
+            padding: 20mm 20mm 20mm 35mm; /* oben rechts unten links */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            page-break-after: always;
+            position: relative;
+        }
+        
+        /* Lochmarkierungen */
+        .page::before {
+            content: '';
+            position: absolute;
+            left: 6mm;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6mm;
+            height: 6mm;
+            border-radius: 50%;
+            background: #ddd;
+            border: 2px solid #999;
+        }
+        
+        .page::after {
+            content: '';
+            position: absolute;
+            left: 6mm;
+            top: 105mm;
+            width: 6mm;
+            height: 6mm;
+            border-radius: 50%;
+            background: #ddd;
+            border: 2px solid #999;
+        }
+        
+        /* Zusätzliche Lochmarkierung unten */
+        .page .hole-bottom {
+            position: absolute;
+            left: 6mm;
+            bottom: 105mm;
+            width: 6mm;
+            height: 6mm;
+            border-radius: 50%;
+            background: #ddd;
+            border: 2px solid #999;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+        }
+        
+        .logo-placeholder {
+            width: 60px;
+            height: 60px;
+            background: #ddd;
+            border: 2px dashed #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #666;
+        }
+        
+        .title {
+            text-align: center;
+            flex-grow: 1;
+            margin: 0 20px;
+        }
+        
+        .title h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .title p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .map-placeholder {
+            width: 80px;
+            height: 60px;
+            background: #ddd;
+            border: 2px dashed #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #666;
+        }
+        
+        .section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .info-block {
+            background: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #007acc;
+        }
+        
+        .info-block h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #007acc;
+        }
+        
+        .field-group {
+            margin-bottom: 10px;
+        }
+        
+        .field-group label {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+        }
+        
+        .field-group input, .field-group select {
+            border: none;
+            border-bottom: 1px solid #ccc;
+            padding: 2px 5px;
+            background: transparent;
+            min-width: 100px;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .data-table th {
+            background: #f5f5f5;
+            font-weight: bold;
+        }
+        
+        .measurement-controls {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+        
+        .control-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .control-card h4 {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .control-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .control-n50 { color: #2196F3; }
+        .control-volume { color: #4CAF50; }
+        .control-pressure { color: #9C27B0; }
+        
+        .chart-placeholder {
+            width: 100%;
+            height: 300px;
+            background: #f5f5f5;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            margin: 20px 0;
+        }
+        
+        .result-cards {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .result-card {
+            flex: 1;
+            background: linear-gradient(135deg, #ff9a56, #ff6b35);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .result-card .value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .result-card .label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, #00bcd4, #0097a7);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            margin-top: 30px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Impact', 'Arial Black', sans-serif;
+        }
+        
+        .footer-logo {
+            font-size: 24px;
+            font-weight: bold;
+            font-family: 'Impact', 'Arial Black', sans-serif;
+        }
+        
+        .definitions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .definition-card {
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .definition-blue {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .definition-green {
+            background: #e8f5e8;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .signature-area {
+            border: 2px dashed #ccc;
+            padding: 50px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .signature-boxes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .signature-box {
+            border: 1px dashed #ccc;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        @media print {
+            .page {
+                margin: 0;
+                box-shadow: none;
+                width: 210mm;
+                height: 297mm;
+                padding: 20mm 20mm 20mm 35mm;
+            }
+            
+            .page::before,
+            .page::after,
+            .page .hole-bottom {
+                display: none; /* Lochmarkierungen beim Drucken ausblenden */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Seite 1 -->
+    <div class="page">
+        <div class="hole-bottom"></div> <!-- Dritte Lochmarkierung -->
+        <div class="header">
+            <div class="logo-placeholder">LOGO</div>
+            <div class="title">
+                <h1>Blower-Door</h1>
+                <p>Prüfverfahren gem. ISO 9972:2018</p>
+            </div>
+            <div class="map-placeholder">Karte</div>
+        </div>
+        
+        <div class="info-block" style="margin-bottom: 20px;">
+            <h3>Geprüftes Objekt:</h3>
+            <div class="field-group">
+                <label>Objekt:</label>
+                <input type="text" value="Wohneinheit nach Sanierung">
+            </div>
+            <div class="field-group">
+                <label>Bauabschnitt:</label>
+                <input type="text" value="EG">
+            </div>
+            <div class="field-group">
+                <label>Adresse:</label>
+                <input type="text" value="Ernst-Thälmann-Straße 27">
+            </div>
+            <div class="field-group">
+                <label>PLZ/Ort:</label>
+                <input type="text" value="D-99423 Weimar">
+            </div>
+        </div>
+        
+        <div class="info-block" style="margin-bottom: 20px;">
+            <h3>Auftraggeber/in:</h3>
+            <div class="field-group">
+                <label>Name:</label>
+                <input type="text" value="Sarah Bäumel">
+            </div>
+            <div class="field-group">
+                <label>Adresse:</label>
+                <input type="text" value="Ernst-Thälmann-Straße 27">
+            </div>
+            <div class="field-group">
+                <label>PLZ/Ort:</label>
+                <input type="text" value="D-99423 Weimar">
+            </div>
+        </div>
+        
+        <div class="info-block" style="margin-bottom: 20px;">
+            <h3>Auftragnehmer:</h3>
+            <div class="field-group">
+                <label>Name:</label>
+                <input type="text" value="Dipl.-Ing. Christoph Quiatkowski">
+            </div>
+            <div class="field-group">
+                <label>Beruf:</label>
+                <input type="text" value="Architekturdienstleister und Energieberater">
+            </div>
+            <div class="field-group">
+                <label>Adresse:</label>
+                <input type="text" value="Kegelplatz 5, D-99423 Weimar">
+            </div>
+            <div class="field-group">
+                <label>E-Mail:</label>
+                <input type="email" value="christoph@immergo.de">
+            </div>
+            <div class="field-group">
+                <label>Tel.:</label>
+                <input type="tel" value="0162-9182524">
+            </div>
+        </div>
+        
+        <div class="info-block" style="margin-bottom: 20px;">
+            <h3>Messungen durchgeführt von:</h3>
+            <div class="field-group">
+                <label>Name:</label>
+                <input type="text" value="Techniker(FH) Danny Heinicke">
+            </div>
+            <div class="field-group">
+                <label>Qualifikation:</label>
+                <input type="text" value="Staatlich gepr. Kälte- und Klimasystemtechniker">
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-logo">FLIB</div>
+            <div>
+                <div><strong>Prüfergebnis: Bestanden</strong></div>
+                <div>gemessen am: 11. November 2025</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seite 2 -->
+    <div class="page">
+        <div class="hole-bottom"></div> <!-- Dritte Lochmarkierung -->
+        <div class="header">
+            <div class="logo-placeholder">LOGO</div>
+            <div class="title">
+                <h1>Blower-Door</h1>
+                <p>Prüfverfahren gem. ISO 9972:2018</p>
+            </div>
+            <div class="map-placeholder">Karte</div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Zweck der Messung:</div>
+            <h3>Überprüfung der Anforderung nach KfW-Richtlinie</h3>
+            <ul style="margin: 15px 0 15px 30px;">
+                <li>Leckageortung</li>
+                <li>Qualitätskontrolle</li>
+                <li>Passivhaus-Standard</li>
+                <li>KfW-Nachweis</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Anwendungen:</div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Definition:</div>
+            <p>Die Blower-Door Messung ist ein Verfahren gem ISO 9972:2018 zur Bestimmung der Luftdurchlässigkeit von Gebäuden. Diese werden zur Qualitätskontrolle der Bauausführung und zur Überprüfung der Anforderungen nach KfW-Richtlinien eingesetzt.</p>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-logo">FLIB</div>
+            <div>
+                <div><strong>Prüfergebnis: Bestanden</strong></div>
+                <div>gemessen am: 11. November 2025</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seite 3 -->
+    <div class="page">
+        <div class="hole-bottom"></div> <!-- Dritte Lochmarkierung -->
+        <div class="header">
+            <div class="logo-placeholder">LOGO</div>
+            <div class="title">
+                <h1>Blower-Door</h1>
+                <p>Prüfverfahren gem. ISO 9972:2018</p>
+            </div>
+            <div class="map-placeholder">Karte</div>
+        </div>
+        
+        <div class="info-grid">
+            <div class="info-block">
+                <h3>Gebäudedaten:</h3>
+                <div class="field-group">
+                    <label>Netto-Raumvolumen V:</label>
+                    <input type="number" placeholder="___"> m³
+                </div>
+                <div class="field-group">
+                    <label>Hüllfläche:</label>
+                    <input type="number" placeholder="___"> m²
+                </div>
+                <div class="field-group">
+                    <label>Geschossanzahl:</label>
+                    <input type="number" placeholder="___">
+                </div>
+                <div class="field-group">
+                    <label>Nutzungsart:</label>
+                    <input type="text" placeholder="___">
+                </div>
+            </div>
+            
+            <div class="info-block">
+                <h3>Wetterdaten:</h3>
+                <div class="field-group">
+                    <label>Außentemp.:</label>
+                    <input type="number" placeholder="___"> °C
+                </div>
+                <div class="field-group">
+                    <label>Innentemp.:</label>
+                    <input type="number" placeholder="___"> °C
+                </div>
+                <div class="field-group">
+                    <label>Windgeschwindigkeit:</label>
+                    <input type="number" placeholder="___"> m/s
+                </div>
+                <div class="field-group">
+                    <label>Windrichtung:</label>
+                    <input type="text" placeholder="___">
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-block">
+            <h3>Messgerät:</h3>
+            <div class="field-group">
+                <label>Hersteller:</label>
+                <input type="text" value="Testo">
+            </div>
+            <div class="field-group">
+                <label>Typ/Modell:</label>
+                <input type="text" value="DP-510i">
+            </div>
+            <div class="field-group">
+                <label>Seriennummer:</label>
+                <input type="text" value="46884224">
+            </div>
+            <div class="field-group">
+                <label>Kalibrierung gültig bis:</label>
+                <input type="text" value="03/27">
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-logo">FLIB</div>
+            <div>
+                <div><strong>Prüfergebnis: Bestanden</strong></div>
+                <div>gemessen am: 11. November 2025</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seite 4 -->
+    <div class="page">
+        <div class="hole-bottom"></div> <!-- Dritte Lochmarkierung -->
+        <div class="header">
+            <div class="logo-placeholder">LOGO</div>
+            <div class="title">
+                <h1>Blower-Door</h1>
+                <p>Prüfverfahren gem. ISO 9972:2018</p>
+            </div>
+            <div class="map-placeholder">Karte</div>
+        </div>
+        
+        <div class="section-title">Messwerte:</div>
+        
+        <div class="measurement-controls">
+            <div class="control-card">
+                <h4>n₅₀-Wert [1/h]</h4>
+                <div class="control-value control-n50">1.5</div>
+            </div>
+            <div class="control-card">
+                <h4>Gebäudevolumen [m³]</h4>
+                <div class="control-value control-volume">100</div>
+            </div>
+            <div class="control-card">
+                <h4>Max. Druck [Pa]</h4>
+                <div class="control-value control-pressure">200</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h4>🔴 Reale Messpunkte eingeben</h4>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Differenzdruck [Pa]</th>
+                        <th>Volumenstrom [m³/h]</th>
+                        <th>Aktionen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="number" value="10"></td>
+                        <td><input type="number" value="1100"></td>
+                        <td><button style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 3px;">Entfernen</button></td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" value="20"></td>
+                        <td><input type="number" value="1100"></td>
+                        <td><button style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 3px;">Entfernen</button></td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" value="30"></td>
+                        <td><input type="number" value="1122"></td>
+                        <td><button style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 3px;">Entfernen</button></td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" value="40"></td>
+                        <td><input type="number" value="1200"></td>
+                        <td><button style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 3px;">Entfernen</button></td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" value="50"></td>
+                        <td><input type="number" value="1344"></td>
+                        <td><button style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 3px;">Entfernen</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="margin-top: 10px;">
+                <button style="background: #f44336; color: white; border: none; padding: 8px 15px; border-radius: 3px; margin-right: 10px;">Alle löschen</button>
+                <button style="background: #4caf50; color: white; border: none; padding: 8px 15px; border-radius: 3px;">+ Zeile hinzufügen</button>
+            </div>
+            <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                <strong>Hinweis:</strong> Geben Sie Ihre gemessenen Werte ein. Leere Zeilen werden ignoriert.<br>
+                <strong>Tipp:</strong> Drücken Sie Tab, um zwischen den Feldern zu wechseln.
+            </p>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-logo">FLIB</div>
+            <div>
+                <div><strong>Prüfergebnis: Bestanden</strong></div>
+                <div>gemessen am: 11. November 2025</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seite 5 -->
+    <div class="page">
+        <div class="hole-bottom"></div> <!-- Dritte Lochmarkierung -->
+        <div class="header">
+            <div class="logo-placeholder">LOGO</div>
+            <div class="title">
+                <h1>Blower-Door</h1>
+                <p>Prüfverfahren gem. ISO 9972:2018</p>
+            </div>
+            <div class="map-placeholder">Karte</div>
+        </div>
+        
+        <div class="section-title">Diagramm:</div>
+        
+        <div class="chart-placeholder">
+            <div>
+                <div>📊 Diagramm-Platzhalter</div>
+                <div style="font-size: 12px; margin-top: 10px;">
+                    Hier würde das Blower-Door Messung Druckverlauf-Diagramm angezeigt<br>
+                    Mit theoretischer Kurve, simulierten Messpunkten und realen Messpunkten
+                </div>
+            </div>
+        </div>
+        
+        <div class="result-cards">
+            <div class="result-card">
+                <div class="value">1.5</div>
+                <div class="label">n₅₀-Wert [1/h]</div>
+            </div>
+            <div class="result-card">
+                <div class="value">4.02</div>
+                <div class="label">q₅₀-Wert [m³/(h·m²)]</div>
+            </div>
+            <div class="result-card">
+                <div class="value">450</div>
+                <div class="label">V₅₀ [m³/h]</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-logo">FLIB</div>
+            <div>
+                <div><strong>Prüfergebnis: Bestanden</strong></div>
+                <div>gemessen am: 11. November 2025</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seite 6 -->
+    <div class="page">
+        <div class="hole-bottom"></div> <!-- Dritte Lochmarkierung -->
+        <div class="header">
+            <div class="logo-placeholder">LOGO</div>
+            <div class="title">
+                <h1>Blower-Door</h1>
+                <p>Prüfverfahren gem. ISO 9972:2018</p>
+            </div>
+            <div class="map-placeholder">Karte</div>
+        </div>
+        
+        <div class="section-title">Auswertung:</div>
+        
+        <div class="definitions-grid">
+            <div class="definition-card definition-blue">
+                <h4>🔵 Grundlegende Definitionen</h4>
+                <p><strong>n₅₀-Wert:</strong> Luftwechselrate bei 50 Pa Druckdifferenz</p>
+                <p><strong>q₅₀-Wert:</strong> Spezifischer Leckagestrom pro m² Hüllfläche</p>
+                <p><strong>V₅₀:</strong> Volumenstrom bei 50 Pa Druckdifferenz</p>
+            </div>
+            
+            <div class="definition-card definition-green">
+                <h4>🟢 Technische Parameter</h4>
+                <p><strong>Potenzfunktion:</strong> V = C × ΔP^n</p>
+                <p><strong>Typischer n-Wert:</strong> 0,65 (für turbulente Strömung)</p>
+                <p><strong>Messbereich:</strong> 10-100 Pa (nach ISO 9972)</p>
+            </div>
+        </div>
+        
+        <div class="signature-area">
+            <div class="section-title">Bewertung:</div>
+            <div style="height: 100px; border: 1px dashed #ccc; margin: 20px 0; padding: 20px;">
+                <div style="color: #666; text-align: center;">Bewertungstext hier einfügen</div>
+            </div>
+        </div>
+        
+        <div class="signature-boxes">
+            <div class="signature-box">
+                <div><strong>Techniker(FH) D.Heinicke</strong></div>
+                <div style="margin-top: 30px;">
+                    <div>_____________________________</div>
+                    <div style="font-size: 12px;">Datum, Unterschrift Messtechniker</div>
+                </div>
+            </div>
+            
+            <div class="signature-box">
+                <div><strong>Dipl.-Ing C. Quiatkowski</strong></div>
+                <div style="margin-top: 30px;">
+                    <div>_____________________________</div>
+                    <div style="font-size: 12px;">Datum, Unterschrift Auftraggeber</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-logo">FLIB</div>
+            <div>
+                <div><strong>Prüfergebnis: Bestanden</strong></div>
+                <div>gemessen am: 11. November 2025</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Interaktive Funktionen für das Formular
+        
+        // Zeile hinzufügen
+        function addRow() {
+            const table = document.querySelector('.data-table tbody');
+            const newRow = table.insertRow();
+            newRow.innerHTML = `
+                <td><input type="number" placeholder="Pa"></td>
+                <td><input type="number" placeholder="m³/h"></td>
+                <td><button onclick="removeRow(this)" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 3px;">Entfernen</button></td>
+            `;
+        }
+        
+        // Zeile entfernen
+        function removeRow(button) {
+            button.closest('tr').remove();
+        }
+        
+        // Alle Zeilen löschen
+        function clearAll() {
+            if (confirm('Alle Messwerte löschen?')) {
+                const tbody = document.querySelector('.data-table tbody');
+                tbody.innerHTML = '';
+            }
+        }
+        
+        // Event Listeners hinzufügen
+        document.addEventListener('DOMContentLoaded', function() {
+            // Button für "Zeile hinzufügen"
+            const addButton = document.querySelector('button[style*="4caf50"]');
+            if (addButton) {
+                addButton.onclick = addRow;
+            }
+            
+            // Button für "Alle löschen"
+            const clearButton = document.querySelector('button[style*="f44336"]:not([onclick])');
+            if (clearButton) {
+                clearButton.onclick = clearAll;
+            }
+            
+            // Entfernen-Buttons
+            document.querySelectorAll('button[style*="f44336"]').forEach(button => {
+                if (button.textContent.includes('Entfernen')) {
+                    button.onclick = function() { removeRow(this); };
+                }
+            });
+        });
+        
+        // Auto-save Funktionalität (optional)
+        function autoSave() {
+            const formData = {};
+            document.querySelectorAll('input').forEach(input => {
+                if (input.name || input.id) {
+                    formData[input.name || input.id] = input.value;
+                }
+            });
+            localStorage.setItem('blowerDoorData', JSON.stringify(formData));
+        }
+        
+        // Daten laden beim Laden der Seite
+        function loadData() {
+            const savedData = localStorage.getItem('blowerDoorData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                Object.keys(data).forEach(key => {
+                    const input = document.querySelector(`[name="${key}"], #${key}`);
+                    if (input) {
+                        input.value = data[key];
+                    }
+                });
+            }
+        }
+        
+        // Auto-save bei Änderungen
+        document.addEventListener('input', autoSave);
+        
+        // Daten beim Laden der Seite wiederherstellen
+        // document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>
