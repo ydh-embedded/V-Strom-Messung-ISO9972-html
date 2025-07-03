@@ -102,9 +102,7 @@
                         </div>
                     </div>
 
-                    <!-- Action Buttons -->
-                    <button onclick="printProtocol()"
-                        class="action-btn bg-gradient-to-r from-emerald-600 to-green-600 text-green-100 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:from-emerald-500 hover:to-green-500">
+                    <button onclick="printProtocol()" class="nav-btn px-3 py-2 rounded-lg font-medium transition-all duration-300">
                         <span class="flex items-center gap-2">
                             <span class="text-base">🖨️</span>
                             <span class="hidden xl:inline">Drucken</span>
@@ -269,242 +267,411 @@
                                 <span id="current-weather-desc" class="text-white">--</span>
                             </div>
                         </div>
+
+                    <div class="section">
+                        <div class="section-title">Anwendungen:</div>
+                        <div class="interactive-text-area">
+                            <h4>📝 Anwendungen</h4>
+                            <textarea class="editable-text" placeholder="Spezifische Anwendungen
+
+Beispiele:
+• Leckageortung vor Fertigstellung
+• Qualitätskontrolle der Bauausführung
+• Nachweis für Förderungen (KfW, BAFA)
+• Überprüfung nach Sanierungsmaßnahmen
+• Dokumentation für Energieausweis"></textarea>
                     </div>
                 </div>
-            </section>
+
+                    <div class="section">
+                        <div class="section-title">Definition:</div>
+                        <div class="info-block">
+                            <p>Die Blower-Door Messung ist ein Verfahren gem ISO 9972:2018 zur Bestimmung der Luftdurchlässigkeit von Gebäuden. Diese werden zur Qualitätskontrolle der Bauausführung und zur Überprüfung der Anforderungen nach KfW-Richtlinien eingesetzt.</p>
+                        </div>
         </div>
 
-        <!-- SECTION Measurement Page -->
-        <div id="measurement" class="page">
-            <section id="measurement-section"
-                class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
-                <div class="max-w-6xl mx-auto">
-                    <h2 class="text-4xl font-bold text-rose-300 mb-8 text-center">Messdatenerfassung</h2>
+                    <div class="footer">
+                        <div class="footer-logo">FLIB</div>
+                        <div>
+                            <div>Prüfergebnis:</div>
+                            <div>gemessen am:</div>
+                        </div>
+                        <div>
+                            <div><strong>Bestanden</strong></div>
+                            <div><strong>November 2025</strong></div>
+                        </div>
+                        <div style="font-size: 14px;">Seite 2 von 6</div>
+                    </div>
+                </div>
 
-                    <!-- Parameter Controls -->
-                    <div id="measurement-parameters"
-                        class="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 mb-8 border border-rose-500/30">
-                        <h3 class="text-2xl font-bold text-rose-300 mb-6">Messparameter</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div id="n50-parameter">
-                                <label class="block text-rose-300 font-medium mb-2">n₅₀-Wert [1/h]</label>
-                                <input type="range" id="n50" min="0.5" max="10" step="0.1" value="3.0"
-                                    class="slider-dark-rose w-full">
-                                <div class="text-rose-300 text-center mt-2 font-bold text-lg" id="n50-value">3.0</div>
+                <!-- Seite 3 -->
+                <div class="protocol-page">
+                    <div class="hole-second"></div>
+                    <div class="hole-third"></div>
+                    <div class="header">
+                        <div class="header-background"></div>
+                        <div class="logo-placeholder">LOGO</div>
+                        <div class="title">
+                            <h1>Blower-Door</h1>
+                            <p>Prüfverfahren gem. ISO 9972:2018</p>
                             </div>
-                            <div id="volume-parameter">
-                                <label class="block text-rose-300 font-medium mb-2">Gebäudevolumen [m³]</label>
-                                <input type="range" id="volume" min="100" max="2000" step="10" value="500"
-                                    class="slider-dark-amber w-full">
-                                <div class="text-rose-300 text-center mt-2 font-bold text-lg" id="volume-value">500
+                        <div class="map-placeholder">Karte</div>
                                 </div>
+
+                    <div class="info-block">
+                        <h3>Gebäudedaten:</h3>
+                        <div class="field-group">
+                            <label>Netto-Raumvolumen V:</label>
+                            <input type="number" placeholder="___"> m³
                             </div>
-                            <div id="pressure-parameter">
-                                <label class="block text-rose-300 font-medium mb-2">Max. Druck [Pa]</label>
-                                <input type="range" id="pressure" min="50" max="150" step="5" value="100"
-                                    class="slider-dark-rose w-full">
-                                <div class="text-rose-300 text-center mt-2 font-bold text-lg" id="pressure-value">100
+                        <div class="field-group">
+                            <label>Hüllfläche:</label>
+                            <input type="number" placeholder="___"> m²
                                 </div>
+                        <div class="field-group">
+                            <label>Geschossanzahl:</label>
+                            <input type="number" placeholder="___">
+                        </div>
+                        <div class="field-group">
+                            <label>Nutzungsart:</label>
+                            <input type="text" placeholder="___">
                             </div>
+                    </div>
+
+                    <div class="info-block">
+                        <h3>Wetterdaten:</h3>
+                        <div class="field-group">
+                            <label>Außentemp.:</label>
+                            <input type="number" placeholder="___"> °C
+                        </div>
+                        <div class="field-group">
+                            <label>Innentemp.:</label>
+                            <input type="number" placeholder="___"> °C
+                        </div>
+                        <div class="field-group">
+                            <label>Windgeschwindigkeit:</label>
+                            <input type="number" placeholder="___"> m/s
+                        </div>
+                        <div class="field-group">
+                            <label>Windrichtung:</label>
+                            <input type="text" placeholder="___">
                         </div>
                     </div>
 
-                    <!-- Measurement Tables -->
-                    <div id="measurement-tables"
-                        class="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 border border-rose-500/30">
-                        <h3 class="text-2xl font-bold text-rose-300 mb-6">Messwerte</h3>
+                    <div class="info-block">
+                        <h3>Messgerät:</h3>
+                        <div class="field-group">
+                            <label>Hersteller:</label>
+                            <input type="text" value="Testo">
+                        </div>
+                        <div class="field-group">
+                            <label>Typ/Modell:</label>
+                            <input type="text" value="DP-510i">
+                        </div>
+                        <div class="field-group">
+                            <label>Seriennummer:</label>
+                            <input type="text" value="46884224">
+                        </div>
+                        <div class="field-group">
+                            <label>Kalibrierung gültig bis:</label>
+                            <input type="text" value="03/27">
+                        </div>
+                    </div>
 
-                        <!-- Tab Navigation -->
-                        <div class="flex space-x-2 mb-6">
-                            <button onclick="switchTab('underpressure')" id="tab-underpressure"
-                                class="tab-button active px-6 py-3 rounded-lg font-medium">
-                                Unterdruck
-                            </button>
-                            <button onclick="switchTab('overpressure')" id="tab-overpressure"
-                                class="tab-button px-6 py-3 rounded-lg font-medium">
-                                Überdruck
-                            </button>
+                    <div class="footer">
+                        <div class="footer-logo">FLIB</div>
+                        <div>
+                            <div>Prüfergebnis:</div>
+                            <div>gemessen am:</div>
+                        </div>
+                        <div>
+                            <div><strong>Bestanden</strong></div>
+                            <div><strong>November 2025</strong></div>
+                        </div>
+                        <div style="font-size: 14px;">Seite 3 von 6</div>
+                    </div>
                         </div>
 
-                        <!-- Underpressure Table -->
-                        <div id="underpressure-content" class="tab-content active">
-                            <div id="underpressure-table-section"
-                                class="bg-slate-800/80 rounded-lg p-4 mb-4 border border-rose-500/20">
-                                <h4 class="text-lg font-bold text-rose-300 mb-4">Unterdruckmessungen</h4>
-                                <div class="overflow-x-auto">
-                                    <table class="measurement-table w-full border-collapse">
+                <!-- Seite 4 -->
+                <div class="protocol-page">
+                    <div class="hole-second"></div>
+                    <div class="hole-third"></div>
+                    <div class="header">
+                        <div class="header-background"></div>
+                        <div class="logo-placeholder">LOGO</div>
+                        <div class="title">
+                            <h1>Blower-Door</h1>
+                            <p>Prüfverfahren gem. ISO 9972:2018</p>
+                        </div>
+                        <div class="map-placeholder">Karte</div>
+                    </div>
+
+                    <div class="section-title">Messwerte:</div>
+
+                    <div class="info-block">
+                        <h3>Unterdruckmessungen:</h3>
+                        <table class="data-table">
                                         <thead>
                                             <tr>
-                                                <th class="border px-4 py-3 text-left">Differenzdruck [Pa]</th>
-                                                <th class="border px-4 py-3 text-left">Volumenstrom [m³/h]</th>
-                                                <th class="border px-4 py-3 text-center">Aktionen</th>
+                                    <th>Messung Nr.</th>
+                                    <th>Differenzdruck [Pa]</th>
+                                    <th>Volumenstrom [m³/h]</th>
+                                    <th>Bemerkungen</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="underpressureTable">
-                                            <!-- Rows will be added dynamically -->
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>-10</td>
+                                    <td>850</td>
+                                    <td>Startwert</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>-20</td>
+                                    <td>1200</td>
+                                    <td>Stabil</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>-30</td>
+                                    <td>1480</td>
+                                    <td>Optimal</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>-40</td>
+                                    <td>1720</td>
+                                    <td>Gut</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>-50</td>
+                                    <td>1950</td>
+                                    <td>Referenzwert</td>
+                                </tr>
+                                        </tbody>
+                                    </table>
+                        </div>
+
+                    <div class="info-block">
+                        <h3>Überdruckmessungen:</h3>
+                        <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                    <th>Messung Nr.</th>
+                                    <th>Differenzdruck [Pa]</th>
+                                    <th>Volumenstrom [m³/h]</th>
+                                    <th>Bemerkungen</th>
+                                            </tr>
+                                        </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>10</td>
+                                    <td>820</td>
+                                    <td>Startwert</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>20</td>
+                                    <td>1150</td>
+                                    <td>Stabil</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>30</td>
+                                    <td>1420</td>
+                                    <td>Optimal</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>40</td>
+                                    <td>1680</td>
+                                    <td>Gut</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>50</td>
+                                    <td>1920</td>
+                                    <td>Referenzwert</td>
+                                </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="mt-4 space-x-2">
-                                    <button onclick="addUnderpressureRow()"
-                                        class="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded hover:from-rose-400 hover:to-pink-400 transition-all duration-300">
-                                        Zeile hinzufügen
-                                    </button>
-                                    <button onclick="clearUnderpressure()"
-                                        class="bg-gradient-to-r from-red-600 to-red-500 text-white px-4 py-2 rounded hover:from-red-500 hover:to-red-400 transition-all duration-300">
-                                        Tabelle leeren
-                                    </button>
+
+                    <div class="footer">
+                        <div class="footer-logo">FLIB</div>
+                        <div>
+                            <div>Prüfergebnis:</div>
+                            <div>gemessen am:</div>
                                 </div>
+                        <div>
+                            <div><strong>Bestanden</strong></div>
+                            <div><strong>November 2025</strong></div>
+                        </div>
+                        <div style="font-size: 14px;">Seite 4 von 6</div>
                             </div>
                         </div>
 
-                        <!-- Overpressure Table -->
-                        <div id="overpressure-content" class="tab-content">
-                            <div id="overpressure-table-section"
-                                class="bg-slate-800/80 rounded-lg p-4 mb-4 border border-rose-500/20">
-                                <h4 class="text-lg font-bold text-rose-300 mb-4">Überdruckmessungen</h4>
-                                <div class="overflow-x-auto">
-                                    <table class="measurement-table w-full border-collapse">
-                                        <thead>
-                                            <tr>
-                                                <th class="border px-4 py-3 text-left">Differenzdruck [Pa]</th>
-                                                <th class="border px-4 py-3 text-left">Volumenstrom [m³/h]</th>
-                                                <th class="border px-4 py-3 text-center">Aktionen</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="overpressureTable">
-                                            <!-- Rows will be added dynamically -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="mt-4 space-x-2">
-                                    <button onclick="addOverpressureRow()"
-                                        class="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded hover:from-rose-400 hover:to-pink-400 transition-all duration-300">
-                                        Zeile hinzufügen
-                                    </button>
-                                    <button onclick="clearOverpressure()"
-                                        class="bg-gradient-to-r from-red-600 to-red-500 text-white px-4 py-2 rounded hover:from-red-500 hover:to-red-400 transition-all duration-300">
-                                        Tabelle leeren
-                                    </button>
-                                </div>
+                <!-- Seite 5 -->
+                <div class="protocol-page">
+                    <div class="hole-second"></div>
+                    <div class="hole-third"></div>
+                    <div class="header">
+                        <div class="header-background"></div>
+                        <div class="logo-placeholder">LOGO</div>
+                        <div class="title">
+                            <h1>Blower-Door</h1>
+                            <p>Prüfverfahren gem. ISO 9972:2018</p>
                             </div>
-                        </div>
+                        <div class="map-placeholder">Karte</div>
+                            </div>
 
-                        <!-- Legacy Combined Table -->
-                        <div id="legacy-table-section"
-                            class="bg-slate-800/80 rounded-lg p-4 mt-6 border border-rose-500/20">
-                            <h4 class="text-lg font-bold text-rose-300 mb-4">Kombinierte Messwerte (Legacy)</h4>
-                            <div class="overflow-x-auto">
-                                <table class="measurement-table w-full border-collapse">
-                                    <thead>
-                                        <tr>
-                                            <th class="border px-4 py-3 text-left">Differenzdruck [Pa]</th>
-                                            <th class="border px-4 py-3 text-left">Volumenstrom [m³/h]</th>
-                                            <th class="border px-4 py-3 text-center">Aktionen</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="measurementTable">
-                                        <!-- Rows will be added dynamically -->
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="mt-4 space-x-2">
-                                <button id="addMeasurementRow"
-                                    class="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded hover:from-rose-400 hover:to-pink-400 transition-all duration-300">
-                                    Zeile hinzufügen
-                                </button>
-                                <button id="clearMeasurements"
-                                    class="bg-gradient-to-r from-red-600 to-red-500 text-white px-4 py-2 rounded hover:from-red-500 hover:to-red-400 transition-all duration-300">
-                                    Tabelle leeren
-                                </button>
-                            </div>
+                    <div class="measurement-controls">
+                        <div class="control-card">
+                            <h4>n₅₀-Wert [1/h]</h4>
+                            <div class="control-value control-n50">1.5</div>
                         </div>
+                        <div class="control-card">
+                            <h4>Gebäudevolumen [m³]</h4>
+                            <div class="control-value control-volume">100</div>
                     </div>
+                        <div class="control-card">
+                            <h4>Max. Druck [Pa]</h4>
+                            <div class="control-value control-pressure">200</div>
                 </div>
-            </section>
         </div>
 
-        <!-- SECTION Analysis Page -->
-        <div id="analysis" class="page">
-            <section id="analysis-section"
-                class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
-                <div class="max-w-6xl mx-auto">
-                    <h2 class="text-4xl font-bold text-rose-300 mb-8 text-center">Messdatenanalyse</h2>
+                    <div class="section-title">Diagramm:</div>
 
-                    <!-- Chart Controls -->
-                    <div id="chart-controls"
-                        class="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 mb-8 border border-rose-500/30">
-                        <h3 class="text-xl font-bold text-rose-300 mb-4">Diagramm-Optionen</h3>
-                        <div class="flex flex-wrap gap-4">
-                            <label class="flex items-center text-rose-300">
-                                <input type="checkbox" id="showTheoretical" checked class="mr-2 accent-rose-500">
-                                Theoretische Kurve
-                            </label>
-                            <label class="flex items-center text-rose-300">
-                                <input type="checkbox" id="showSimulated" class="mr-2 accent-amber-500">
-                                Simulierte Messpunkte
-                            </label>
-                            <label class="flex items-center text-rose-300">
-                                <input type="checkbox" id="showReal" checked class="mr-2 accent-emerald-500">
-                                Reale Messpunkte
-                            </label>
-                            <label class="flex items-center text-rose-300">
-                                <input type="checkbox" id="showUnderpressure" checked class="mr-2 accent-red-500">
-                                Unterdruckmessungen
-                            </label>
-                            <label class="flex items-center text-rose-300">
-                                <input type="checkbox" id="showOverpressure" checked class="mr-2 accent-purple-500">
-                                Überdruckmessungen
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Chart Container -->
-                    <div id="chart-container"
-                        class="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 mb-8 border border-rose-500/30">
-                        <div class="bg-slate-800/90 rounded-lg p-4">
-                            <canvas id="chart" width="855" height="320"
-                                style="display: block; box-sizing: border-box; height: 400px; width: 1069px;"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Results Display -->
-                    <div id="analysis-results"
-                        class="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 mb-8 border border-rose-500/30">
-                        <h3 class="text-2xl font-bold text-rose-300 mb-6 text-center">Berechnete Kennwerte</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div id="n50-result"
-                                class="bg-slate-800/40 backdrop-blur-sm rounded-xl p-6 text-center border border-rose-500/30 hover:bg-slate-800/60 transition-all duration-300">
-                                <div class="text-4xl font-bold text-rose-400 mb-3" id="calc-n50">3.0</div>
-                                <div class="text-rose-300/90 text-sm font-medium">n₅₀-Wert [1/h]</div>
-                            </div>
-                            <div id="q50-result"
-                                class="bg-slate-800/40 backdrop-blur-sm rounded-xl p-6 text-center border border-amber-500/30 hover:bg-slate-800/60 transition-all duration-300">
-                                <div class="text-4xl font-bold text-amber-400 mb-3" id="calc-q50">9.52</div>
-                                <div class="text-amber-300/90 text-sm font-medium">q₅₀-Wert [m³/(h·m²)]</div>
-                            </div>
-                            <div id="v50-result"
-                                class="bg-slate-800/40 backdrop-blur-sm rounded-xl p-6 text-center border border-pink-500/30 hover:bg-slate-800/60 transition-all duration-300">
-                                <div class="text-4xl font-bold text-pink-400 mb-3" id="calc-v50">1500</div>
-                                <div class="text-pink-300/90 text-sm font-medium">V₅₀ [m³/h]</div>
+                    <div class="chart-placeholder">
+                        <div>
+                            <div>📊 Diagramm-Platzhalter</div>
+                            <div style="font-size: 12px; margin-top: 10px;">
+                                Hier würde das Blower-Door Messung Druckverlauf-Diagramm angezeigt<br>
+                                Mit theoretischer Kurve, simulierten Messpunkten und realen Messpunkten
                             </div>
                         </div>
                     </div>
 
-                    <div id="chart-error"
-                        class="hidden bg-red-900/50 border border-red-500 text-red-300 px-4 py-3 rounded mt-4">
-                        <p><strong>Fehler:</strong> Das Diagramm konnte nicht geladen werden. Bitte überprüfen Sie die
-                            Konsole für weitere Details.</p>
+                    <div class="result-cards">
+                        <div class="result-card">
+                            <div class="value">1.5</div>
+                            <div class="label">n₅₀-Wert [1/h]</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="value">4.02</div>
+                            <div class="label">q₅₀-Wert [m³/(h·m²)]</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="value">450</div>
+                            <div class="label">V₅₀ [m³/h]</div>
+                        </div>
                     </div>
+
+                    <div class="footer">
+                        <div class="footer-logo">FLIB</div>
+                        <div>
+                            <div>Prüfergebnis:</div>
+                            <div>gemessen am:</div>
+                            </div>
+                        <div>
+                            <div><strong>Bestanden</strong></div>
+                            <div><strong>November 2025</strong></div>
+                            </div>
+                        <div style="font-size: 14px;">Seite 5 von 6</div>
+                            </div>
+                        </div>
+
+                <!-- Seite 6 -->
+                <div class="protocol-page">
+                    <div class="hole-second"></div>
+                    <div class="hole-third"></div>
+                    <div class="header">
+                        <div class="header-background"></div>
+                        <div class="logo-placeholder">LOGO</div>
+                        <div class="title">
+                            <h1>Blower-Door</h1>
+                            <p>Prüfverfahren gem. ISO 9972:2018</p>
+                        </div>
+                        <div class="map-placeholder">Karte</div>
+                    </div>
+
+                    <div class="section-title">Auswertung:</div>
+
+                    <div class="definitions-grid">
+                        <div class="definition-card definition-blue">
+                            <h4>🔵 Grundlegende Definitionen</h4>
+                            <p><strong>n₅₀-Wert:</strong> Luftwechselrate bei 50 Pa Druckdifferenz</p>
+                            <p><strong>q₅₀-Wert:</strong> Spezifischer Leckagestrom pro m² Hüllfläche</p>
+                            <p><strong>V₅₀:</strong> Volumenstrom bei 50 Pa Druckdifferenz</p>
+                    </div>
+
+                        <div class="definition-card definition-green">
+                            <h4>🟢 Technische Parameter</h4>
+                            <p><strong>Potenzfunktion:</strong> V = C × ΔP^n</p>
+                            <p><strong>Typischer n-Wert:</strong> 0,65 (für turbulente Strömung)</p>
+                            <p><strong>Messbereich:</strong> 10-100 Pa (nach ISO 9972)</p>
                 </div>
-            </section>
         </div>
 
-        <!-- SECTION Protocol Page -->
-        <div id="protocol" class="page">
-            <section id="protocol-section">
-                <!-- Content will be filled by JavaScript -->
-            </section>
+                    <div class="interactive-text-area">
+                        <h4>📝 Detaillierte Bewertung der Messergebnisse</h4>
+                        <textarea class="editable-text evaluation-text" placeholder="Hier können Sie eine detaillierte Bewertung der Messergebnisse eintragen...
+
+Beispielhafte Bewertungskriterien:
+• Bewertung der gemessenen n₅₀-Werte im Vergleich zu Grenzwerten
+• Einhaltung der KfW-Anforderungen (n₅₀ ≤ 1,5 h⁻¹)
+• Qualität der Messung (Korrelationskoeffizient R²)
+• Identifizierte Leckagen und deren Bedeutung
+• Empfehlungen für Nachbesserungen
+• Fazit zur Luftdichtheit des Gebäudes
+
+Bewertung der Messergebnisse:
+Der gemessene n₅₀-Wert von 1,5 h⁻¹ entspricht exakt dem KfW-Grenzwert für Sanierungen. Die Messung zeigt eine gute Korrelation zwischen Unter- und Überdruckmessungen.
+
+Empfehlungen:
+- Alle größeren Leckagen wurden bereits während der Messung identifiziert und sollten abgedichtet werden
+- Nachkontrolle in 6 Monaten empfohlen"></textarea>
+                    </div>
+
+                    <div class="signature-boxes">
+                        <div class="signature-box">
+                            <div><strong>Techniker(FH) D.Heinicke</strong></div>
+                            <div style="margin-top: 70px;">
+                                <div style="font-size: 12px;">
+                                    <p>...............................................................</p>
+                                    Datum, Unterschrift Messtechniker
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="signature-box">
+                            <div><strong>Dipl.-Ing C. Quiatkowski</strong></div>
+                            <div style="margin-top: 70px;">
+                                <div style="font-size: 12px;">
+                                    <p>...............................................................</p>
+                                    Datum, Unterschrift Auftraggeber
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="footer">
+                        <div class="footer-logo">FLIB</div>
+                        <div>
+                            <div>Prüfergebnis:</div>
+                            <div>gemessen am:</div>
+                        </div>
+                        <div>
+                            <div><strong>Bestanden</strong></div>
+                            <div><strong>November 2025</strong></div>
+                        </div>
+                        <div style="font-size: 14px;">Seite 6 von 6</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
