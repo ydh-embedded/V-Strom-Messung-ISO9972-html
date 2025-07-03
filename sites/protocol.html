@@ -1,0 +1,672 @@
+.title p {
+font-size: 14px;
+color: #666;
+}
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blower-Door Prüfverfahren gem. ISO 9972:2018</title>
+
+
+    <!-- externe stylesheet Anbindung -->
+    <link rel="stylesheet" href="./styles/style.css">
+
+    
+
+</head>
+
+<body>
+    <!-- Seite 1 -->
+    <div class="page">
+        <div class="hole-second"></div> <!-- Zweite Lochmarkierung -->
+        <div class="hole-third"></div> <!-- Dritte Lochmarkierung -->
+        <div class="header">
+            <div class="header-background"></div>
+            <div class="logo-placeholder">LOGO</div>
+            <div class="title">
+                <h1>Blower-Door</h1>
+                <p>Prüfverfahren gem. ISO 9972:2018</p>
+            </div>
+            <div class="map-placeholder">Karte</div>
+        </div>
+
+        <div class="info-block" style="margin-bottom: 20px;">
+            <h3>Geprüftes Objekt:</h3>
+            <div class="field-group">
+                <label>Objekt:</label>
+                <input type="text" value="Wohneinheit nach Sanierung">
+            </div>
+            <div class="field-group">
+                <label>Bauabschnitt:</label>
+                <input type="text" value="EG">
+            </div>
+            <div class="field-group">
+                <label>Adresse:</label>
+                <input type="text" value="Ernst-Thälmann-Straße 27">
+            </div>
+            <div class="field-group">
+                <label>PLZ/Ort:</label>
+                <input type="text" value="D-99423 Weimar">
+            </div>
+        </div>
+
+        <div class="info-block" style="margin-bottom: 20px;">
+            <h3>Auftraggeber/in:</h3>
+            <div class="field-group">
+                <label>Name:</label>
+                <input type="text" value="Sarah Bäumel">
+            </div>
+            <div class="field-group">
+                <label>Adresse:</label>
+                <input type="text" value="Ernst-Thälmann-Straße 27">
+            </div>
+            <div class="field-group">
+                <label>PLZ/Ort:</label>
+                <input type="text" value="D-99423 Weimar">
+            </div>
+        </div>
+
+        <div class="info-block" style="margin-bottom: 20px;">
+            <h3>Auftragnehmer:</h3>
+            <div class="field-group">
+                <label>Name:</label>
+                <input type="text" value="Dipl.-Ing. Christoph Quiatkowski">
+            </div>
+            <div class="field-group">
+                <label>Beruf:</label>
+                <input type="text" value="Architekturdienstleister und Energieberater">
+            </div>
+            <div class="field-group">
+                <label>Adresse:</label>
+                <input type="text" value="Kegelplatz 5, D-99423 Weimar">
+            </div>
+            <div class="field-group">
+                <label>E-Mail:</label>
+                <input type="email" value="christoph@immergo.de">
+            </div>
+            <div class="field-group">
+                <label>Tel.:</label>
+                <input type="tel" value="0162-9182524">
+            </div>
+        </div>
+
+        <div class="info-block" style="margin-bottom: 20px;">
+            <h3>Messungen durchgeführt von:</h3>
+            <div class="field-group">
+                <label>Name:</label>
+                <input type="text" value="Techniker(FH) Danny Heinicke">
+            </div>
+            <div class="field-group">
+                <label>Qualifikation:</label>
+                <input type="text" value="Staatlich gepr. Kälte- und Klimasystemtechniker">
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-logo">FLIB</div>
+            <div>
+                <div>Prüfergebnis:</div>
+                <div>gemessen am: </div>
+
+            </div>
+            <div>
+                <div><strong>Bestanden</strong></div>
+                <div><strong>November 2025</strong></div>
+            </div>
+            <div style="font-size: 14px;">Seite 1 von 6</div>
+        </div>
+    </div>
+
+    <!-- Seite 2 -->
+    <div class="page">
+        <div class="hole-second"></div> <!-- Zweite Lochmarkierung -->
+        <div class="hole-third"></div> <!-- Dritte Lochmarkierung -->
+        <div class="header">
+            <div class="header-background"></div>
+            <div class="logo-placeholder">LOGO</div>
+            <div class="title">
+                <h1>Blower-Door</h1>
+                <p>Prüfverfahren gem. ISO 9972:2018</p>
+            </div>
+            <div class="map-placeholder">Karte</div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Zweck der Messung:</div>
+            <div class="info-block" style="margin-bottom: 20px;">
+                <h3>Überprüfung der Anforderung nach KfW-Richtlinie</h3>
+
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Anwendungen:</div>
+            <div class="interactive-text-area">
+                <h4>📝 Anwendungen</h4>
+                <textarea class="editable-text" id="applications-text" placeholder="spezifische Anwendungen 
+
+Beispiele:
+• Leckageortung vor Fertigstellung
+• Qualitätskontrolle der Bauausführung
+• Nachweis für Förderungen (KfW, BAFA)
+• Überprüfung nach Sanierungsmaßnahmen
+• Dokumentation für Energieausweis"></textarea>
+                <div class="text-hint"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Definition:</div>
+            <div class="info-block" style="margin-bottom: 20px;">
+                <p>Die Blower-Door Messung ist ein Verfahren gem ISO 9972:2018 zur Bestimmung der Luftdurchlässigkeit
+                    von Gebäuden. Diese werden zur Qualitätskontrolle der Bauausführung und zur Überprüfung der
+                    Anforderungen nach KfW-Richtlinien eingesetzt.</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-logo">FLIB</div>
+            <div>
+                <div>Prüfergebnis:</div>
+                <div>gemessen am: </div>
+
+            </div>
+            <div>
+                <div><strong>Bestanden</strong></div>
+                <div><strong>November 2025</strong></div>
+            </div>
+            <div style="font-size: 14px;">Seite 2 von 6</div>
+        </div>
+    </div>
+
+    <!-- Seite 3 -->
+    <div class="page">
+        <div class="hole-second"></div> <!-- Zweite Lochmarkierung -->
+        <div class="hole-third"></div> <!-- Dritte Lochmarkierung -->
+        <div class="header">
+            <div class="header-background"></div>
+            <div class="logo-placeholder">LOGO</div>
+            <div class="title">
+                <h1>Blower-Door</h1>
+                <p>Prüfverfahren gem. ISO 9972:2018</p>
+            </div>
+            <div class="map-placeholder">Karte</div>
+        </div>
+
+        <div class="info-block" style="margin-bottom: 20px;">
+            <h3>Gebäudedaten:</h3>
+            <div class="field-group">
+                <label>Netto-Raumvolumen V:</label>
+                <input type="number" placeholder="___"> m³
+            </div>
+            <div class="field-group">
+                <label>Hüllfläche:</label>
+                <input type="number" placeholder="___"> m²
+            </div>
+            <div class="field-group">
+                <label>Geschossanzahl:</label>
+                <input type="number" placeholder="___">
+            </div>
+            <div class="field-group">
+                <label>Nutzungsart:</label>
+                <input type="text" placeholder="___">
+            </div>
+        </div>
+
+        <div class="info-block" style="margin-bottom: 20px;">
+            <h3>Wetterdaten:</h3>
+            <div class="field-group">
+                <label>Außentemp.:</label>
+                <input type="number" placeholder="___"> °C
+            </div>
+            <div class="field-group">
+                <label>Innentemp.:</label>
+                <input type="number" placeholder="___"> °C
+            </div>
+            <div class="field-group">
+                <label>Windgeschwindigkeit:</label>
+                <input type="number" placeholder="___"> m/s
+            </div>
+            <div class="field-group">
+                <label>Windrichtung:</label>
+                <input type="text" placeholder="___">
+            </div>
+        </div>
+
+        <div class="info-block">
+            <h3>Messgerät:</h3>
+            <div class="field-group">
+                <label>Hersteller:</label>
+                <input type="text" value="Testo">
+            </div>
+            <div class="field-group">
+                <label>Typ/Modell:</label>
+                <input type="text" value="DP-510i">
+            </div>
+            <div class="field-group">
+                <label>Seriennummer:</label>
+                <input type="text" value="46884224">
+            </div>
+            <div class="field-group">
+                <label>Kalibrierung gültig bis:</label>
+                <input type="text" value="03/27">
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-logo">FLIB</div>
+            <div>
+                <div>Prüfergebnis:</div>
+                <div>gemessen am: </div>
+
+            </div>
+            <div>
+                <div><strong>Bestanden</strong></div>
+                <div><strong>November 2025</strong></div>
+            </div>
+            <div style="font-size: 14px;">Seite 3 von 6</div>
+        </div>
+    </div>
+
+    <!-- Seite 4 -->
+    <div class="page">
+        <div class="hole-second"></div> <!-- Zweite Lochmarkierung -->
+        <div class="hole-third"></div> <!-- Dritte Lochmarkierung -->
+        <div class="header">
+            <div class="header-background"></div>
+            <div class="logo-placeholder">LOGO</div>
+            <div class="title">
+                <h1>Blower-Door</h1>
+                <p>Prüfverfahren gem. ISO 9972:2018</p>
+            </div>
+            <div class="map-placeholder">Karte</div>
+        </div>
+
+        <div class="section-title">Messwerte:</div>
+
+
+
+        <div class="info-block" style="margin-bottom: 20px;">
+            <h3>Unterdruckmessungen:</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Messung Nr.</th>
+                        <th>Differenzdruck [Pa]</th>
+                        <th>Volumenstrom [m³/h]</th>
+                        <th>Bemerkungen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>-10</td>
+                        <td>850</td>
+                        <td>Startwert</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>-20</td>
+                        <td>1200</td>
+                        <td>Stabil</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>-30</td>
+                        <td>1480</td>
+                        <td>Optimal</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>-40</td>
+                        <td>1720</td>
+                        <td>Gut</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>-50</td>
+                        <td>1950</td>
+                        <td>Referenzwert</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="info-block" style="margin-bottom: 20px;">
+            <h3>Überdruckmessungen:</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Messung Nr.</th>
+                        <th>Differenzdruck [Pa]</th>
+                        <th>Volumenstrom [m³/h]</th>
+                        <th>Bemerkungen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>10</td>
+                        <td>820</td>
+                        <td>Startwert</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>20</td>
+                        <td>1150</td>
+                        <td>Stabil</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>30</td>
+                        <td>1420</td>
+                        <td>Optimal</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>40</td>
+                        <td>1680</td>
+                        <td>Gut</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>50</td>
+                        <td>1920</td>
+                        <td>Referenzwert</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <div class="footer-logo">FLIB</div>
+            <div>
+                <div>Prüfergebnis:</div>
+                <div>gemessen am: </div>
+
+            </div>
+            <div>
+                <div><strong>Bestanden</strong></div>
+                <div><strong>November 2025</strong></div>
+            </div>
+            <div style="font-size: 14px;">Seite 4 von 6</div>
+        </div>
+    </div>
+
+    <!-- Seite 5 -->
+    <div class="page">
+        <div class="hole-second"></div> <!-- Zweite Lochmarkierung -->
+        <div class="hole-third"></div> <!-- Dritte Lochmarkierung -->
+        <div class="header">
+            <div class="header-background"></div>
+            <div class="logo-placeholder">LOGO</div>
+            <div class="title">
+                <h1>Blower-Door</h1>
+                <p>Prüfverfahren gem. ISO 9972:2018</p>
+            </div>
+            <div class="map-placeholder">Karte</div>
+        </div>
+        <div class="measurement-controls">
+            <div class="control-card">
+                <h4>n₅₀-Wert [1/h]</h4>
+                <div class="control-value control-n50">1.5</div>
+            </div>
+            <div class="control-card">
+                <h4>Gebäudevolumen [m³]</h4>
+                <div class="control-value control-volume">100</div>
+            </div>
+            <div class="control-card">
+                <h4>Max. Druck [Pa]</h4>
+                <div class="control-value control-pressure">200</div>
+            </div>
+        </div>
+
+        <div class="section-title">Diagramm:</div>
+
+        <div class="chart-placeholder">
+            <div>
+                <div>📊 Diagramm-Platzhalter</div>
+                <div style="font-size: 12px; margin-top: 10px;">
+                    Hier würde das Blower-Door Messung Druckverlauf-Diagramm angezeigt<br>
+                    Mit theoretischer Kurve, simulierten Messpunkten und realen Messpunkten
+                </div>
+            </div>
+        </div>
+
+        <div class="result-cards">
+            <div class="result-card">
+                <div class="value">1.5</div>
+                <div class="label">n₅₀-Wert [1/h]</div>
+            </div>
+            <div class="result-card">
+                <div class="value">4.02</div>
+                <div class="label">q₅₀-Wert [m³/(h·m²)]</div>
+            </div>
+            <div class="result-card">
+                <div class="value">450</div>
+                <div class="label">V₅₀ [m³/h]</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-logo">FLIB</div>
+            <div>
+                <div>Prüfergebnis:</div>
+                <div>gemessen am: </div>
+
+            </div>
+            <div>
+                <div><strong>Bestanden</strong></div>
+                <div><strong>November 2025</strong></div>
+            </div>
+            <div style="font-size: 14px;">Seite 5 von 6</div>
+        </div>
+    </div>
+
+    <!-- Seite 6 -->
+    <div class="page">
+        <div class="hole-second"></div> <!-- Zweite Lochmarkierung -->
+        <div class="hole-third"></div> <!-- Dritte Lochmarkierung -->
+        <div class="header">
+            <div class="header-background"></div>
+            <div class="logo-placeholder">LOGO</div>
+            <div class="title">
+                <h1>Blower-Door</h1>
+                <p>Prüfverfahren gem. ISO 9972:2018</p>
+            </div>
+            <div class="map-placeholder">Karte</div>
+        </div>
+
+        <div class="section-title">Auswertung:</div>
+
+        <div class="definitions-grid">
+            <div class="definition-card definition-blue">
+                <h4>🔵 Grundlegende Definitionen</h4>
+                <p><strong>n₅₀-Wert:</strong> Luftwechselrate bei 50 Pa Druckdifferenz</p>
+                <p><strong>q₅₀-Wert:</strong> Spezifischer Leckagestrom pro m² Hüllfläche</p>
+                <p><strong>V₅₀:</strong> Volumenstrom bei 50 Pa Druckdifferenz</p>
+            </div>
+
+            <div class="definition-card definition-green">
+                <h4>🟢 Technische Parameter</h4>
+                <p><strong>Potenzfunktion:</strong> V = C × ΔP^n</p>
+                <p><strong>Typischer n-Wert:</strong> 0,65 (für turbulente Strömung)</p>
+                <p><strong>Messbereich:</strong> 10-100 Pa (nach ISO 9972)</p>
+            </div>
+        </div>
+
+        <div class="interactive-text-area">
+            <h4>📝 Detaillierte Bewertung der Messergebnisse</h4>
+            <textarea class="editable-text evaluation-text" id="evaluation-text" placeholder="Hier können Sie eine detaillierte Bewertung der Messergebnisse eintragen...
+
+Beispielhafte Bewertungskriterien:
+• Bewertung der gemessenen n₅₀-Werte im Vergleich zu Grenzwerten
+• Einhaltung der KfW-Anforderungen (n₅₀ ≤ 1,5 h⁻¹)
+• Qualität der Messung (Korrelationskoeffizient R²)
+• Identifizierte Leckagen und deren Bedeutung
+• Empfehlungen für Nachbesserungen
+• Fazit zur Luftdichtheit des Gebäudes
+
+Bewertung der Messergebnisse:
+Der gemessene n₅₀-Wert von 1,5 h⁻¹ entspricht exakt dem KfW-Grenzwert für Sanierungen. Die Messung zeigt eine gute Korrelation zwischen Unter- und Überdruckmessungen.
+
+Empfehlungen:
+- Alle größeren Leckagen wurden bereits während der Messung identifiziert und sollten abgedichtet werden
+- Nachkontrolle in 6 Monaten empfohlen"></textarea>
+            <div class="text-hint">Tipp: Bewerten Sie hier die Messergebnisse fachlich und geben Sie konkrete Empfehlungen</div>
+        </div>
+
+        <div class="signature-boxes" >
+            <div class="signature-box">
+                <div><strong>Techniker(FH) D.Heinicke</strong></div>
+                <div style="margin-top: 70px;">
+                    <div style="font-size: 12px;"><p>...............................................................</p> Datum, Unterschrift Messtechniker</div>
+                </div>
+            </div>
+
+            <div class="signature-box">
+                <div><strong>Dipl.-Ing C. Quiatkowski</strong></div>
+                <div style="margin-top: 70px;">
+                    <div style="font-size: 12px;"><p>...............................................................</p>Datum, Unterschrift Auftraggeber</div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="footer-logo">FLIB</div>
+            <div>
+                <div>Prüfergebnis:</div>
+                <div>gemessen am: </div>
+
+            </div>
+            <div>
+                <div><strong>Bestanden</strong></div>
+                <div><strong>November 2025</strong></div>
+            </div>
+            <div style="font-size: 14px;">Seite 6 von 6</div>
+        </div>
+    </div>
+
+    <script>
+        // Interaktive Funktionen für das Formular
+
+        // Zeile hinzufügen
+        function addRow() {
+            const table = document.querySelector('.data-table tbody');
+            const newRow = table.insertRow();
+            newRow.innerHTML = `
+                <td><input type="number" placeholder="Pa"></td>
+                <td><input type="number" placeholder="m³/h"></td>
+                <td><button onclick="removeRow(this)" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 3px;">Entfernen</button></td>
+            `;
+        }
+
+        // Zeile entfernen
+        function removeRow(button) {
+            button.closest('tr').remove();
+        }
+
+        // Alle Zeilen löschen
+        function clearAll() {
+            if (confirm('Alle Messwerte löschen?')) {
+                const tbody = document.querySelector('.data-table tbody');
+                tbody.innerHTML = '';
+            }
+        }
+
+        // Auto-save Funktionalität für Textfelder
+        function autoSave() {
+            const formData = {};
+            
+            // Alle Input-Felder speichern
+            document.querySelectorAll('input').forEach(input => {
+                if (input.id || input.name) {
+                    formData[input.id || input.name] = input.value;
+                }
+            });
+            
+            // Textareas speichern
+            document.querySelectorAll('textarea').forEach(textarea => {
+                if (textarea.id) {
+                    formData[textarea.id] = textarea.value;
+                }
+            });
+            
+            // In Memory speichern (localStorage nicht verfügbar)
+            window.protocolData = formData;
+        }
+
+        // Daten laden
+        function loadData() {
+            if (window.protocolData) {
+                const data = window.protocolData;
+                Object.keys(data).forEach(key => {
+                    const element = document.getElementById(key) || document.querySelector(`[name="${key}"]`);
+                    if (element) {
+                        element.value = data[key];
+                    }
+                });
+            }
+        }
+
+        // Event Listeners hinzufügen
+        document.addEventListener('DOMContentLoaded', function () {
+            // Auto-save bei Änderungen
+            document.addEventListener('input', autoSave);
+            
+            // Daten beim Laden der Seite wiederherstellen
+            loadData();
+            
+            // Fokus-Effekte für Textfelder
+            document.querySelectorAll('.editable-text').forEach(textarea => {
+                textarea.addEventListener('focus', function() {
+                    this.parentElement.style.borderColor = '#007acc';
+                    this.parentElement.style.boxShadow = '0 0 10px rgba(0, 122, 204, 0.2)';
+                });
+                
+                textarea.addEventListener('blur', function() {
+                    this.parentElement.style.borderColor = '#007acc';
+                    this.parentElement.style.boxShadow = 'none';
+                });
+            });
+        });
+
+        // Druckfunktion für das Protokoll
+        function printProtocol() {
+            window.print();
+        }
+
+        // Funktion zum Exportieren der Daten
+        function exportData() {
+            const data = window.protocolData || {};
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'blower-door-protokoll.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Zusätzliche Hilfsfunktionen für bessere Benutzerfreundlichkeit
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+S für Speichern
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                autoSave();
+                alert('Daten gespeichert!');
+            }
+            
+            // Ctrl+P für Drucken
+            if (e.ctrlKey && e.key === 'p') {
+                e.preventDefault();
+                printProtocol();
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -10,600 +10,25 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"></script>
 
-    <style>
-        /* Main App Styles */
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1e293b, #334155);
-            margin: 0;
-            padding: 0;
-        }
-
-        .nav-container {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(51, 65, 85, 0.95));
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(248, 113, 113, 0.3);
-        }
-
-        .nav-btn {
-            background: linear-gradient(135deg, rgba(248, 113, 113, 0.1), rgba(251, 146, 60, 0.1));
-            border: 1px solid rgba(248, 113, 113, 0.3);
-            color: #fda4af;
-            transition: all 0.3s ease;
-        }
-
-        .nav-btn:hover {
-            background: linear-gradient(135deg, rgba(248, 113, 113, 0.2), rgba(251, 146, 60, 0.2));
-            border-color: rgba(248, 113, 113, 0.5);
-            transform: translateY(-2px);
-        }
-
-        .logo-glow {
-            background: linear-gradient(135deg, #f87171, #fb923c);
-        }
-
-        .shine-effect {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .shine-effect::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: shine 3s infinite;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-        }
-
-        .page {
-            display: none;
-            min-height: 100vh;
-            padding-top: 80px;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        .home-gradient {
-            background: linear-gradient(135deg, #1e293b, #334155, #475569);
-        }
-
-        .home-button-primary {
-            background: linear-gradient(135deg, #f87171, #fb923c);
-            color: white;
-            border: none;
-            box-shadow: 0 8px 32px rgba(248, 113, 113, 0.3);
-        }
-
-        .home-button-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(248, 113, 113, 0.4);
-        }
-
-        .weather-display {
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px solid rgba(248, 113, 113, 0.3);
-            padding: 8px 12px;
-            border-radius: 8px;
-        }
-
-        .weather-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .weather-value {
-            color: #fda4af;
-            font-weight: 600;
-        }
-
-        .weather-unit {
-            color: #fca5a5;
-            font-size: 10px;
-        }
-
-        /* Protocol Styles - Isolated with .protocol-container */
-        .protocol-container {
-            /* Reset styles for protocol container */
-            all: initial;
-            font-family: Arial, sans-serif;
-            color: #333;
-            background: #f5f5f5;
-            line-height: 1.4;
-            display: block;
-            min-height: 100vh;
-            overflow-y: auto;
-        }
-
-        .protocol-container * {
-            box-sizing: border-box;
-        }
-
-        .protocol-container .protocol-page {
-            width: 210mm;
-            height: 297mm;
-            margin: 20px auto;
-            background: white;
-            padding: 20mm 20mm 20mm 35mm;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            page-break-after: always;
-            position: relative;
-            padding-bottom: 80px;
-        }
-
-        .protocol-container .protocol-page::before {
-            content: '';
-            position: absolute;
-            left: 6mm;
-            top: 74.25mm;
-            width: 6mm;
-            height: 6mm;
-            border-radius: 50%;
-            background: #ddd;
-            border: 2px solid #999;
-        }
-
-        .protocol-container .protocol-page::after {
-            content: '';
-            position: absolute;
-            left: 6mm;
-            top: 222.75mm;
-            width: 6mm;
-            height: 6mm;
-            border-radius: 50%;
-            background: #ddd;
-            border: 2px solid #999;
-        }
-
-        .protocol-container .hole-second {
-            position: absolute;
-            left: 6mm;
-            top: 123mm;
-            width: 6mm;
-            height: 6mm;
-            border-radius: 50%;
-            background: #ddd;
-            border: 2px solid #999;
-        }
-
-        .protocol-container .hole-third {
-            position: absolute;
-            left: 6mm;
-            top: 174mm;
-            width: 6mm;
-            height: 6mm;
-            border-radius: 50%;
-            background: #ddd;
-            border: 2px solid #999;
-        }
-
-        .protocol-container .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #333;
-            padding-bottom: 15px;
-            position: relative;
-        }
-
-        .protocol-container .header-background {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 170mm;
-            height: 50mm;
-            background-color: #e3f2fd;
-            z-index: 1;
-            border-radius: 5px;
-        }
-
-        .protocol-container .logo-placeholder {
-            width: 60px;
-            height: 60px;
-            background: #ddd;
-            border: 2px dashed #999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            color: #666;
-            position: relative;
-            z-index: 2;
-        }
-
-        .protocol-container .title {
-            text-align: center;
-            flex-grow: 1;
-            margin: 0 20px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .protocol-container .title h1 {
-            font-size: 36px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        .protocol-container .title p {
-            font-size: 14px;
-            color: #666;
-            margin: 0;
-        }
-
-        .protocol-container .map-placeholder {
-            width: 80px;
-            height: 60px;
-            background: #ddd;
-            border: 2px dashed #999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            color: #666;
-            position: relative;
-            z-index: 2;
-        }
-
-        .protocol-container .section {
-            margin-bottom: 25px;
-        }
-
-        .protocol-container .section-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #ccc;
-            color: #333;
-        }
-
-        .protocol-container .info-block {
-            background: #f9f9f9;
-            padding: 15px;
-            border-left: 4px solid #007acc;
-            margin-bottom: 15px;
-        }
-
-        .protocol-container .info-block h3 {
-            font-size: 16px;
-            margin-bottom: 10px;
-            color: #007acc;
-        }
-
-        .protocol-container .field-group {
-            margin-bottom: 10px;
-        }
-
-        .protocol-container .field-group label {
-            display: inline-block;
-            width: 150px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .protocol-container .field-group input,
-        .protocol-container .field-group select {
-            border: none;
-            border-bottom: 1px solid #ccc;
-            padding: 2px 5px;
-            background: transparent;
-            min-width: 350px;
-            color: #333;
-        }
-
-        .protocol-container .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        .protocol-container .data-table th,
-        .protocol-container .data-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-            color: #333;
-        }
-
-        .protocol-container .data-table th {
-            background: #f5f5f5;
-            font-weight: bold;
-        }
-
-        .protocol-container .measurement-controls {
-            display: flex;
-            gap: 20px;
-            margin: 20px 0;
-            justify-content: center;
-        }
-
-        .protocol-container .control-card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            min-width: 120px;
-        }
-
-        .protocol-container .control-card h4 {
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 10px;
-        }
-
-        .protocol-container .control-value {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .protocol-container .control-n50 {
-            color: #2196F3;
-        }
-
-        .protocol-container .control-volume {
-            color: #4CAF50;
-        }
-
-        .protocol-container .control-pressure {
-            color: #9C27B0;
-        }
-
-        .protocol-container .chart-placeholder {
-            width: 100%;
-            height: 444px;
-            background: #f5f5f5;
-            border: 2px dashed #ccc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            margin: 20px 0;
-        }
-
-        .protocol-container .result-cards {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        .protocol-container .result-card {
-            flex: 1;
-            background: linear-gradient(135deg, #ff9a56, #ff6b35);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .protocol-container .result-card .value {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .protocol-container .result-card .label {
-            font-size: 12px;
-            opacity: 0.9;
-        }
-
-        .protocol-container .footer {
-            background: linear-gradient(135deg, #00bcd4, #0097a7);
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-size: small;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: 'Impact', 'Arial Black', sans-serif;
-            position: absolute;
-            bottom: 20mm;
-            left: 35mm;
-            right: 20mm;
-            margin: 0;
-        }
-
-        .protocol-container .footer-logo {
-            font-size: 26px;
-            font-weight: bold;
-            font-family: 'Impact', 'Arial Black', sans-serif;
-            text-align: left;
-        }
-
-        .protocol-container .definitions-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 10px 0;
-        }
-
-        .protocol-container .definition-card {
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 12px;
-        }
-
-        .protocol-container .definition-card h4 {
-            font-size: 13px;
-            margin-bottom: 8px;
-        }
-
-        .protocol-container .definition-card p {
-            margin-bottom: 5px;
-            line-height: 1.3;
-        }
-
-        .protocol-container .definition-blue {
-            background: #e3f2fd;
-            border-left: 3px solid #2196f3;
-        }
-
-        .protocol-container .definition-green {
-            background: #e8f5e8;
-            border-left: 3px solid #4caf50;
-        }
-
-        .protocol-container .signature-boxes {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .protocol-container .signature-box {
-            border: 1px dashed #ccc;
-            padding: 20px 15px;
-            text-align: left;
-            font-size: 12px;
-        }
-
-        .protocol-container .signature-box div:first-child {
-            font-size: 13px;
-            font-weight: bold;
-        }
-
-        .protocol-container .signature-box div:last-child {
-            font-size: 10px;
-            margin-top: 20px;
-        }
-
-        .protocol-container .interactive-text-area {
-            border: 2px solid #007acc;
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            min-height: 350px;
-        }
-
-        .protocol-container .interactive-text-area h4 {
-            color: #007acc;
-            margin-bottom: 10px;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .protocol-container .editable-text {
-            min-height: 100px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background: white;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            line-height: 1.4;
-            resize: vertical;
-            width: 100%;
-            box-sizing: border-box;
-            min-height: 300px;
-        }
-
-        .protocol-container .editable-text:focus {
-            outline: none;
-            border-color: #007acc;
-            box-shadow: 0 0 5px rgba(0, 122, 204, 0.3);
-        }
-
-        .protocol-container .evaluation-text {
-            min-height: 310px;
-        }
-
-        .protocol-container .text-hint {
-            font-size: 11px;
-            color: #666;
-            margin-top: 5px;
-            font-style: italic;
-        }
-
-        /* Print styles for protocol */
-        @media print {
-            .protocol-container .protocol-page {
-                margin: 0;
-                box-shadow: none;
-                width: 210mm;
-                height: 297mm;
-                padding: 20mm 20mm 20mm 35mm;
-                padding-bottom: 80px;
-            }
-
-            .protocol-container .protocol-page::before,
-            .protocol-container .protocol-page::after,
-            .protocol-container .hole-second,
-            .protocol-container .hole-third {
-                display: none;
-            }
-
-            .protocol-container .footer {
-                bottom: 20mm;
-                left: 35mm;
-                right: 20mm;
-            }
-
-            .protocol-container .text-hint {
-                display: none;
-            }
-        }
-
-        /* Back to top button */
-        #back-to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: #f87171;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(248, 113, 113, 0.4);
-            opacity: 0;
-            transform: translateY(100px);
-            transition: all 0.3s ease;
-        }
-
-        #back-to-top.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        #back-to-top:hover {
-            background: #ef4444;
-            transform: translateY(-2px);
-        }
-    </style>
+    <!-- externe stylesheet Anbindung -->
+    <link rel="stylesheet" href="./styles/style.css">
 </head>
 
-<body>
-    <!-- Navigation -->
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 font-sans">
+
+
+
+    <!-- SECTION Navigation -->
     <nav id="main-nav" class="nav-container shadow-xl fixed top-0 left-0 right-0 z-50">
         <div class="max-w-7xl mx-auto px-4 lg:px-6">
             <div class="flex justify-between items-center h-20">
+
                 <!-- Logo Section -->
                 <div class="flex items-center">
-                    <button onclick="showPage('home')" class="group flex items-center space-x-3 hover:scale-105 transition-all duration-300">
-                        <div class="logo-glow shine-effect w-12 h-12 rounded-xl flex items-center justify-center shadow-lg">
+                    <button onclick="showPage('weather')"
+                        class="group flex items-center space-x-3 hover:scale-105 transition-all duration-300">
+                        <div
+                            class="logo-glow shine-effect w-12 h-12 rounded-xl flex items-center justify-center shadow-lg">
                             <span class="text-white font-bold text-xs tracking-wider">ISO</span>
                         </div>
                         <div class="hidden md:block">
@@ -617,35 +42,40 @@
 
                 <!-- Navigation Buttons -->
                 <div class="flex items-center space-x-2 lg:space-x-3">
-                    <button onclick="showPage('home')" class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                    <button onclick="showPage('home')"
+                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
                         <span class="relative z-10 flex items-center gap-2">
                             <span class="text-base">🏠</span>
                             <span class="hidden sm:inline">Start</span>
                         </span>
                     </button>
 
-                    <button onclick="showPage('weather')" class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                    <button onclick="getLocationByIP()"
+                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
                         <span class="relative z-10 flex items-center gap-2">
                             <span class="text-base">🌤️</span>
                             <span class="hidden sm:inline">Wetter</span>
                         </span>
                     </button>
 
-                    <button onclick="showPage('measurement')" class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                    <button onclick="showPage('measurement')"
+                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
                         <span class="relative z-10 flex items-center gap-2">
                             <span class="text-base">📊</span>
                             <span class="hidden sm:inline">Messung</span>
                         </span>
                     </button>
 
-                    <button onclick="showPage('analysis')" class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                    <button onclick="showPage('analysis')"
+                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
                         <span class="relative z-10 flex items-center gap-2">
                             <span class="text-base">📈</span>
                             <span class="hidden sm:inline">Analyse</span>
                         </span>
                     </button>
 
-                    <button onclick="showPage('protocol')" class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                    <button onclick="window.location.href='./sites/protocol.html'"
+                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
                         <span class="relative z-10 flex items-center gap-2">
                             <span class="text-base">📋</span>
                             <span class="hidden sm:inline">Protokoll</span>
@@ -653,24 +83,47 @@
                     </button>
                 </div>
 
-                <!-- Action Buttons -->
+                <!-- Right Section: Weather Display + Action Buttons -->
                 <div class="flex items-center space-x-3">
+
+                    <!-- Current Weather Display -->
                     <div id="nav-weather-display" class="weather-display hidden lg:block">
                         <div class="grid grid-cols-2 gap-3 text-xs">
                             <div class="weather-item">
                                 <span class="weather-icon">🌡️</span>
-                                <span id="nav-temp" class="weather-value">22°C</span>
+                                <span id="nav-temp" class="weather-value">--</span>
+                                <span class="weather-unit"></span>
                             </div>
+
                             <div class="weather-item">
-                                <span id="nav-pressure" class="weather-value">1013 hPa</span>
+                                <span id="nav-pressure" class="weather-value">--</span>
+                                <span class="weather-unit"></span>
                             </div>
                         </div>
                     </div>
 
-                    <button onclick="printProtocol()" class="nav-btn px-3 py-2 rounded-lg font-medium transition-all duration-300">
+                    <!-- Action Buttons -->
+                    <button onclick="printProtocol()"
+                        class="action-btn bg-gradient-to-r from-emerald-600 to-green-600 text-green-100 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:from-emerald-500 hover:to-green-500">
                         <span class="flex items-center gap-2">
                             <span class="text-base">🖨️</span>
                             <span class="hidden xl:inline">Drucken</span>
+                        </span>
+                    </button>
+
+                    <button onclick="setzeDatum()"
+                        class="action-btn bg-gradient-to-r from-blue-600 to-indigo-600 text-blue-100 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:from-blue-500 hover:to-indigo-500">
+                        <span class="flex items-center gap-2">
+                            <span class="text-base">📅</span>
+                            <span class="auto-datum font-semibold text-xs">2.7.2025</span>
+                        </span>
+                    </button>
+
+                    <!-- Weather Update Button (Mobile) -->
+                    <button onclick="updateNavWeather()"
+                        class="action-btn lg:hidden bg-gradient-to-r from-rose-600 to-pink-600 text-rose-100 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:from-rose-500 hover:to-pink-500">
+                        <span class="flex items-center gap-1">
+                            <span class="text-base">🌤️</span>
                         </span>
                     </button>
                 </div>
@@ -679,751 +132,395 @@
     </nav>
 
     <!-- Back to Top Button -->
-    <button id="back-to-top" onclick="scrollToTop()">
+    <button id="back-to-top" onclick="scrollToTop()"
+        class="fixed bottom-4 left-4 z-50 bg-rose-600 text-white p-3 rounded-full shadow-lg hover:bg-rose-500 transition-all duration-300 opacity-0 invisible">
         <span class="text-xl">↑</span>
     </button>
 
-    <main class="pt-20">
-        <!-- Home Page -->
-        <div id="home" class="page active">
-            <section class="min-h-screen home-gradient flex items-center justify-center p-8">
-                <div class="max-w-4xl mx-auto text-center">
-                    <div class="bg-slate-800/40 backdrop-blur-sm rounded-xl p-8 border border-rose-500/30">
-                        <h1 class="text-4xl font-light text-rose-300 mb-6 tracking-wide">
-                            Professionelle Luftdurchlässigkeitsmessung
-                        </h1>
-                        <div class="w-24 h-1 bg-gradient-to-r from-rose-400 to-amber-400 mx-auto rounded-full mb-4"></div>
-                        <p class="text-rose-400 mb-8">
-                            Zertifizierung nach ISO 9972:2018-12
-                        </p>
-                        <button onclick="showPage('measurement')" class="home-button-primary px-8 py-3 rounded-lg font-semibold transition-all duration-300">
-                            Neue Messung starten
-                        </button>
-                    </div>
-                </div>
+    <!-- Leerer Header für den Scroll-Effekt -->
+    <header id="main-header" class="header-scroll pt-24 pb-8"></header>
+
+    <main class="pt-4">
+        <!-- SECTION Start Page -->
+        <div id="home" class="page">
+            <section id="home-section" class="min-h-screen home-gradient flex-start items-center justify-center">
+                <!-- Table of Contents -->
+                <div id="toc" class="max-w-4xl mx-auto mb-8 px-6">
+                    <div class="bg-slate-800/40 backdrop-blur-sm rounded-xl p-6 border border-rose-500/30">
+
+
+                        <div class="text-center text-rose-200 p-8">
+                            <h1 class="text-2xl font-light text-rose-300 mb-4 tracking-wide leading-relaxed">
+                                Professionelle Luftdurchlässigkeitsmessung
+                            </h1>
+                            <div class="w-24 h-1 bg-gradient-to-r from-rose-400 to-amber-400 mx-auto rounded-full">
+                            </div>
+                            <p class="text-sm text-rose-400 mt-3">
+                                Zertifizierung nach ISO 9972:2018-12
+                            </p>
+
+                            <div class="space-y-4">
+                            </div>
+                            <button onclick="showPage('measurement')"
+                                class="home-button-primary px-8 py-3 rounded-lg font-semibold transition-all duration-300 backdrop-blur-sm">
+                                Neue Messung starten
+                            </button>
+                        </div>
+
+
+
+
+
             </section>
         </div>
 
-        <!-- Weather Page -->
+        <!-- SECTION Weather Page -->
         <div id="weather" class="page">
-            <section class="min-h-screen p-8">
+            <section id="weather-section"
+                class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
                 <div class="max-w-4xl mx-auto">
                     <h2 class="text-4xl font-bold text-rose-300 mb-8 text-center">Wetterdatenerfassung</h2>
-                    <div class="bg-slate-800/40 backdrop-blur-sm rounded-xl p-6 border border-rose-500/30">
-                        <p class="text-rose-200 text-center">Wetter-Funktionalität hier implementieren...</p>
+
+                    <!-- Weather Controls -->
+                    <div id="weather-controls" class="weather-controls mb-8">
+                        <h3 class="text-2xl font-bold text-rose-300 mb-6 text-center">Aktuelle Wetterdaten laden</h3>
+
+                        <div class="text-center mb-6">
+                            <button onclick="getCurrentWeather()"
+                                class="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-3 rounded-lg font-semibold mr-4 mb-2 hover:from-rose-400 hover:to-pink-400 transition-all duration-300">
+                                🌤️ Aktuelle Wetterdaten laden
+                            </button>
+                            <button onclick="getUserLocation()"
+                                class="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-3 rounded-lg font-semibold mr-4 mb-2 hover:from-amber-400 hover:to-orange-400 transition-all duration-300">
+                                📍 Standort ermitteln
+                            </button>
+                            <button onclick="getLocationByIP()"
+                                class="bg-gradient-to-r from-emerald-500 to-green-500 text-white px-6 py-3 rounded-lg font-semibold mb-2 hover:from-emerald-400 hover:to-green-400 transition-all duration-300">
+                                🌐 Standort via IP
+                            </button>
+                            <div id="weather-status" class="weather-status"></div>
+                        </div>
+                    </div>
+
+                    <!-- Weather Data Display -->
+                    <div id="weather-data-form" class="weather-controls">
+                        <h3 class="text-2xl font-bold text-rose-300 mb-6">Wetterdaten für Protokoll</h3>
+
+                        <div class="space-y-4">
+                            <div class="weather-field-group">
+                                <label>Außentemperatur:</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="number" id="outside-temp" placeholder="___" step="0.1">
+                                    <span class="text-rose-300">°C</span>
+                                </div>
+                            </div>
+
+                            <div class="weather-field-group">
+                                <label>Windgeschwindigkeit:</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="number" id="wind-speed" placeholder="___" step="0.1">
+                                    <span class="text-rose-300">m/s</span>
+                                </div>
+                            </div>
+
+                            <div class="weather-field-group">
+                                <label>Windrichtung:</label>
+                                <input type="text" id="wind-direction" placeholder="___" style="width: 120px;">
+                            </div>
+                            <div class="weather-field-group">
+                                <label>Luftdruck:</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="number" id="air-pressure" placeholder="1013" step="0.1">
+                                    <span class="text-rose-300">hPa</span>
+                                </div>
+                            </div>
+
+                            <div class="weather-field-group">
+                                <label>Luftfeuchtigkeit:</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="number" id="humidity" placeholder="50" step="1">
+                                    <span class="text-rose-300">%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-8">
+                            <button onclick="transferWeatherToProtocol()"
+                                class="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-8 py-3 rounded-lg font-semibold hover:from-rose-400 hover:to-pink-400 transition-all duration-300">
+                                📋 Daten ins Protokoll übertragen
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aktuelle Wetterdaten Anzeige -->
+                    <div id="current-weather-display" class="weather-info" style="display: none;">
+                        <h4 class="text-xl font-bold text-amber-300 mb-4">🌡️ Aktuelle Wetterdaten</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                            <div class="bg-slate-800/60 p-3 rounded-lg">
+                                <strong class="text-rose-300">Temperatur:</strong><br>
+                                <span id="current-temp" class="text-2xl text-white">--°C</span>
+                            </div>
+                            <div class="bg-slate-800/60 p-3 rounded-lg">
+                                <strong class="text-rose-300">Wind:</strong><br>
+                                <span id="current-wind" class="text-white">-- km/h --</span>
+                            </div>
+                            <div class="bg-slate-800/60 p-3 rounded-lg">
+                                <strong class="text-rose-300">Wetter:</strong><br>
+                                <span id="current-weather-desc" class="text-white">--</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
         </div>
 
-        <!-- Measurement Page -->
+        <!-- SECTION Measurement Page -->
         <div id="measurement" class="page">
-            <section class="min-h-screen p-8">
-                <div class="max-w-4xl mx-auto">
+            <section id="measurement-section"
+                class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+                <div class="max-w-6xl mx-auto">
                     <h2 class="text-4xl font-bold text-rose-300 mb-8 text-center">Messdatenerfassung</h2>
-                    <div class="bg-slate-800/40 backdrop-blur-sm rounded-xl p-6 border border-rose-500/30">
-                        <p class="text-rose-200 text-center">Messung-Funktionalität hier implementieren...</p>
+
+                    <!-- Parameter Controls -->
+                    <div id="measurement-parameters"
+                        class="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 mb-8 border border-rose-500/30">
+                        <h3 class="text-2xl font-bold text-rose-300 mb-6">Messparameter</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div id="n50-parameter">
+                                <label class="block text-rose-300 font-medium mb-2">n₅₀-Wert [1/h]</label>
+                                <input type="range" id="n50" min="0.5" max="10" step="0.1" value="3.0"
+                                    class="slider-dark-rose w-full">
+                                <div class="text-rose-300 text-center mt-2 font-bold text-lg" id="n50-value">3.0</div>
+                            </div>
+                            <div id="volume-parameter">
+                                <label class="block text-rose-300 font-medium mb-2">Gebäudevolumen [m³]</label>
+                                <input type="range" id="volume" min="100" max="2000" step="10" value="500"
+                                    class="slider-dark-amber w-full">
+                                <div class="text-rose-300 text-center mt-2 font-bold text-lg" id="volume-value">500
+                                </div>
+                            </div>
+                            <div id="pressure-parameter">
+                                <label class="block text-rose-300 font-medium mb-2">Max. Druck [Pa]</label>
+                                <input type="range" id="pressure" min="50" max="150" step="5" value="100"
+                                    class="slider-dark-rose w-full">
+                                <div class="text-rose-300 text-center mt-2 font-bold text-lg" id="pressure-value">100
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Measurement Tables -->
+                    <div id="measurement-tables"
+                        class="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 border border-rose-500/30">
+                        <h3 class="text-2xl font-bold text-rose-300 mb-6">Messwerte</h3>
+
+                        <!-- Tab Navigation -->
+                        <div class="flex space-x-2 mb-6">
+                            <button onclick="switchTab('underpressure')" id="tab-underpressure"
+                                class="tab-button active px-6 py-3 rounded-lg font-medium">
+                                Unterdruck
+                            </button>
+                            <button onclick="switchTab('overpressure')" id="tab-overpressure"
+                                class="tab-button px-6 py-3 rounded-lg font-medium">
+                                Überdruck
+                            </button>
+                        </div>
+
+                        <!-- Underpressure Table -->
+                        <div id="underpressure-content" class="tab-content active">
+                            <div id="underpressure-table-section"
+                                class="bg-slate-800/80 rounded-lg p-4 mb-4 border border-rose-500/20">
+                                <h4 class="text-lg font-bold text-rose-300 mb-4">Unterdruckmessungen</h4>
+                                <div class="overflow-x-auto">
+                                    <table class="measurement-table w-full border-collapse">
+                                        <thead>
+                                            <tr>
+                                                <th class="border px-4 py-3 text-left">Differenzdruck [Pa]</th>
+                                                <th class="border px-4 py-3 text-left">Volumenstrom [m³/h]</th>
+                                                <th class="border px-4 py-3 text-center">Aktionen</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="underpressureTable">
+                                            <!-- Rows will be added dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="mt-4 space-x-2">
+                                    <button onclick="addUnderpressureRow()"
+                                        class="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded hover:from-rose-400 hover:to-pink-400 transition-all duration-300">
+                                        Zeile hinzufügen
+                                    </button>
+                                    <button onclick="clearUnderpressure()"
+                                        class="bg-gradient-to-r from-red-600 to-red-500 text-white px-4 py-2 rounded hover:from-red-500 hover:to-red-400 transition-all duration-300">
+                                        Tabelle leeren
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Overpressure Table -->
+                        <div id="overpressure-content" class="tab-content">
+                            <div id="overpressure-table-section"
+                                class="bg-slate-800/80 rounded-lg p-4 mb-4 border border-rose-500/20">
+                                <h4 class="text-lg font-bold text-rose-300 mb-4">Überdruckmessungen</h4>
+                                <div class="overflow-x-auto">
+                                    <table class="measurement-table w-full border-collapse">
+                                        <thead>
+                                            <tr>
+                                                <th class="border px-4 py-3 text-left">Differenzdruck [Pa]</th>
+                                                <th class="border px-4 py-3 text-left">Volumenstrom [m³/h]</th>
+                                                <th class="border px-4 py-3 text-center">Aktionen</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="overpressureTable">
+                                            <!-- Rows will be added dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="mt-4 space-x-2">
+                                    <button onclick="addOverpressureRow()"
+                                        class="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded hover:from-rose-400 hover:to-pink-400 transition-all duration-300">
+                                        Zeile hinzufügen
+                                    </button>
+                                    <button onclick="clearOverpressure()"
+                                        class="bg-gradient-to-r from-red-600 to-red-500 text-white px-4 py-2 rounded hover:from-red-500 hover:to-red-400 transition-all duration-300">
+                                        Tabelle leeren
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Legacy Combined Table -->
+                        <div id="legacy-table-section"
+                            class="bg-slate-800/80 rounded-lg p-4 mt-6 border border-rose-500/20">
+                            <h4 class="text-lg font-bold text-rose-300 mb-4">Kombinierte Messwerte (Legacy)</h4>
+                            <div class="overflow-x-auto">
+                                <table class="measurement-table w-full border-collapse">
+                                    <thead>
+                                        <tr>
+                                            <th class="border px-4 py-3 text-left">Differenzdruck [Pa]</th>
+                                            <th class="border px-4 py-3 text-left">Volumenstrom [m³/h]</th>
+                                            <th class="border px-4 py-3 text-center">Aktionen</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="measurementTable">
+                                        <!-- Rows will be added dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-4 space-x-2">
+                                <button id="addMeasurementRow"
+                                    class="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded hover:from-rose-400 hover:to-pink-400 transition-all duration-300">
+                                    Zeile hinzufügen
+                                </button>
+                                <button id="clearMeasurements"
+                                    class="bg-gradient-to-r from-red-600 to-red-500 text-white px-4 py-2 rounded hover:from-red-500 hover:to-red-400 transition-all duration-300">
+                                    Tabelle leeren
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
         </div>
 
-        <!-- Analysis Page -->
+        <!-- SECTION Analysis Page -->
         <div id="analysis" class="page">
-            <section class="min-h-screen p-8">
-                <div class="max-w-4xl mx-auto">
+            <section id="analysis-section"
+                class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+                <div class="max-w-6xl mx-auto">
                     <h2 class="text-4xl font-bold text-rose-300 mb-8 text-center">Messdatenanalyse</h2>
-                    <div class="bg-slate-800/40 backdrop-blur-sm rounded-xl p-6 border border-rose-500/30">
-                        <p class="text-rose-200 text-center">Analyse-Funktionalität hier implementieren...</p>
+
+                    <!-- Chart Controls -->
+                    <div id="chart-controls"
+                        class="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 mb-8 border border-rose-500/30">
+                        <h3 class="text-xl font-bold text-rose-300 mb-4">Diagramm-Optionen</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <label class="flex items-center text-rose-300">
+                                <input type="checkbox" id="showTheoretical" checked class="mr-2 accent-rose-500">
+                                Theoretische Kurve
+                            </label>
+                            <label class="flex items-center text-rose-300">
+                                <input type="checkbox" id="showSimulated" class="mr-2 accent-amber-500">
+                                Simulierte Messpunkte
+                            </label>
+                            <label class="flex items-center text-rose-300">
+                                <input type="checkbox" id="showReal" checked class="mr-2 accent-emerald-500">
+                                Reale Messpunkte
+                            </label>
+                            <label class="flex items-center text-rose-300">
+                                <input type="checkbox" id="showUnderpressure" checked class="mr-2 accent-red-500">
+                                Unterdruckmessungen
+                            </label>
+                            <label class="flex items-center text-rose-300">
+                                <input type="checkbox" id="showOverpressure" checked class="mr-2 accent-purple-500">
+                                Überdruckmessungen
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Chart Container -->
+                    <div id="chart-container"
+                        class="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 mb-8 border border-rose-500/30">
+                        <div class="bg-slate-800/90 rounded-lg p-4">
+                            <canvas id="chart" width="855" height="320"
+                                style="display: block; box-sizing: border-box; height: 400px; width: 1069px;"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Results Display -->
+                    <div id="analysis-results"
+                        class="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 mb-8 border border-rose-500/30">
+                        <h3 class="text-2xl font-bold text-rose-300 mb-6 text-center">Berechnete Kennwerte</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div id="n50-result"
+                                class="bg-slate-800/40 backdrop-blur-sm rounded-xl p-6 text-center border border-rose-500/30 hover:bg-slate-800/60 transition-all duration-300">
+                                <div class="text-4xl font-bold text-rose-400 mb-3" id="calc-n50">3.0</div>
+                                <div class="text-rose-300/90 text-sm font-medium">n₅₀-Wert [1/h]</div>
+                            </div>
+                            <div id="q50-result"
+                                class="bg-slate-800/40 backdrop-blur-sm rounded-xl p-6 text-center border border-amber-500/30 hover:bg-slate-800/60 transition-all duration-300">
+                                <div class="text-4xl font-bold text-amber-400 mb-3" id="calc-q50">9.52</div>
+                                <div class="text-amber-300/90 text-sm font-medium">q₅₀-Wert [m³/(h·m²)]</div>
+                            </div>
+                            <div id="v50-result"
+                                class="bg-slate-800/40 backdrop-blur-sm rounded-xl p-6 text-center border border-pink-500/30 hover:bg-slate-800/60 transition-all duration-300">
+                                <div class="text-4xl font-bold text-pink-400 mb-3" id="calc-v50">1500</div>
+                                <div class="text-pink-300/90 text-sm font-medium">V₅₀ [m³/h]</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="chart-error"
+                        class="hidden bg-red-900/50 border border-red-500 text-red-300 px-4 py-3 rounded mt-4">
+                        <p><strong>Fehler:</strong> Das Diagramm konnte nicht geladen werden. Bitte überprüfen Sie die
+                            Konsole für weitere Details.</p>
                     </div>
                 </div>
             </section>
         </div>
 
-        <!-- Protocol Page -->
+        <!-- SECTION Protocol Page -->
         <div id="protocol" class="page">
-            <div class="protocol-container">
-                <!-- Seite 1 -->
-                <div class="protocol-page">
-                    <div class="hole-second"></div>
-                    <div class="hole-third"></div>
-                    <div class="header">
-                        <div class="header-background"></div>
-                        <div class="logo-placeholder">LOGO</div>
-                        <div class="title">
-                            <h1>Blower-Door</h1>
-                            <p>Prüfverfahren gem. ISO 9972:2018</p>
-                        </div>
-                        <div class="map-placeholder">Karte</div>
-                    </div>
-
-                    <div class="info-block">
-                        <h3>Geprüftes Objekt:</h3>
-                        <div class="field-group">
-                            <label>Objekt:</label>
-                            <input type="text" value="Wohneinheit nach Sanierung">
-                        </div>
-                        <div class="field-group">
-                            <label>Bauabschnitt:</label>
-                            <input type="text" value="EG">
-                        </div>
-                        <div class="field-group">
-                            <label>Adresse:</label>
-                            <input type="text" value="Ernst-Thälmann-Straße 27">
-                        </div>
-                        <div class="field-group">
-                            <label>PLZ/Ort:</label>
-                            <input type="text" value="D-99423 Weimar">
-                        </div>
-                    </div>
-
-                    <div class="info-block">
-                        <h3>Auftraggeber/in:</h3>
-                        <div class="field-group">
-                            <label>Name:</label>
-                            <input type="text" value="Sarah Bäumel">
-                        </div>
-                        <div class="field-group">
-                            <label>Adresse:</label>
-                            <input type="text" value="Ernst-Thälmann-Straße 27">
-                        </div>
-                        <div class="field-group">
-                            <label>PLZ/Ort:</label>
-                            <input type="text" value="D-99423 Weimar">
-                        </div>
-                    </div>
-
-                    <div class="info-block">
-                        <h3>Auftragnehmer:</h3>
-                        <div class="field-group">
-                            <label>Name:</label>
-                            <input type="text" value="Dipl.-Ing. Christoph Quiatkowski">
-                        </div>
-                        <div class="field-group">
-                            <label>Beruf:</label>
-                            <input type="text" value="Architekturdienstleister und Energieberater">
-                        </div>
-                        <div class="field-group">
-                            <label>Adresse:</label>
-                            <input type="text" value="Kegelplatz 5, D-99423 Weimar">
-                        </div>
-                        <div class="field-group">
-                            <label>E-Mail:</label>
-                            <input type="email" value="christoph@immergo.de">
-                        </div>
-                        <div class="field-group">
-                            <label>Tel.:</label>
-                            <input type="tel" value="0162-9182524">
-                        </div>
-                    </div>
-
-                    <div class="info-block">
-                        <h3>Messungen durchgeführt von:</h3>
-                        <div class="field-group">
-                            <label>Name:</label>
-                            <input type="text" value="Techniker(FH) Danny Heinicke">
-                        </div>
-                        <div class="field-group">
-                            <label>Qualifikation:</label>
-                            <input type="text" value="Staatlich gepr. Kälte- und Klimasystemtechniker">
-                        </div>
-                    </div>
-
-                    <div class="footer">
-                        <div class="footer-logo">FLIB</div>
-                        <div>
-                            <div>Prüfergebnis:</div>
-                            <div>gemessen am:</div>
-                        </div>
-                        <div>
-                            <div><strong>Bestanden</strong></div>
-                            <div><strong>November 2025</strong></div>
-                        </div>
-                        <div style="font-size: 14px;">Seite 1 von 6</div>
-                    </div>
-                </div>
-
-                <!-- Seite 2 -->
-                <div class="protocol-page">
-                    <div class="hole-second"></div>
-                    <div class="hole-third"></div>
-                    <div class="header">
-                        <div class="header-background"></div>
-                        <div class="logo-placeholder">LOGO</div>
-                        <div class="title">
-                            <h1>Blower-Door</h1>
-                            <p>Prüfverfahren gem. ISO 9972:2018</p>
-                        </div>
-                        <div class="map-placeholder">Karte</div>
-                    </div>
-
-                    <div class="section">
-                        <div class="section-title">Zweck der Messung:</div>
-                        <div class="info-block">
-                            <h3>Überprüfung der Anforderung nach KfW-Richtlinie</h3>
-                        </div>
-                    </div>
-
-                    <div class="section">
-                        <div class="section-title">Anwendungen:</div>
-                        <div class="interactive-text-area">
-                            <h4>📝 Anwendungen</h4>
-                            <textarea class="editable-text" placeholder="Spezifische Anwendungen
-
-Beispiele:
-• Leckageortung vor Fertigstellung
-• Qualitätskontrolle der Bauausführung
-• Nachweis für Förderungen (KfW, BAFA)
-• Überprüfung nach Sanierungsmaßnahmen
-• Dokumentation für Energieausweis"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="section">
-                        <div class="section-title">Definition:</div>
-                        <div class="info-block">
-                            <p>Die Blower-Door Messung ist ein Verfahren gem ISO 9972:2018 zur Bestimmung der Luftdurchlässigkeit von Gebäuden. Diese werden zur Qualitätskontrolle der Bauausführung und zur Überprüfung der Anforderungen nach KfW-Richtlinien eingesetzt.</p>
-                        </div>
-                    </div>
-
-                    <div class="footer">
-                        <div class="footer-logo">FLIB</div>
-                        <div>
-                            <div>Prüfergebnis:</div>
-                            <div>gemessen am:</div>
-                        </div>
-                        <div>
-                            <div><strong>Bestanden</strong></div>
-                            <div><strong>November 2025</strong></div>
-                        </div>
-                        <div style="font-size: 14px;">Seite 2 von 6</div>
-                    </div>
-                </div>
-
-                <!-- Seite 3 -->
-                <div class="protocol-page">
-                    <div class="hole-second"></div>
-                    <div class="hole-third"></div>
-                    <div class="header">
-                        <div class="header-background"></div>
-                        <div class="logo-placeholder">LOGO</div>
-                        <div class="title">
-                            <h1>Blower-Door</h1>
-                            <p>Prüfverfahren gem. ISO 9972:2018</p>
-                        </div>
-                        <div class="map-placeholder">Karte</div>
-                    </div>
-
-                    <div class="info-block">
-                        <h3>Gebäudedaten:</h3>
-                        <div class="field-group">
-                            <label>Netto-Raumvolumen V:</label>
-                            <input type="number" placeholder="___"> m³
-                        </div>
-                        <div class="field-group">
-                            <label>Hüllfläche:</label>
-                            <input type="number" placeholder="___"> m²
-                        </div>
-                        <div class="field-group">
-                            <label>Geschossanzahl:</label>
-                            <input type="number" placeholder="___">
-                        </div>
-                        <div class="field-group">
-                            <label>Nutzungsart:</label>
-                            <input type="text" placeholder="___">
-                        </div>
-                    </div>
-
-                    <div class="info-block">
-                        <h3>Wetterdaten:</h3>
-                        <div class="field-group">
-                            <label>Außentemp.:</label>
-                            <input type="number" placeholder="___"> °C
-                        </div>
-                        <div class="field-group">
-                            <label>Innentemp.:</label>
-                            <input type="number" placeholder="___"> °C
-                        </div>
-                        <div class="field-group">
-                            <label>Windgeschwindigkeit:</label>
-                            <input type="number" placeholder="___"> m/s
-                        </div>
-                        <div class="field-group">
-                            <label>Windrichtung:</label>
-                            <input type="text" placeholder="___">
-                        </div>
-                    </div>
-
-                    <div class="info-block">
-                        <h3>Messgerät:</h3>
-                        <div class="field-group">
-                            <label>Hersteller:</label>
-                            <input type="text" value="Testo">
-                        </div>
-                        <div class="field-group">
-                            <label>Typ/Modell:</label>
-                            <input type="text" value="DP-510i">
-                        </div>
-                        <div class="field-group">
-                            <label>Seriennummer:</label>
-                            <input type="text" value="46884224">
-                        </div>
-                        <div class="field-group">
-                            <label>Kalibrierung gültig bis:</label>
-                            <input type="text" value="03/27">
-                        </div>
-                    </div>
-
-                    <div class="footer">
-                        <div class="footer-logo">FLIB</div>
-                        <div>
-                            <div>Prüfergebnis:</div>
-                            <div>gemessen am:</div>
-                        </div>
-                        <div>
-                            <div><strong>Bestanden</strong></div>
-                            <div><strong>November 2025</strong></div>
-                        </div>
-                        <div style="font-size: 14px;">Seite 3 von 6</div>
-                    </div>
-                </div>
-
-                <!-- Seite 4 -->
-                <div class="protocol-page">
-                    <div class="hole-second"></div>
-                    <div class="hole-third"></div>
-                    <div class="header">
-                        <div class="header-background"></div>
-                        <div class="logo-placeholder">LOGO</div>
-                        <div class="title">
-                            <h1>Blower-Door</h1>
-                            <p>Prüfverfahren gem. ISO 9972:2018</p>
-                        </div>
-                        <div class="map-placeholder">Karte</div>
-                    </div>
-
-                    <div class="section-title">Messwerte:</div>
-
-                    <div class="info-block">
-                        <h3>Unterdruckmessungen:</h3>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Messung Nr.</th>
-                                    <th>Differenzdruck [Pa]</th>
-                                    <th>Volumenstrom [m³/h]</th>
-                                    <th>Bemerkungen</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>-10</td>
-                                    <td>850</td>
-                                    <td>Startwert</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>-20</td>
-                                    <td>1200</td>
-                                    <td>Stabil</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>-30</td>
-                                    <td>1480</td>
-                                    <td>Optimal</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>-40</td>
-                                    <td>1720</td>
-                                    <td>Gut</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>-50</td>
-                                    <td>1950</td>
-                                    <td>Referenzwert</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="info-block">
-                        <h3>Überdruckmessungen:</h3>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Messung Nr.</th>
-                                    <th>Differenzdruck [Pa]</th>
-                                    <th>Volumenstrom [m³/h]</th>
-                                    <th>Bemerkungen</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>10</td>
-                                    <td>820</td>
-                                    <td>Startwert</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>20</td>
-                                    <td>1150</td>
-                                    <td>Stabil</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>30</td>
-                                    <td>1420</td>
-                                    <td>Optimal</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>40</td>
-                                    <td>1680</td>
-                                    <td>Gut</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>50</td>
-                                    <td>1920</td>
-                                    <td>Referenzwert</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="footer">
-                        <div class="footer-logo">FLIB</div>
-                        <div>
-                            <div>Prüfergebnis:</div>
-                            <div>gemessen am:</div>
-                        </div>
-                        <div>
-                            <div><strong>Bestanden</strong></div>
-                            <div><strong>November 2025</strong></div>
-                        </div>
-                        <div style="font-size: 14px;">Seite 4 von 6</div>
-                    </div>
-                </div>
-
-                <!-- Seite 5 -->
-                <div class="protocol-page">
-                    <div class="hole-second"></div>
-                    <div class="hole-third"></div>
-                    <div class="header">
-                        <div class="header-background"></div>
-                        <div class="logo-placeholder">LOGO</div>
-                        <div class="title">
-                            <h1>Blower-Door</h1>
-                            <p>Prüfverfahren gem. ISO 9972:2018</p>
-                        </div>
-                        <div class="map-placeholder">Karte</div>
-                    </div>
-
-                    <div class="measurement-controls">
-                        <div class="control-card">
-                            <h4>n₅₀-Wert [1/h]</h4>
-                            <div class="control-value control-n50">1.5</div>
-                        </div>
-                        <div class="control-card">
-                            <h4>Gebäudevolumen [m³]</h4>
-                            <div class="control-value control-volume">100</div>
-                        </div>
-                        <div class="control-card">
-                            <h4>Max. Druck [Pa]</h4>
-                            <div class="control-value control-pressure">200</div>
-                        </div>
-                    </div>
-
-                    <div class="section-title">Diagramm:</div>
-
-                    <div class="chart-placeholder">
-                        <div>
-                            <div>📊 Diagramm-Platzhalter</div>
-                            <div style="font-size: 12px; margin-top: 10px;">
-                                Hier würde das Blower-Door Messung Druckverlauf-Diagramm angezeigt<br>
-                                Mit theoretischer Kurve, simulierten Messpunkten und realen Messpunkten
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="result-cards">
-                        <div class="result-card">
-                            <div class="value">1.5</div>
-                            <div class="label">n₅₀-Wert [1/h]</div>
-                        </div>
-                        <div class="result-card">
-                            <div class="value">4.02</div>
-                            <div class="label">q₅₀-Wert [m³/(h·m²)]</div>
-                        </div>
-                        <div class="result-card">
-                            <div class="value">450</div>
-                            <div class="label">V₅₀ [m³/h]</div>
-                        </div>
-                    </div>
-
-                    <div class="footer">
-                        <div class="footer-logo">FLIB</div>
-                        <div>
-                            <div>Prüfergebnis:</div>
-                            <div>gemessen am:</div>
-                        </div>
-                        <div>
-                            <div><strong>Bestanden</strong></div>
-                            <div><strong>November 2025</strong></div>
-                        </div>
-                        <div style="font-size: 14px;">Seite 5 von 6</div>
-                    </div>
-                </div>
-
-                <!-- Seite 6 -->
-                <div class="protocol-page">
-                    <div class="hole-second"></div>
-                    <div class="hole-third"></div>
-                    <div class="header">
-                        <div class="header-background"></div>
-                        <div class="logo-placeholder">LOGO</div>
-                        <div class="title">
-                            <h1>Blower-Door</h1>
-                            <p>Prüfverfahren gem. ISO 9972:2018</p>
-                        </div>
-                        <div class="map-placeholder">Karte</div>
-                    </div>
-
-                    <div class="section-title">Auswertung:</div>
-
-                    <div class="definitions-grid">
-                        <div class="definition-card definition-blue">
-                            <h4>🔵 Grundlegende Definitionen</h4>
-                            <p><strong>n₅₀-Wert:</strong> Luftwechselrate bei 50 Pa Druckdifferenz</p>
-                            <p><strong>q₅₀-Wert:</strong> Spezifischer Leckagestrom pro m² Hüllfläche</p>
-                            <p><strong>V₅₀:</strong> Volumenstrom bei 50 Pa Druckdifferenz</p>
-                        </div>
-
-                        <div class="definition-card definition-green">
-                            <h4>🟢 Technische Parameter</h4>
-                            <p><strong>Potenzfunktion:</strong> V = C × ΔP^n</p>
-                            <p><strong>Typischer n-Wert:</strong> 0,65 (für turbulente Strömung)</p>
-                            <p><strong>Messbereich:</strong> 10-100 Pa (nach ISO 9972)</p>
-                        </div>
-                    </div>
-
-                    <div class="interactive-text-area">
-                        <h4>📝 Detaillierte Bewertung der Messergebnisse</h4>
-                        <textarea class="editable-text evaluation-text" placeholder="Hier können Sie eine detaillierte Bewertung der Messergebnisse eintragen...
-
-Beispielhafte Bewertungskriterien:
-• Bewertung der gemessenen n₅₀-Werte im Vergleich zu Grenzwerten
-• Einhaltung der KfW-Anforderungen (n₅₀ ≤ 1,5 h⁻¹)
-• Qualität der Messung (Korrelationskoeffizient R²)
-• Identifizierte Leckagen und deren Bedeutung
-• Empfehlungen für Nachbesserungen
-• Fazit zur Luftdichtheit des Gebäudes
-
-Bewertung der Messergebnisse:
-Der gemessene n₅₀-Wert von 1,5 h⁻¹ entspricht exakt dem KfW-Grenzwert für Sanierungen. Die Messung zeigt eine gute Korrelation zwischen Unter- und Überdruckmessungen.
-
-Empfehlungen:
-- Alle größeren Leckagen wurden bereits während der Messung identifiziert und sollten abgedichtet werden
-- Nachkontrolle in 6 Monaten empfohlen"></textarea>
-                    </div>
-
-                    <div class="signature-boxes">
-                        <div class="signature-box">
-                            <div><strong>Techniker(FH) D.Heinicke</strong></div>
-                            <div style="margin-top: 70px;">
-                                <div style="font-size: 12px;">
-                                    <p>...............................................................</p>
-                                    Datum, Unterschrift Messtechniker
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="signature-box">
-                            <div><strong>Dipl.-Ing C. Quiatkowski</strong></div>
-                            <div style="margin-top: 70px;">
-                                <div style="font-size: 12px;">
-                                    <p>...............................................................</p>
-                                    Datum, Unterschrift Auftraggeber
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="footer">
-                        <div class="footer-logo">FLIB</div>
-                        <div>
-                            <div>Prüfergebnis:</div>
-                            <div>gemessen am:</div>
-                        </div>
-                        <div>
-                            <div><strong>Bestanden</strong></div>
-                            <div><strong>November 2025</strong></div>
-                        </div>
-                        <div style="font-size: 14px;">Seite 6 von 6</div>
-                    </div>
-                </div>
-            </div>
+            <section id="protocol-section">
+                <!-- Content will be filled by JavaScript -->
+            </section>
         </div>
     </main>
 
-    <script>
-        // Navigation functionality
-        function showPage(pageId) {
-            // Hide all pages
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => page.classList.remove('active'));
-            
-            // Show selected page
-            const selectedPage = document.getElementById(pageId);
-            if (selectedPage) {
-                selectedPage.classList.add('active');
-            }
-            
-            // Update navigation buttons
-            const navButtons = document.querySelectorAll('.nav-btn');
-            navButtons.forEach(btn => btn.classList.remove('active'));
-            
-            // Add active class to current button
-            event.target.closest('.nav-btn')?.classList.add('active');
-        }
 
-        // Back to top functionality
-        function scrollToTop() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        }
 
-        // Show/hide back to top button
-        window.addEventListener('scroll', function() {
-            const backToTopBtn = document.getElementById('back-to-top');
-            if (window.pageYOffset > 300) {
-                backToTopBtn.classList.add('show');
-            } else {
-                backToTopBtn.classList.remove('show');
-            }
-        });
+    <!-- JavaScript-Dateien laden (Reihenfolge ist wichtig) -->
+    <script src="js/app.js"></script>
+    <script src="js/measurement.js"></script>
+    <script src="js/weather.js"></script>
+    <script src="js/protocol.js"></script>
 
-        // Print protocol functionality
-        function printProtocol() {
-            // Show only protocol page before printing
-            const currentPage = document.querySelector('.page.active');
-            const protocolPage = document.getElementById('protocol');
-            
-            // Hide all pages
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => page.style.display = 'none');
-            
-            // Show only protocol
-            protocolPage.style.display = 'block';
-            
-            // Print
-            window.print();
-            
-            // Restore original state
-            pages.forEach(page => page.style.display = '');
-            pages.forEach(page => page.classList.remove('active'));
-            currentPage.classList.add('active');
-        }
+    <!-- JavaScript für Anchor-Navigation -->
+    <script src="js/sectionID.js"></script>
 
-        // Protocol functionality
-        function autoSave() {
-            const formData = {};
-            
-            // Save all input fields
-            document.querySelectorAll('.protocol-container input').forEach(input => {
-                if (input.id || input.name) {
-                    formData[input.id || input.name] = input.value;
-                }
-            });
-            
-            // Save textareas
-            document.querySelectorAll('.protocol-container textarea').forEach(textarea => {
-                if (textarea.id) {
-                    formData[textarea.id] = textarea.value;
-                }
-            });
-            
-            // Store in memory
-            window.protocolData = formData;
-        }
 
-        function loadData() {
-            if (window.protocolData) {
-                const data = window.protocolData;
-                Object.keys(data).forEach(key => {
-                    const element = document.querySelector(`.protocol-container #${key}, .protocol-container [name="${key}"]`);
-                    if (element) {
-                        element.value = data[key];
-                    }
-                });
-            }
-        }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function () {
-            // Auto-save on input changes
-            document.addEventListener('input', function(e) {
-                if (e.target.closest('.protocol-container')) {
-                    autoSave();
-                }
-            });
-            
-            // Load data on page load
-            loadData();
-            
-            // Focus effects for text areas
-            document.querySelectorAll('.protocol-container .editable-text').forEach(textarea => {
-                textarea.addEventListener('focus', function() {
-                    this.parentElement.style.borderColor = '#007acc';
-                    this.parentElement.style.boxShadow = '0 0 10px rgba(0, 122, 204, 0.2)';
-                });
-                
-                textarea.addEventListener('blur', function() {
-                    this.parentElement.style.borderColor = '#007acc';
-                    this.parentElement.style.boxShadow = 'none';
-                });
-            });
-            
-            // Keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                // Ctrl+S for Save
-                if (e.ctrlKey && e.key === 's') {
-                    e.preventDefault();
-                    autoSave();
-                    
-                    // Show save notification
-                    const notification = document.createElement('div');
-                    notification.textContent = 'Daten gespeichert!';
-                    notification.style.cssText = `
-                        position: fixed;
-                        top: 100px;
-                        right: 20px;
-                        background: #4CAF50;
-                        color: white;
-                        padding: 10px 20px;
-                        border-radius: 5px;
-                        z-index: 10000;
-                        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-                    `;
-                    document.body.appendChild(notification);
-                    setTimeout(() => notification.remove(), 2000);
-                }
-                
-                // Ctrl+P for Print
-                if (e.ctrlKey && e.key === 'p') {
-                    e.preventDefault();
-                    printProtocol();
-                }
-            });
-        });
-    </script>
 </body>
 
 </html>
