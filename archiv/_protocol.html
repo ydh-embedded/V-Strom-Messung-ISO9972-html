@@ -6,19 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blower-Door Prüfverfahren gem. ISO 9972:2018</title>
 
+
     <!-- LINK externe stylesheet Anbindung -->
-    <link rel="stylesheet" href="./protocol_style/scope_style.css">
+    <link rel="stylesheet" href="./styles/style.css">
 
     <!-- LINK Transfer-System -->
-    <script src="../js/transfer.js"></script>
+    <script src="js/transfer.js"></script>
 
 </head>
 
 <body>
     <!-- ANCHOR Seite 1 -->
     <div class="page">
-        <div class="hole-second"></div>
-        <div class="hole-third"></div>
+        <div class="hole-second"></div> <!-- Zweite Lochmarkierung -->
+        <div class="hole-third"></div> <!-- Dritte Lochmarkierung -->
         <div class="header">
             <div class="header-background"></div>
             <div class="logo-placeholder">LOGO</div>
@@ -106,6 +107,7 @@
             <div>
                 <div>Prüfergebnis:</div>
                 <div>gemessen am: </div>
+
             </div>
             <div>
                 <div><strong>Bestanden</strong></div>
@@ -117,8 +119,8 @@
 
     <!-- ANCHOR Seite 2 -->
     <div class="page">
-        <div class="hole-second"></div>
-        <div class="hole-third"></div>
+        <div class="hole-second"></div> <!-- Zweite Lochmarkierung -->
+        <div class="hole-third"></div> <!-- Dritte Lochmarkierung -->
         <div class="header">
             <div class="header-background"></div>
             <div class="logo-placeholder">LOGO</div>
@@ -133,6 +135,7 @@
             <div class="section-title">Zweck der Messung:</div>
             <div class="info-block" style="margin-bottom: 20px;">
                 <h3>Überprüfung der Anforderung nach KfW-Richtlinie</h3>
+
             </div>
         </div>
 
@@ -166,6 +169,7 @@ Beispiele:
             <div>
                 <div>Prüfergebnis:</div>
                 <div>gemessen am: </div>
+
             </div>
             <div>
                 <div><strong>Bestanden</strong></div>
@@ -175,10 +179,10 @@ Beispiele:
         </div>
     </div>
 
-    <!-- ANCHOR Seite 3 - HIER SIND DIE ÜBERTRAGENEN DATEN -->
+    <!-- ANCHOR  Seite 3 -->
     <div class="page">
-        <div class="hole-second"></div>
-        <div class="hole-third"></div>
+        <div class="hole-second"></div> <!-- Zweite Lochmarkierung -->
+        <div class="hole-third"></div> <!-- Dritte Lochmarkierung -->
         <div class="header">
             <div class="header-background"></div>
             <div class="logo-placeholder">LOGO</div>
@@ -193,19 +197,19 @@ Beispiele:
             <h3>Gebäudedaten:</h3>
             <div class="field-group">
                 <label>Netto-Raumvolumen V:</label>
-                <input type="number" placeholder="volume" data-transfer="volume"> m³
+                <input type="number" placeholder="Netto-Raumvolumen V"> m³
             </div>
             <div class="field-group">
                 <label>Hüllfläche:</label>
-                <input type="number" placeholder="hüllfläche"> m²
+                <input type="number" placeholder="Hüllfläche"> m²
             </div>
             <div class="field-group">
                 <label>Geschossanzahl:</label>
-                <input type="number" placeholder="geschossanzahl">
+                <input type="number" placeholder="Geschossanzahl">
             </div>
             <div class="field-group">
                 <label>Nutzungsart:</label>
-                <input type="text" placeholder="nutzungsart">
+                <input type="text" placeholder="Nutzungsart">
             </div>
         </div>
 
@@ -213,27 +217,25 @@ Beispiele:
             <h3>Wetterdaten:</h3>
             <div class="field-group">
                 <label>Außentemp.:</label>
-                <input type="number" placeholder="outside-temp" data-transfer="outside-temp"> °C
+                <input type="number" placeholder="Außentemperatur"> °C
             </div>
-            <div class="field-group">
-                <label>Innentemp.:</label>
-                <input type="number" placeholder="inside-temp" data-transfer="inside-temp"> °C
+
+            <!-- funtkioniert In index.html im Wetter-Bereich -->
+            <div class="weather-field-group">
+                <div class="flex items-center gap-2">
+                    <label>Innentemperatur:</label>
+                    <input type="number" id="inside-temp" placeholder="20" step="0.1">
+                    <span class="text-rose-300">°C</span>
+                </div>
             </div>
+
             <div class="field-group">
                 <label>Wind:</label>
-                <input type="number" placeholder="wind-speed" data-transfer="wind-speed"> m/s
+                <input type="number" placeholder="Windgeschwindigkeit"> m/s
             </div>
             <div class="field-group">
                 <label>Windrichtung:</label>
-                <input type="text" placeholder="wind-direction" data-transfer="wind-direction">
-            </div>
-            <div class="field-group">
-                <label>Luftdruck:</label>
-                <input type="number" placeholder="air-pressure" data-transfer="air-pressure"> hPa
-            </div>
-            <div class="field-group">
-                <label>Luftfeuchtigkeit:</label>
-                <input type="number" placeholder="humidity" data-transfer="humidity"> %
+                <input type="text" placeholder="Windrichtung">
             </div>
         </div>
 
@@ -262,6 +264,7 @@ Beispiele:
             <div>
                 <div>Prüfergebnis:</div>
                 <div>gemessen am: </div>
+
             </div>
             <div>
                 <div><strong>Bestanden</strong></div>
@@ -271,10 +274,10 @@ Beispiele:
         </div>
     </div>
 
-    <!-- ANCHOR Seite 4 -->
+    <!-- ANCHOR  Seite 4 -->
     <div class="page">
-        <div class="hole-second"></div>
-        <div class="hole-third"></div>
+        <div class="hole-second"></div> <!-- Zweite Lochmarkierung -->
+        <div class="hole-third"></div> <!-- Dritte Lochmarkierung -->
         <div class="header">
             <div class="header-background"></div>
             <div class="logo-placeholder">LOGO</div>
@@ -286,6 +289,8 @@ Beispiele:
         </div>
 
         <div class="section-title">Messwerte:</div>
+
+
 
         <div class="info-block" style="margin-bottom: 20px;">
             <h3>Unterdruckmessungen:</h3>
@@ -384,6 +389,7 @@ Beispiele:
             <div>
                 <div>Prüfergebnis:</div>
                 <div>gemessen am: </div>
+
             </div>
             <div>
                 <div><strong>Bestanden</strong></div>
@@ -393,10 +399,10 @@ Beispiele:
         </div>
     </div>
 
-    <!-- ANCHOR Seite 5 -->
+    <!-- ANCHOR  Seite 5 -->
     <div class="page">
-        <div class="hole-second"></div>
-        <div class="hole-third"></div>
+        <div class="hole-second"></div> <!-- Zweite Lochmarkierung -->
+        <div class="hole-third"></div> <!-- Dritte Lochmarkierung -->
         <div class="header">
             <div class="header-background"></div>
             <div class="logo-placeholder">LOGO</div>
@@ -406,19 +412,18 @@ Beispiele:
             </div>
             <div class="map-placeholder">Karte</div>
         </div>
-        
         <div class="measurement-controls">
             <div class="control-card">
                 <h4>n₅₀-Wert [1/h]</h4>
-                <div class="control-value" data-transfer="n50">1.5</div>
+                <div class="control-value control-n50">1.5</div>
             </div>
             <div class="control-card">
                 <h4>Gebäudevolumen [m³]</h4>
-                <div class="control-value" data-transfer="volume">100</div>
+                <div class="control-value control-volume">100</div>
             </div>
             <div class="control-card">
                 <h4>Max. Druck [Pa]</h4>
-                <div class="control-value" data-transfer="pressure">200</div>
+                <div class="control-value control-pressure">200</div>
             </div>
         </div>
 
@@ -436,15 +441,15 @@ Beispiele:
 
         <div class="result-cards">
             <div class="result-card">
-                <div class="value" data-transfer="n50">1.5</div>
+                <div class="value control-n50">1.5</div>
                 <div class="label">n₅₀-Wert [1/h]</div>
             </div>
             <div class="result-card">
-                <div class="value" data-transfer="q50">4.02</div>
+                <div class="value control-q50">4.02</div>
                 <div class="label">q₅₀-Wert [m³/(h·m²)]</div>
             </div>
             <div class="result-card">
-                <div class="value" data-transfer="v50">450</div>
+                <div class="value control-volume">450</div>
                 <div class="label">V₅₀ [m³/h]</div>
             </div>
         </div>
@@ -454,6 +459,7 @@ Beispiele:
             <div>
                 <div>Prüfergebnis:</div>
                 <div>gemessen am: </div>
+
             </div>
             <div>
                 <div><strong>Bestanden</strong></div>
@@ -463,10 +469,10 @@ Beispiele:
         </div>
     </div>
 
-    <!-- ANCHOR Seite 6 -->
+    <!-- ANCHOR  Seite 6 -->
     <div class="page">
-        <div class="hole-second"></div>
-        <div class="hole-third"></div>
+        <div class="hole-second"></div> <!-- Zweite Lochmarkierung -->
+        <div class="hole-third"></div> <!-- Dritte Lochmarkierung -->
         <div class="header">
             <div class="header-background"></div>
             <div class="logo-placeholder">LOGO</div>
@@ -538,12 +544,12 @@ Empfehlungen:
                 </div>
             </div>
         </div>
-        
         <div class="footer">
             <div class="footer-logo">FLIB</div>
             <div>
                 <div>Prüfergebnis:</div>
                 <div>gemessen am: </div>
+
             </div>
             <div>
                 <div><strong>Bestanden</strong></div>
@@ -552,6 +558,8 @@ Empfehlungen:
             <div style="font-size: 14px;">Seite 6 von 6</div>
         </div>
     </div>
+
+
 
 </body>
 

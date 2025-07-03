@@ -1,0 +1,60 @@
+    <!-- DIESEN DEBUG-CODE AM ANFANG VON protocol.html Einfügen und mit F12 checken  -->
+
+    <script>
+        console.log("🔍 === PROTOCOL.HTML DEBUG ===");
+        console.log("📍 Aktuelle URL:", window.location.href);
+        console.log("📂 Basis-Pfad:", window.location.pathname);
+
+        // Teste CSS-Ladung
+        const cssLink = document.querySelector('link[rel="stylesheet"]');
+        if (cssLink) {
+            console.log("🎨 CSS-Pfad gefunden:", cssLink.href);
+
+            // Teste ob CSS geladen wurde
+            cssLink.onload = () => console.log("✅ CSS erfolgreich geladen");
+            cssLink.onerror = () => console.error("❌ CSS NICHT GELADEN!");
+        } else {
+            console.error("❌ Kein CSS-Link gefunden!");
+        }
+
+        // Teste Transfer-System
+        setTimeout(() => {
+            if (window.loadDataOnProtocol) {
+                console.log("✅ Transfer-System geladen");
+            } else {
+                console.error("❌ Transfer-System NICHT geladen!");
+            }
+
+            // Prüfe SessionStorage
+            const sessionData = sessionStorage.getItem('blowerDoorTransfer');
+            if (sessionData) {
+                console.log("📦 SessionStorage Daten gefunden:", sessionData.length, "Zeichen");
+            } else {
+                console.log("📦 Keine SessionStorage Daten");
+            }
+
+            // Teste verschiedene CSS-Pfade
+            testCSSPath('./styles/style.css');
+            testCSSPath('../styles/style.css');
+            testCSSPath('./style.css');
+
+        }, 1000);
+
+        function testCSSPath(path) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = path;
+            link.onload = () => console.log(`✅ CSS-Test erfolgreich: ${path}`);
+            link.onerror = () => console.log(`❌ CSS-Test fehlgeschlagen: ${path}`);
+            document.head.appendChild(link);
+            // Wieder entfernen nach Test
+            setTimeout(() => document.head.removeChild(link), 2000);
+        }
+
+        // Zeige Seiten-Info
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("📄 DOM geladen");
+            console.log("🎯 Anzahl .page Elemente:", document.querySelectorAll('.page').length);
+            console.log("📝 Anzahl input Elemente:", document.querySelectorAll('input').length);
+        });
+    </script>

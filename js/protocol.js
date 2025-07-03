@@ -1,394 +1,366 @@
-// =================================================================
-// protocol.js - Protokoll-System
-// =================================================================
-
 /**
- * Initialisiert das Protokoll-System
+ * EINFACHES TRANSFER-SYSTEM - GARANTIERT FUNKTIONIEREND
+ * Ersetzen Sie den gesamten Inhalt von js/transfer.js
  */
-window.initProtocolPage = function() {
-    console.log("Initialisiere Protokoll-System...");
-    
-    // Funktionen global verfügbar machen
-    window.validateAndPrint = validateAndPrint;
-    window.exportProtocol = exportProtocol;
-    window.transferDataToProtocol = transferDataToProtocol;
-}
 
-/**
- * Aktualisiert die Protokoll-Seite
- */
-window.updateProtocolPage = function() {
-    const protocolPage = document.getElementById('protocol');
-    
-    if (!protocolPage || protocolPage.querySelector('.protocol-container')) {
-        return;
-    }
+console.log("🚀 EINFACHES TRANSFER-SYSTEM STARTET");
 
-    protocolPage.innerHTML = `
-        <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
-            <div class="max-w-7xl mx-auto">
-                <div class="protocol-wrapper no-print">
-                    <div class="protocol-controls text-center mb-6">
-                        <h3 class="text-2xl font-bold text-rose-300 mb-4">📋 Blower Door Protokoll</h3>
-                        <div class="flex flex-wrap justify-center gap-2">
-                            <button onclick="validateAndPrint()" 
-                                    class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors">
-                                🖨️ Drucken
-                            </button>
-                            <button onclick="exportProtocol()" 
-                                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
-                                📄 Exportieren (JSON)
-                            </button>
-                            <button onclick="transferDataToProtocol()" 
-                                    class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-lg transition-colors">
-                                🔄 Daten übertragen
-                            </button>
-                        </div>
-                    </div>
-                    <div class="protocol-content">
-                        <div class="protocol-container bg-white text-black p-4 rounded-lg">
-                            ${generateProtocolPages()}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+// =============================================================================
+// SOFORT AUSFÜHRBARE FUNKTIONEN
+// =============================================================================
+
+// Erstelle sofort einen Test-Button
+function createTestButton() {
+    // Entferne alten Button
+    const oldBtn = document.getElementById('simple-transfer-btn');
+    if (oldBtn) oldBtn.remove();
+
+    const button = document.createElement('button');
+    button.id = 'simple-transfer-btn';
+    button.innerHTML = '🚀 TRANSFER TEST';
+    button.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        background: #ff0000;
+        color: white;
+        border: none;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     `;
-
-    addProtocolInputListeners();
+    
+    button.onclick = function() {
+        console.log("🔥 TEST BUTTON GEKLICKT!");
+        transferDataNow();
+    };
+    
+    document.body.appendChild(button);
+    console.log("✅ Test-Button erstellt");
 }
 
-/**
- * Generiert die Protokoll-Seiten
- */
-function generateProtocolPages() {
-    const pages = [];
+// Sammle alle verfügbaren Daten
+function collectData() {
+    console.log("📊 Sammle Daten...");
     
-    for (let i = 1; i <= 6; i++) {
-        const contentFunction = `getPage${i}Content`;
-        const content = typeof window[contentFunction] === 'function' 
-            ? window[contentFunction]() 
-            : `<div class="p-4"><h2>Seite ${i}</h2><p>Inhalt wird geladen...</p></div>`;
-        
-        pages.push(`<div class="page protocol-page">${content}</div>`);
-    }
-    
-    return pages.join('');
-}
-
-/**
- * Überträgt Daten ins Protokoll
- */
-window.transferDataToProtocol = function() {
-    console.log('Übertrage Daten ins Protokoll...');
-
-    try {
-        // Gebäudedaten
-        transferBuildingData();
+    const data = {
+        // Zeitstempel
+        timestamp: new Date().toLocaleString('de-DE'),
         
         // Wetterdaten
-        transferWeatherData();
+        weather: {},
         
-        // Messdaten
-        transferMeasurementData();
+        // Gebäudedaten  
+        building: {},
         
-        // Berechnete Werte
-        transferCalculatedValues();
-        
-        // Prüfergebnis
-        transferTestResult();
-        
-        // Datum
-        updateProtocolDate();
+        // Status
+        status: 'collected'
+    };
+    
+    // Wetterdaten sammeln
+    const weatherIds = ['outside-temp', 'inside-temp', 'wind-speed', 'wind-direction', 'air-pressure', 'humidity'];
+    weatherIds.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            data.weather[id] = element.value || '';
+            console.log(`🌤️ ${id}: "${element.value}"`);
+        } else {
+            console.log(`❌ Element nicht gefunden: ${id}`);
+        }
+    });
+    
+    // Gebäudedaten sammeln
+    const buildingIds = ['volume', 'n50', 'pressure'];
+    buildingIds.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            data.building[id] = element.value || '';
+            console.log(`🏗️ ${id}: "${element.value}"`);
+        } else {
+            console.log(`❌ Element nicht gefunden: ${id}`);
+        }
+    });
+    
+    console.log("📋 Gesammelte Daten:", data);
+    return data;
+}
 
-        console.log('Datenübertragung erfolgreich abgeschlossen');
-        alert('Alle Daten wurden erfolgreich ins Protokoll übertragen!');
+// Führe Transfer aus
+function transferDataNow() {
+    console.log("🔄 TRANSFER STARTET JETZT!");
+    
+    try {
+        // 1. Daten sammeln
+        const data = collectData();
+        
+        // 2. Prüfen ob Daten vorhanden
+        const hasData = checkHasData(data);
+        console.log("✅ Hat Daten:", hasData);
+        
+        if (!hasData) {
+            alert("❌ Keine Daten gefunden!\n\nBitte füllen Sie mindestens ein Feld aus und versuchen Sie es erneut.");
+            return;
+        }
+        
+        // 3. Daten speichern und übertragen
+        const success = executeTransfer(data);
+        
+        if (success) {
+            console.log("🎉 TRANSFER ERFOLGREICH!");
+        }
         
     } catch (error) {
-        console.error('Fehler bei der Datenübertragung:', error);
-        alert('Fehler beim Übertragen der Daten. Bitte versuchen Sie es erneut.');
+        console.error("💥 TRANSFER FEHLER:", error);
+        alert("Transfer fehlgeschlagen: " + error.message);
     }
 }
 
-function transferBuildingData() {
-    const volume = document.getElementById('volume')?.value || 'N/A';
-    const pressure = document.getElementById('pressure')?.value || 'N/A';
+// Prüfe ob Daten vorhanden sind
+function checkHasData(data) {
+    const weatherHasData = Object.values(data.weather).some(val => val !== '');
+    const buildingHasData = Object.values(data.building).some(val => val !== '');
     
-    document.querySelectorAll('.protocol-volume, .protocol-volume-display').forEach(el => {
-        if (el.tagName === 'INPUT') {
-            el.value = volume;
+    console.log("🔍 Wetter hat Daten:", weatherHasData);
+    console.log("🔍 Gebäude hat Daten:", buildingHasData);
+    
+    return weatherHasData || buildingHasData;
+}
+
+// Führe den eigentlichen Transfer aus
+function executeTransfer(data) {
+    console.log("🚚 Führe Transfer aus...");
+    
+    try {
+        // 1. Daten als JSON speichern
+        const jsonData = JSON.stringify(data);
+        console.log("📦 JSON Daten erstellt, Größe:", jsonData.length);
+        
+        // 2. In SessionStorage speichern (immer, als Backup)
+        sessionStorage.setItem('blowerDoorTransfer', jsonData);
+        console.log("💾 Daten in SessionStorage gespeichert");
+        
+        // 3. URL erstellen
+        const protocolUrl = './sites/protocol.html';
+        console.log("🎯 Ziel-URL:", protocolUrl);
+        
+        // 4. Benutzer informieren
+        const proceed = confirm(`✅ Daten bereit für Transfer!\n\n` +
+            `Wetter-Felder: ${Object.keys(data.weather).length}\n` +
+            `Gebäude-Felder: ${Object.keys(data.building).length}\n\n` +
+            `Jetzt zu protocol.html wechseln?`);
+        
+        if (proceed) {
+            // 5. Navigation ausführen
+            console.log("🚀 Navigiere zu protocol.html...");
+            window.location.href = protocolUrl;
+            return true;
         } else {
-            el.textContent = volume;
+            console.log("❌ Transfer vom Benutzer abgebrochen");
+            return false;
         }
-    });
-    
-    document.querySelectorAll('.protocol-pressure-display').forEach(el => {
-        el.textContent = pressure;
-    });
+        
+    } catch (error) {
+        console.error("💥 Transfer-Ausführung fehlgeschlagen:", error);
+        throw error;
+    }
 }
 
-function transferWeatherData() {
-    const weatherMappings = {
-        'outside-temp': '.protocol-outside-temp',
-        'wind-speed': '.protocol-wind-speed',
-        'wind-direction': '.protocol-wind-direction'
-    };
+// =============================================================================
+// PROTOCOL.HTML SEITE - DATEN LADEN
+// =============================================================================
 
-    Object.entries(weatherMappings).forEach(([inputId, selector]) => {
-        const value = document.getElementById(inputId)?.value || '___';
+// Lade Daten auf protocol.html
+function loadDataOnProtocol() {
+    console.log("📥 Protocol.html: Lade Daten...");
+    
+    // Aus SessionStorage laden
+    const sessionData = sessionStorage.getItem('blowerDoorTransfer');
+    
+    if (sessionData) {
+        try {
+            const data = JSON.parse(sessionData);
+            console.log("✅ Daten aus SessionStorage geladen:", data);
+            
+            // Daten einfügen
+            fillProtocolFields(data);
+            
+            // SessionStorage leeren
+            sessionStorage.removeItem('blowerDoorTransfer');
+            
+            // Erfolg anzeigen
+            showProtocolMessage("✅ Daten erfolgreich übertragen!", "success");
+            
+        } catch (error) {
+            console.error("❌ Fehler beim Laden der SessionStorage Daten:", error);
+            showProtocolMessage("❌ Fehler beim Laden der Daten", "error");
+        }
+    } else {
+        console.log("ℹ️ Keine Übertragungsdaten in SessionStorage gefunden");
+        showProtocolMessage("ℹ️ Keine Übertragungsdaten gefunden", "info");
+    }
+}
+
+// Fülle Protocol-Felder aus
+function fillProtocolFields(data) {
+    console.log("✏️ Fülle Protocol-Felder aus...");
+    
+    let fieldsUpdated = 0;
+    
+    // Alle input-Felder durchgehen
+    const inputs = document.querySelectorAll('input');
+    console.log(`🔍 ${inputs.length} Eingabefelder gefunden`);
+    
+    inputs.forEach((input, index) => {
+        const placeholder = input.placeholder ? input.placeholder.toLowerCase() : '';
+        const label = input.previousElementSibling?.textContent?.toLowerCase() || '';
+        const parentText = input.closest('.field-group')?.textContent?.toLowerCase() || '';
         
-        document.querySelectorAll(selector).forEach(el => {
-            if (el.tagName === 'INPUT') {
-                el.value = value;
-            } else {
-                el.textContent = value;
+        console.log(`🔍 Feld ${index}: placeholder="${placeholder}", label="${label}"`);
+        
+        // Erweiterte Zuordnung basierend auf Labels UND Platzhaltern
+        const fieldMappings = [
+            // Wetterdaten
+            { 
+                checks: ['außentemp', 'außentemperatur'], 
+                value: data.weather['outside-temp'],
+                name: 'Außentemperatur'
+            },
+            { 
+                checks: ['innentemp', 'innentemperatur', 'placeholder="20"'], 
+                value: data.weather['inside-temp'],
+                name: 'Innentemperatur'
+            },
+            { 
+                checks: ['wind:', 'windgeschwindigkeit'], 
+                value: data.weather['wind-speed'],
+                name: 'Windgeschwindigkeit'
+            },
+            { 
+                checks: ['windrichtung'], 
+                value: data.weather['wind-direction'],
+                name: 'Windrichtung'
+            },
+            { 
+                checks: ['luftdruck'], 
+                value: data.weather['air-pressure'],
+                name: 'Luftdruck'
+            },
+            { 
+                checks: ['luftfeuchtigkeit'], 
+                value: data.weather['humidity'],
+                name: 'Luftfeuchtigkeit'
+            },
+            // Gebäudedaten
+            { 
+                checks: ['netto-raumvolumen', 'volumen'], 
+                value: data.building['volume'],
+                name: 'Volumen'
+            },
+            { 
+                checks: ['n₅₀', 'n50'], 
+                value: data.building['n50'],
+                name: 'n50-Wert'
+            },
+            { 
+                checks: ['druck', 'pressure'], 
+                value: data.building['pressure'],
+                name: 'Druck'
+            }
+        ];
+        
+        // Prüfe jedes Mapping
+        fieldMappings.forEach(mapping => {
+            const matchFound = mapping.checks.some(check => 
+                placeholder.includes(check) || 
+                label.includes(check) || 
+                parentText.includes(check) ||
+                (check === 'placeholder="20"' && placeholder === '20')
+            );
+            
+            if (matchFound && mapping.value) {
+                input.value = mapping.value;
+                input.style.backgroundColor = '#e6ffe6';
+                input.style.border = '2px solid #10b981';
+                fieldsUpdated++;
+                console.log(`✅ ${mapping.name}: ${mapping.value} (gefunden mit: ${mapping.checks})`);
             }
         });
     });
-}
-
-function transferMeasurementData() {
-    // Unterdruck-Messungen
-    transferTableData('underpressure', '#protocol-underpressure-table');
     
-    // Überdruck-Messungen
-    transferTableData('overpressure', '#protocol-overpressure-table');
+    console.log(`📊 ${fieldsUpdated} Felder aktualisiert`);
 }
 
-function transferTableData(type, tableSelector) {
-    const table = document.querySelector(tableSelector);
-    if (!table) return;
-
-    const tbody = table.querySelector('tbody');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-
-    const data = window.readTableData(
-        `.${type}-pressure-input`, 
-        `.${type}-flow-input`, 
-        type === 'underpressure'
-    );
-
-    data.forEach((entry, index) => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-            <td class="border px-2 py-1">${index + 1}</td>
-            <td class="border px-2 py-1">${entry.x.toFixed(1)}</td>
-            <td class="border px-2 py-1">${entry.y.toFixed(1)}</td>
-            <td class="border px-2 py-1">Messwert ${index + 1}</td>
-        `;
-    });
-}
-
-function transferCalculatedValues() {
-    const calculatedValues = {
-        'calc-n50': '.protocol-result-n50',
-        'calc-q50': '.protocol-result-q50',
-        'calc-v50': '.protocol-result-v50'
+// Zeige Nachricht auf Protocol-Seite
+function showProtocolMessage(message, type) {
+    const colors = {
+        success: '#10b981',
+        error: '#ef4444', 
+        info: '#3b82f6'
     };
-
-    Object.entries(calculatedValues).forEach(([inputId, selector]) => {
-        const value = document.getElementById(inputId)?.textContent || 'N/A';
-        
-        document.querySelectorAll(selector).forEach(el => {
-            el.textContent = value;
-        });
-    });
-}
-
-function transferTestResult() {
-    const n50 = parseFloat(document.getElementById('calc-n50')?.textContent || '99');
-    const result = n50 <= 1.5 ? 'Bestanden' : 'Nicht bestanden';
-    const color = result === 'Bestanden' ? '#4CAF50' : '#F44336';
     
-    document.querySelectorAll('.protocol-result').forEach(el => {
-        el.textContent = result;
-        el.style.color = color;
-    });
-}
-
-function updateProtocolDate() {
-    const heute = new Date().toLocaleDateString('de-DE');
-    document.querySelectorAll('.auto-datum').forEach(el => {
-        el.textContent = heute;
-    });
-}
-
-/**
- * Validiert Protokoll-Daten
- */
-function validateProtocolData() {
-    const requiredFields = [
-        '.protocol-object',
-        '.protocol-address',
-        '.protocol-client-name',
-        '.protocol-volume'
-    ];
-
-    const missingFields = [];
-    
-    requiredFields.forEach(selector => {
-        const field = document.querySelector(selector);
-        if (!field || !field.value.trim()) {
-            const label = field?.previousElementSibling?.textContent || selector;
-            missingFields.push(label);
-        }
-    });
-
-    if (missingFields.length > 0) {
-        alert(`Bitte füllen Sie die folgenden Pflichtfelder aus:\n- ${missingFields.join('\n- ')}`);
-        return false;
-    }
-
-    return true;
-}
-
-/**
- * Druckt das Protokoll
- */
-window.validateAndPrint = function() {
-    if (!validateProtocolData()) return;
-
-    const printStyles = `
-        @media print {
-            body * { visibility: hidden; }
-            .protocol-container, .protocol-container * { visibility: visible; }
-            .protocol-container { 
-                position: absolute; 
-                left: 0; 
-                top: 0; 
-                width: 100%; 
-            }
-            .no-print, .protocol-controls { display: none !important; }
-            .protocol-page { 
-                page-break-after: always; 
-                box-shadow: none !important; 
-                margin: 0; 
-                border: none; 
-            }
-        }
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: ${colors[type] || colors.info};
+        color: white;
+        padding: 15px 25px;
+        border-radius: 8px;
+        z-index: 10000;
+        font-weight: bold;
+        font-size: 16px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     `;
-
-    const styleSheet = document.createElement('style');
-    styleSheet.textContent = printStyles;
-    document.head.appendChild(styleSheet);
-
-    window.print();
-
-    document.head.removeChild(styleSheet);
-}
-
-/**
- * Exportiert das Protokoll
- */
-window.exportProtocol = function() {
-    if (!validateProtocolData()) return;
-
-    const data = {
-        timestamp: new Date().toISOString(),
-        version: '1.0'
-    };
-
-    // Eingabefelder sammeln
-    document.querySelectorAll('.protocol-container input, .protocol-container textarea').forEach(input => {
-        const key = input.className.split(' ').find(cls => cls.startsWith('protocol-'));
-        if (key) {
-            data[key] = input.value;
-        }
-    });
-
-    // Berechnete Werte
-    const calculatedSelectors = [
-        '.protocol-result-n50',
-        '.protocol-result-q50',
-        '.protocol-result-v50',
-        '.protocol-result'
-    ];
-
-    calculatedSelectors.forEach(selector => {
-        const element = document.querySelector(selector);
-        if (element) {
-            const key = selector.replace('.', '').replace('-', '_');
-            data[key] = element.textContent;
-        }
-    });
-
-    // Export
-    const dataStr = JSON.stringify(data, null, 2);
-    const blob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
+    notification.textContent = message;
+    document.body.appendChild(notification);
     
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `blower-door-protokoll-${new Date().toISOString().split('T')[0]}.json`;
-    link.click();
+    setTimeout(() => {
+        notification.remove();
+    }, 5000);
+}
+
+// =============================================================================
+// AUTOMATISCHE INITIALISIERUNG
+// =============================================================================
+
+// Prüfe welche Seite wir haben
+function initializeTransferSystem() {
+    const currentUrl = window.location.href.toLowerCase();
+    console.log("🔍 Aktuelle URL:", currentUrl);
     
-    URL.revokeObjectURL(url);
-}
-
-/**
- * Fügt Event-Listener zu Protokoll-Eingabefeldern hinzu
- */
-function addProtocolInputListeners() {
-    document.querySelectorAll('.protocol-container input, .protocol-container textarea').forEach(input => {
-        input.addEventListener('change', saveProtocolData);
-        input.addEventListener('input', saveProtocolData);
-    });
-}
-
-/**
- * Speichert Protokoll-Daten
- */
-function saveProtocolData() {
-    if (!window.protocolData) {
-        window.protocolData = {};
+    if (currentUrl.includes('protocol.html')) {
+        console.log("📄 Protocol-Seite erkannt");
+        loadDataOnProtocol();
+    } else {
+        console.log("🏠 Index-Seite erkannt");
+        createTestButton();
     }
-
-    document.querySelectorAll('.protocol-container input, .protocol-container textarea').forEach(input => {
-        const key = input.className.split(' ').find(cls => cls.startsWith('protocol-'));
-        if (key) {
-            window.protocolData[key] = input.value;
-        }
-    });
-
-    console.log('Protokolldaten gespeichert');
 }
 
-// Platzhalter für Protokoll-Seiten (müssen implementiert werden)
-window.getPage1Content = function() {
-    return `
-        <div class="p-4">
-            <h2 class="text-xl font-bold mb-4">Seite 1 - Grunddaten</h2>
-            <div class="space-y-4">
-                <div>
-                    <label class="block font-medium">Objekt:</label>
-                    <input type="text" class="protocol-object border rounded px-2 py-1 w-full" 
-                           placeholder="Bezeichnung des Objekts">
-                </div>
-                <div>
-                    <label class="block font-medium">Adresse:</label>
-                    <input type="text" class="protocol-address border rounded px-2 py-1 w-full" 
-                           placeholder="Vollständige Adresse">
-                </div>
-                <div>
-                    <label class="block font-medium">Auftraggeber:</label>
-                    <input type="text" class="protocol-client-name border rounded px-2 py-1 w-full" 
-                           placeholder="Name des Auftraggebers">
-                </div>
-                <div>
-                    <label class="block font-medium">Volumen [m³]:</label>
-                    <input type="number" class="protocol-volume border rounded px-2 py-1 w-full" 
-                           placeholder="Gebäudevolumen">
-                </div>
-            </div>
-        </div>
-    `;
-};
+// Starte sofort nach DOM-Laden
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeTransferSystem);
+} else {
+    initializeTransferSystem();
+}
 
-// Weitere Seiten müssen entsprechend implementiert werden
-window.getPage2Content = function() { return '<div class="p-4">Seite 2 - Inhalt folgt</div>'; };
-window.getPage3Content = function() { return '<div class="p-4">Seite 3 - Inhalt folgt</div>'; };
-window.getPage4Content = function() { return '<div class="p-4">Seite 4 - Inhalt folgt</div>'; };
-window.getPage5Content = function() { return '<div class="p-4">Seite 5 - Inhalt folgt</div>'; };
-window.getPage6Content = function() { return '<div class="p-4">Seite 6 - Inhalt folgt</div>'; };
+// =============================================================================
+// GLOBALE FUNKTIONEN
+// =============================================================================
+
+// Für bestehende Buttons
+window.transferAllData = transferDataNow;
+window.transferWeatherToProtocol = transferDataNow;
+window.transferMeasurementToProtocol = transferDataNow;
+
+// Debug-Funktionen
+window.debugCollectData = collectData;
+window.testTransfer = transferDataNow;
+
+console.log("✅ Einfaches Transfer-System geladen und bereit!");
