@@ -14,7 +14,7 @@ color: #666;
     <!-- externe stylesheet Anbindung -->
     <link rel="stylesheet" href="./styles/style.css">
 
-    
+
 
 </head>
 
@@ -200,19 +200,19 @@ Beispiele:
             <h3>Gebäudedaten:</h3>
             <div class="field-group">
                 <label>Netto-Raumvolumen V:</label>
-                <input type="number" placeholder="___"> m³
+                <input type="number" placeholder="Netto-Raumvolumen V"> m³
             </div>
             <div class="field-group">
                 <label>Hüllfläche:</label>
-                <input type="number" placeholder="___"> m²
+                <input type="number" placeholder="Hüllfläche"> m²
             </div>
             <div class="field-group">
                 <label>Geschossanzahl:</label>
-                <input type="number" placeholder="___">
+                <input type="number" placeholder="Geschossanzahl">
             </div>
             <div class="field-group">
                 <label>Nutzungsart:</label>
-                <input type="text" placeholder="___">
+                <input type="text" placeholder="Nutzungsart">
             </div>
         </div>
 
@@ -220,19 +220,19 @@ Beispiele:
             <h3>Wetterdaten:</h3>
             <div class="field-group">
                 <label>Außentemp.:</label>
-                <input type="number" placeholder="___"> °C
+                <input type="number" placeholder="Außentemperatur"> °C
             </div>
             <div class="field-group">
                 <label>Innentemp.:</label>
-                <input type="number" placeholder="___"> °C
+                <input type="number" placeholder="Innentemperatur"> °C
             </div>
             <div class="field-group">
-                <label>Windgeschwindigkeit:</label>
-                <input type="number" placeholder="___"> m/s
+                <label>Wind:</label>
+                <input type="number" placeholder="Windgeschwindigkeit"> m/s
             </div>
             <div class="field-group">
                 <label>Windrichtung:</label>
-                <input type="text" placeholder="___">
+                <input type="text" placeholder="Windrichtung">
             </div>
         </div>
 
@@ -516,21 +516,28 @@ Der gemessene n₅₀-Wert von 1,5 h⁻¹ entspricht exakt dem KfW-Grenzwert fü
 Empfehlungen:
 - Alle größeren Leckagen wurden bereits während der Messung identifiziert und sollten abgedichtet werden
 - Nachkontrolle in 6 Monaten empfohlen"></textarea>
-            <div class="text-hint">Tipp: Bewerten Sie hier die Messergebnisse fachlich und geben Sie konkrete Empfehlungen</div>
+            <div class="text-hint">Tipp: Bewerten Sie hier die Messergebnisse fachlich und geben Sie konkrete
+                Empfehlungen</div>
         </div>
 
-        <div class="signature-boxes" >
+        <div class="signature-boxes">
             <div class="signature-box">
                 <div><strong>Techniker(FH) D.Heinicke</strong></div>
                 <div style="margin-top: 70px;">
-                    <div style="font-size: 12px;"><p>...............................................................</p> Datum, Unterschrift Messtechniker</div>
+                    <div style="font-size: 12px;">
+                        <p>...............................................................</p> Datum, Unterschrift
+                        Messtechniker
+                    </div>
                 </div>
             </div>
 
             <div class="signature-box">
                 <div><strong>Dipl.-Ing C. Quiatkowski</strong></div>
                 <div style="margin-top: 70px;">
-                    <div style="font-size: 12px;"><p>...............................................................</p>Datum, Unterschrift Auftraggeber</div>
+                    <div style="font-size: 12px;">
+                        <p>...............................................................</p>Datum, Unterschrift
+                        Auftraggeber
+                    </div>
                 </div>
             </div>
         </div>
@@ -550,25 +557,23 @@ Empfehlungen:
     </div>
 
     <script>
-        // Interaktive Funktionen für das Formular
+        // Optimiertes JavaScript für protocol.html - Ersetzt den gesamten <script> Bereich
 
-        // Zeile hinzufügen
+        // Interaktive Funktionen für das Formular
         function addRow() {
             const table = document.querySelector('.data-table tbody');
             const newRow = table.insertRow();
             newRow.innerHTML = `
-                <td><input type="number" placeholder="Pa"></td>
-                <td><input type="number" placeholder="m³/h"></td>
-                <td><button onclick="removeRow(this)" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 3px;">Entfernen</button></td>
-            `;
+        <td><input type="number" placeholder="Pa"></td>
+        <td><input type="number" placeholder="m³/h"></td>
+        <td><button onclick="removeRow(this)" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 3px;">Entfernen</button></td>
+    `;
         }
 
-        // Zeile entfernen
         function removeRow(button) {
             button.closest('tr').remove();
         }
 
-        // Alle Zeilen löschen
         function clearAll() {
             if (confirm('Alle Messwerte löschen?')) {
                 const tbody = document.querySelector('.data-table tbody');
@@ -576,29 +581,25 @@ Empfehlungen:
             }
         }
 
-        // Auto-save Funktionalität für Textfelder
+        // Auto-save Funktionalität
         function autoSave() {
             const formData = {};
-            
-            // Alle Input-Felder speichern
+
             document.querySelectorAll('input').forEach(input => {
                 if (input.id || input.name) {
                     formData[input.id || input.name] = input.value;
                 }
             });
-            
-            // Textareas speichern
+
             document.querySelectorAll('textarea').forEach(textarea => {
                 if (textarea.id) {
                     formData[textarea.id] = textarea.value;
                 }
             });
-            
-            // In Memory speichern (localStorage nicht verfügbar)
+
             window.protocolData = formData;
         }
 
-        // Daten laden
         function loadData() {
             if (window.protocolData) {
                 const data = window.protocolData;
@@ -611,38 +612,304 @@ Empfehlungen:
             }
         }
 
-        // Event Listeners hinzufügen
-        document.addEventListener('DOMContentLoaded', function () {
-            // Auto-save bei Änderungen
-            document.addEventListener('input', autoSave);
-            
-            // Daten beim Laden der Seite wiederherstellen
-            loadData();
-            
-            // Fokus-Effekte für Textfelder
-            document.querySelectorAll('.editable-text').forEach(textarea => {
-                textarea.addEventListener('focus', function() {
-                    this.parentElement.style.borderColor = '#007acc';
-                    this.parentElement.style.boxShadow = '0 0 10px rgba(0, 122, 204, 0.2)';
-                });
-                
-                textarea.addEventListener('blur', function() {
-                    this.parentElement.style.borderColor = '#007acc';
-                    this.parentElement.style.boxShadow = 'none';
-                });
-            });
-        });
+        // Datenübertragung von index.html
+        function loadDataFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const encodedData = urlParams.get('data');
 
-        // Druckfunktion für das Protokoll
+            if (encodedData) {
+                try {
+                    const data = JSON.parse(decodeURIComponent(encodedData));
+                    console.log('🔄 Geladene Daten:', data);
+
+                    // Daten einfügen
+                    if (data.weather) {
+                        fillWeatherData(data.weather);
+                    }
+
+                    if (data.measurement) {
+                        fillMeasurementData(data.measurement);
+                    }
+
+                    if (data.underpressure || data.overpressure) {
+                        fillMeasurementTables(data);
+                    }
+
+                    // Erfolgsanzeige
+                    showSuccessMessage('✅ Daten erfolgreich übertragen!');
+
+                } catch (error) {
+                    console.error('❌ Fehler beim Laden der Daten:', error);
+                    showErrorMessage('Fehler beim Laden der Daten: ' + error.message);
+                }
+            }
+        }
+
+        // Wetterdaten einfügen
+        function fillWeatherData(weatherData) {
+            console.log('🌤️ Fülle Wetterdaten:', weatherData);
+
+            // Spezifische Suche nach Placeholder-Texten
+            const fieldMapping = {
+                'Außentemperatur': weatherData.outsideTemp,
+                'Innentemperatur': weatherData.insideTemp,
+                'Windgeschwindigkeit': weatherData.windSpeed,
+                'Windrichtung': weatherData.windDirection
+            };
+
+            // Alle Input-Felder durchgehen
+            document.querySelectorAll('input').forEach(input => {
+                const placeholder = input.getAttribute('placeholder');
+
+                if (placeholder && fieldMapping[placeholder]) {
+                    input.value = fieldMapping[placeholder];
+                    highlightField(input, '#e6f3ff');
+                    console.log(`✅ ${placeholder}: ${fieldMapping[placeholder]}`);
+                }
+            });
+        }
+
+        // Messparameter einfügen
+        function fillMeasurementData(measurementData) {
+            console.log('📏 Fülle Messparameter:', measurementData);
+
+            const fieldMapping = {
+                'Netto-Raumvolumen V': measurementData.volume,
+                'Hüllfläche': measurementData.surfaceArea,
+                'Geschossanzahl': measurementData.floors,
+                'Nutzungsart': measurementData.usageType
+            };
+
+            // Alle Input-Felder durchgehen
+            document.querySelectorAll('input').forEach(input => {
+                const placeholder = input.getAttribute('placeholder');
+
+                if (placeholder && fieldMapping[placeholder]) {
+                    input.value = fieldMapping[placeholder];
+                    highlightField(input, '#ffe6e6');
+                    console.log(`✅ ${placeholder}: ${fieldMapping[placeholder]}`);
+                }
+            });
+
+            // Zusätzlich: Berechnete Werte in die Anzeige-Karten einfügen
+            updateDisplayCards(measurementData);
+        }
+
+        // Anzeige-Karten aktualisieren (Seite 5)
+        function updateDisplayCards(measurementData) {
+            // n₅₀-Wert
+            if (measurementData.n50) {
+                const n50Card = document.querySelector('.control-n50');
+                if (n50Card) {
+                    n50Card.textContent = measurementData.n50;
+                }
+
+                // Auch in den Ergebnis-Karten
+                const n50Result = document.querySelector('.result-card .value');
+                if (n50Result) {
+                    n50Result.textContent = measurementData.n50;
+                }
+            }
+
+            // Gebäudevolumen
+            if (measurementData.volume) {
+                const volumeCard = document.querySelector('.control-volume');
+                if (volumeCard) {
+                    volumeCard.textContent = measurementData.volume;
+                }
+            }
+
+            // Max. Druck
+            if (measurementData.pressure) {
+                const pressureCard = document.querySelector('.control-pressure');
+                if (pressureCard) {
+                    pressureCard.textContent = measurementData.pressure;
+                }
+            }
+        }
+
+        // Tabellen befüllen
+        function fillMeasurementTables(data) {
+            console.log('📊 Fülle Tabellen:', data);
+
+            const tables = document.querySelectorAll('.data-table tbody');
+
+            // Unterdruckmessungen (erste Tabelle)
+            if (data.underpressure && data.underpressure.length > 0 && tables[0]) {
+                tables[0].innerHTML = '';
+
+                data.underpressure.forEach((measurement, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${measurement.pressure}</td>
+                <td>${measurement.volume}</td>
+                <td style="color: #10b981; font-weight: bold;">📥 Übertragen</td>
+            `;
+                    tables[0].appendChild(row);
+                });
+
+                console.log(`✅ ${data.underpressure.length} Unterdruckmessungen eingefügt`);
+            }
+
+            // Überdruckmessungen (zweite Tabelle)
+            if (data.overpressure && data.overpressure.length > 0 && tables[1]) {
+                tables[1].innerHTML = '';
+
+                data.overpressure.forEach((measurement, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${measurement.pressure}</td>
+                <td>${measurement.volume}</td>
+                <td style="color: #10b981; font-weight: bold;">📥 Übertragen</td>
+            `;
+                    tables[1].appendChild(row);
+                });
+
+                console.log(`✅ ${data.overpressure.length} Überdruckmessungen eingefügt`);
+            }
+        }
+
+        // Feld hervorheben
+        function highlightField(input, color) {
+            const originalColor = input.style.backgroundColor;
+            input.style.backgroundColor = color;
+            input.style.transition = 'background-color 0.3s ease';
+
+            setTimeout(() => {
+                input.style.backgroundColor = originalColor;
+            }, 2000);
+        }
+
+        // Erfolgsanzeige
+        function showSuccessMessage(message) {
+            const successDiv = document.createElement('div');
+            successDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+        z-index: 1000;
+        font-weight: 600;
+        font-size: 14px;
+        animation: slideIn 0.5s ease-out;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    `;
+            successDiv.innerHTML = message;
+            document.body.appendChild(successDiv);
+
+            setTimeout(() => {
+                successDiv.style.animation = 'slideOut 0.5s ease-out';
+                setTimeout(() => successDiv.remove(), 500);
+            }, 4000);
+        }
+
+        // Fehleranzeige
+        function showErrorMessage(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(239, 68, 68, 0.3);
+        z-index: 1000;
+        font-weight: 600;
+        font-size: 14px;
+        animation: slideIn 0.5s ease-out;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    `;
+            errorDiv.innerHTML = '❌ ' + message;
+            document.body.appendChild(errorDiv);
+
+            setTimeout(() => {
+                errorDiv.style.animation = 'slideOut 0.5s ease-out';
+                setTimeout(() => errorDiv.remove(), 500);
+            }, 6000);
+        }
+
+        // Debug-Funktionen
+        function debugFields() {
+            console.log('🔍 === DEBUG: Alle Eingabefelder ===');
+
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach((input, index) => {
+                const label = input.closest('.field-group')?.querySelector('label')?.textContent;
+                const placeholder = input.getAttribute('placeholder');
+
+                console.log(`${index}: Label="${label || 'none'}", Placeholder="${placeholder || 'none'}", Wert="${input.value}"`);
+            });
+
+            console.log('🔍 === DEBUG: Alle Tabellen ===');
+            const tables = document.querySelectorAll('.data-table');
+            tables.forEach((table, index) => {
+                const title = table.closest('.info-block')?.querySelector('h3')?.textContent;
+                console.log(`Tabelle ${index}: ${title || 'Unbekannt'}`);
+            });
+        }
+
+        function showDataPreview() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const encodedData = urlParams.get('data');
+
+            if (encodedData) {
+                try {
+                    const data = JSON.parse(decodeURIComponent(encodedData));
+                    console.log('📋 Datenvorschau:', data);
+
+                    let preview = '=== DATENVORSCHAU ===\n\n';
+
+                    if (data.weather) {
+                        preview += '🌤️ Wetterdaten:\n';
+                        Object.entries(data.weather).forEach(([key, value]) => {
+                            if (value) preview += `  • ${key}: ${value}\n`;
+                        });
+                        preview += '\n';
+                    }
+
+                    if (data.measurement) {
+                        preview += '📏 Messparameter:\n';
+                        Object.entries(data.measurement).forEach(([key, value]) => {
+                            if (value) preview += `  • ${key}: ${value}\n`;
+                        });
+                        preview += '\n';
+                    }
+
+                    if (data.underpressure) {
+                        preview += `📊 Unterdruckmessungen: ${data.underpressure.length} Einträge\n`;
+                    }
+
+                    if (data.overpressure) {
+                        preview += `📊 Überdruckmessungen: ${data.overpressure.length} Einträge\n`;
+                    }
+
+                    alert(preview);
+                } catch (error) {
+                    alert('Fehler beim Anzeigen der Datenvorschau: ' + error.message);
+                }
+            } else {
+                alert('Keine Daten in der URL gefunden.');
+            }
+        }
+
+        // Druckfunktion
         function printProtocol() {
             window.print();
         }
 
-        // Funktion zum Exportieren der Daten
+        // Exportfunktion
         function exportData() {
             const data = window.protocolData || {};
             const dataStr = JSON.stringify(data, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(dataBlob);
             const link = document.createElement('a');
             link.href = url;
@@ -651,19 +918,122 @@ Empfehlungen:
             URL.revokeObjectURL(url);
         }
 
-        // Zusätzliche Hilfsfunktionen für bessere Benutzerfreundlichkeit
-        document.addEventListener('keydown', function(e) {
+        // CSS für Animationen
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+    @keyframes slideIn {
+        from { 
+            transform: translateX(100%) scale(0.8); 
+            opacity: 0; 
+        }
+        to { 
+            transform: translateX(0) scale(1); 
+            opacity: 1; 
+        }
+    }
+    
+    @keyframes slideOut {
+        from { 
+            transform: translateX(0) scale(1); 
+            opacity: 1; 
+        }
+        to { 
+            transform: translateX(100%) scale(0.8); 
+            opacity: 0; 
+        }
+    }
+    
+    .debug-panel {
+        position: fixed;
+        top: 60px;
+        left: 10px;
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 10px;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 12px;
+        z-index: 998;
+        max-width: 300px;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+`;
+        document.head.appendChild(styleSheet);
+
+        // Hauptinitialisierung
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('🚀 Protocol.html initialisiert');
+
+            // Auto-save bei Änderungen
+            document.addEventListener('input', autoSave);
+
+            // Daten aus URL laden
+            loadDataFromURL();
+
+            // Bestehende Daten laden
+            loadData();
+
+            // Fokus-Effekte für Textfelder
+            document.querySelectorAll('.editable-text').forEach(textarea => {
+                textarea.addEventListener('focus', function () {
+                    this.parentElement.style.borderColor = '#007acc';
+                    this.parentElement.style.boxShadow = '0 0 10px rgba(0, 122, 204, 0.2)';
+                });
+
+                textarea.addEventListener('blur', function () {
+                    this.parentElement.style.borderColor = '#007acc';
+                    this.parentElement.style.boxShadow = 'none';
+                });
+            });
+
+            // Debug-Panel erstellen
+            const debugPanel = document.createElement('div');
+            debugPanel.innerHTML = `
+        <div style="margin-bottom: 10px; font-weight: bold; color: #10b981;">🔧 Debug-Panel</div>
+        <button onclick="debugFields()" style="background: #374151; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 2px; cursor: pointer;">📋 Felder anzeigen</button>
+        <button onclick="showDataPreview()" style="background: #374151; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 2px; cursor: pointer;">👀 Datenvorschau</button>
+        <button onclick="loadDataFromURL()" style="background: #374151; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin: 2px; cursor: pointer;">🔄 Daten neu laden</button>
+        <div style="margin-top: 8px; font-size: 10px; color: #9ca3af;">
+            Aktueller Stand: ${new Date().toLocaleTimeString()}
+        </div>
+    `;
+            debugPanel.className = 'debug-panel';
+            document.body.appendChild(debugPanel);
+
+            // Debug-Panel ein-/ausblenden
+            debugPanel.addEventListener('dblclick', function () {
+                this.style.display = this.style.display === 'none' ? 'block' : 'none';
+            });
+
+            console.log('✅ Protokoll bereit für Datenübertragung');
+        });
+
+        // Tastaturkürzel
+        document.addEventListener('keydown', function (e) {
             // Ctrl+S für Speichern
             if (e.ctrlKey && e.key === 's') {
                 e.preventDefault();
                 autoSave();
-                alert('Daten gespeichert!');
+                showSuccessMessage('💾 Daten gespeichert!');
             }
-            
+
             // Ctrl+P für Drucken
             if (e.ctrlKey && e.key === 'p') {
                 e.preventDefault();
                 printProtocol();
+            }
+
+            // Ctrl+D für Debug
+            if (e.ctrlKey && e.key === 'd') {
+                e.preventDefault();
+                debugFields();
+            }
+
+            // F5 für Daten neu laden
+            if (e.key === 'F5') {
+                e.preventDefault();
+                loadDataFromURL();
             }
         });
     </script>

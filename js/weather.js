@@ -2,6 +2,21 @@
 // weather.js - Wetter-System
 // =================================================================
 
+
+
+// Nur Wetterdaten übertragen
+function transferWeatherToProtocol() {
+    const weatherData = {
+        outsideTemp: document.getElementById('outside-temp')?.value || '',
+        windSpeed: document.getElementById('wind-speed')?.value || '',
+        windDirection: document.getElementById('wind-direction')?.value || '',
+        airPressure: document.getElementById('air-pressure')?.value || '',
+        humidity: document.getElementById('humidity')?.value || ''
+    };
+
+    const encodedData = encodeURIComponent(JSON.stringify({weather: weatherData}));
+    window.location.href = `./sites/protocol.html?data=${encodedData}`;
+}
 // Globale Variablen
 let currentLat = 52.52; // Berlin
 let currentLon = 13.40;

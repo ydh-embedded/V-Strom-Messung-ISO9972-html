@@ -519,6 +519,353 @@
     <!-- JavaScript für Anchor-Navigation -->
     <script src="js/sectionID.js"></script>
 
+    <!--  Datenübertragung zur protocol.html -->
+    <script>
+        // Optimiertes JavaScript für index.html - Hinzufügen zum Ende der Datei
+
+// Hauptfunktion für Datenübertragung
+function transferDataToProtocol() {
+    console.log('🔄 Sammle Daten für Protokoll...');
+    
+    // Wetterdaten sammeln
+    const weatherData = {
+        outsideTemp: document.getElementById('outside-temp')?.value || '',
+        insideTemp: document.getElementById('inside-temp')?.value || '',
+        windSpeed: document.getElementById('wind-speed')?.value || '',
+        windDirection: document.getElementById('wind-direction')?.value || '',
+        airPressure: document.getElementById('air-pressure')?.value || '',
+        humidity: document.getElementById('humidity')?.value || ''
+    };
+
+    // Messparameter sammeln
+    const measurementData = {
+        n50: document.getElementById('n50')?.value || '',
+        volume: document.getElementById('volume')?.value || '',
+        pressure: document.getElementById('pressure')?.value || '',
+        // Zusätzliche berechnete Werte
+        surfaceArea: calculateSurfaceArea(document.getElementById('volume')?.value) || '',
+        floors: '1', // Standard-Wert
+        usageType: 'Wohngebäude' // Standard-Wert
+    };
+
+    // Messwerte aus Tabellen sammeln
+    const underpressureData = collectTableData('#underpressureTable');
+    const overpressureData = collectTableData('#overpressureTable');
+
+    // Alle Daten kombinieren
+    const allData = {
+        weather: weatherData,
+        measurement: measurementData,
+        underpressure: underpressureData,
+        overpressure: overpressureData,
+        timestamp: new Date().toISOString()
+    };
+
+    console.log('📊 Gesammelte Daten:', allData);
+
+    // Datenqualität prüfen
+    const hasWeatherData = Object.values(weatherData).some(val => val !== '');
+    const hasMeasurementData = Object.values(measurementData).some(val => val !== '');
+    const hasTableData = underpressureData.length > 0 || overpressureData.length > 0;
+
+    if (!hasWeatherData && !hasMeasurementData && !hasTableData) {
+        if (!confirm('⚠️ Keine Messdaten gefunden. Trotzdem zum Protokoll wechseln?')) {
+            return;
+        }
+    }
+
+    // Daten übertragen
+    const encodedData = encodeURIComponent(JSON.stringify(allData));
+    const url = `./sites/protocol.html?data=${encodedData}`;
+    
+    console.log('🚀 Navigiere zu:', url);
+    window.location.href = url;
+}
+
+// Hilfsfunktion: Tabellendaten sammeln
+function collectTableData(tableSelector) {
+    const table = document.querySelector(tableSelector);
+    if (!table) return [];
+    
+    const data = [];
+    const rows = table.querySelectorAll('tbody tr');
+    
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('input, td');
+        if (cells.length >= 2) {
+            let pressure = '';
+            let volume = '';
+            
+            // Verschiedene Tabellenstrukturen berücksichtigen
+            if (cells[0].tagName === 'INPUT') {
+                pressure = cells[0].value;
+                volume = cells[1].value;
+            } else if (cells[1] && cells[2]) {
+                pressure = cells[1].textContent || cells[1].value;
+                volume = cells[2].textContent || cells[2].value;
+            }
+            
+            if (pressure && volume) {
+                data.push({
+                    pressure: pressure,
+                    volume: volume
+                });
+            }
+        }
+    });
+    
+    return data;
+}
+
+// Hilfsfunktion: Hüllfläche berechnen
+function calculateSurfaceArea(volume) {
+    if (!volume || isNaN(volume)) return '';
+    
+    // Grobe Schätzung für Wohngebäude
+    const factor = 5.5; // Typischer Faktor für Wohngebäude
+    return Math.round(Math.pow(parseFloat(volume), 2/3) * factor);
+}
+
+// Spezifische Übertragungsfunktionen
+function transferWeatherToProtocol() {
+    const weatherData = {
+        outsideTemp: document.getElementById('outside-temp')?.value || '',
+        insideTemp: document.getElementById('inside-temp')?.value || '',
+        windSpeed: document.getElementById('wind-speed')?.value || '',
+        windDirection: document.getElementById('wind-direction')?.value || '',
+        airPressure: document.getElementById('air-pressure')?.value || '',
+        humidity: document.getElementById('humidity')?.value || ''
+    };
+
+    const encodedData = encodeURIComponent(JSON.stringify({weather: weatherData}));
+    window.location.href = `./sites/protocol.html?data=${encodedData}`;
+}
+
+function transferMeasurementToProtocol() {
+    const measurementData = {
+        n50: document.getElementById('n50')?.value || '',
+        volume: document.getElementById('volume')?.value || '',
+        pressure: document.getElementById('pressure')?.value || '',
+        surfaceArea: calculateSurfaceArea(document.getElementById('volume')?.value) || '',
+        floors: '1',
+        usageType: 'Wohngebäude'
+    };
+
+    const encodedData = encodeURIComponent(JSON.stringify({measurement: measurementData}));
+    window.location.href = `./sites/protocol.html?data=${encodedData}`;
+}
+
+function transferTablesOnlyToProtocol() {
+    const underpressureData = collectTableData('#underpressureTable');
+    const overpressureData = collectTableData('#overpressureTable');
+
+    const tablesData = {
+        underpressure: underpressureData,
+        overpressure: overpressureData
+    };
+
+    const encodedData = encodeURIComponent(JSON.stringify(tablesData));
+    window.location.href = `./sites/protocol.html?data=${encodedData}`;
+}
+
+// Datenvorschau anzeigen
+function previewTransferData() {
+    const weatherData = {
+        outsideTemp: document.getElementById('outside-temp')?.value || '',
+        windSpeed: document.getElementById('wind-speed')?.value || '',
+        windDirection: document.getElementById('wind-direction')?.value || '',
+        airPressure: document.getElementById('air-pressure')?.value || '',
+        humidity: document.getElementById('humidity')?.value || ''
+    };
+
+    const measurementData = {
+        n50: document.getElementById('n50')?.value || '',
+        volume: document.getElementById('volume')?.value || '',
+        pressure: document.getElementById('pressure')?.value || ''
+    };
+
+    const underpressureData = collectTableData('#underpressureTable');
+    const overpressureData = collectTableData('#overpressureTable');
+
+    const preview = `
+🔍 === DATEN-VORSCHAU ===
+
+🌤️ Wetterdaten:
+   • Außentemperatur: ${weatherData.outsideTemp || 'nicht gesetzt'}°C
+   • Windgeschwindigkeit: ${weatherData.windSpeed || 'nicht gesetzt'} m/s
+   • Windrichtung: ${weatherData.windDirection || 'nicht gesetzt'}
+   • Luftdruck: ${weatherData.airPressure || 'nicht gesetzt'} hPa
+   • Luftfeuchtigkeit: ${weatherData.humidity || 'nicht gesetzt'}%
+
+📏 Messparameter:
+   • n₅₀-Wert: ${measurementData.n50 || 'nicht gesetzt'}
+   • Volumen: ${measurementData.volume || 'nicht gesetzt'} m³
+   • Max. Druck: ${measurementData.pressure || 'nicht gesetzt'} Pa
+   • Geschätzte Hüllfläche: ${calculateSurfaceArea(measurementData.volume) || 'nicht berechnet'} m²
+
+📊 Messwerte:
+   • Unterdruckmessungen: ${underpressureData.length} Einträge
+   • Überdruckmessungen: ${overpressureData.length} Einträge
+
+Übertragung starten?
+    `;
+
+    if (confirm(preview)) {
+        transferDataToProtocol();
+    }
+}
+
+// Debug-Funktionen
+function debugCollectedData() {
+    console.log('🔍 === DEBUG: Verfügbare Eingabefelder ===');
+    
+    const inputs = document.querySelectorAll('input[id]');
+    inputs.forEach((input, index) => {
+        console.log(`${index}: ID="${input.id}", Wert="${input.value}"`);
+    });
+    
+    console.log('🔍 === DEBUG: Tabellendaten ===');
+    console.log('Unterdruck:', collectTableData('#underpressureTable'));
+    console.log('Überdruck:', collectTableData('#overpressureTable'));
+}
+
+// Verbesserte Wetterübertragung mit Validierung
+function transferWeatherToProtocol() {
+    const weatherData = {
+        outsideTemp: document.getElementById('outside-temp')?.value || '',
+        insideTemp: document.getElementById('inside-temp')?.value || '',
+        windSpeed: document.getElementById('wind-speed')?.value || '',
+        windDirection: document.getElementById('wind-direction')?.value || '',
+        airPressure: document.getElementById('air-pressure')?.value || '',
+        humidity: document.getElementById('humidity')?.value || ''
+    };
+
+    // Validierung
+    const hasData = Object.values(weatherData).some(val => val !== '');
+    if (!hasData) {
+        alert('⚠️ Bitte füllen Sie mindestens ein Wetterfeld aus.');
+        return;
+    }
+
+    const encodedData = encodeURIComponent(JSON.stringify({weather: weatherData}));
+    window.location.href = `./sites/protocol.html?data=${encodedData}`;
+}
+
+// Automatische Button-Aktualisierung
+function updateProtocolButtons() {
+    // Haupt-Protokoll-Button
+    const mainProtocolButton = document.querySelector('button[onclick*="protocol.html"]');
+    if (mainProtocolButton) {
+        mainProtocolButton.setAttribute('onclick', 'transferDataToProtocol()');
+        mainProtocolButton.style.position = 'relative';
+        
+        // Indikator für Datenübertragung hinzufügen
+        const indicator = document.createElement('div');
+        indicator.innerHTML = '📊';
+        indicator.style.cssText = `
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #10b981;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        `;
+        mainProtocolButton.appendChild(indicator);
+    }
+    
+    // Wetter-Übertragung-Button hinzufügen
+    const weatherSection = document.getElementById('weather-data-form');
+    if (weatherSection) {
+        const buttonContainer = weatherSection.querySelector('.text-center');
+        if (buttonContainer) {
+            // Vorschau-Button
+            const previewButton = document.createElement('button');
+            previewButton.innerHTML = '🔍 Datenvorschau';
+            previewButton.className = 'bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-2 rounded-lg font-medium hover:from-amber-400 hover:to-orange-400 transition-all duration-300 mr-2';
+            previewButton.onclick = previewTransferData;
+            
+            // Wetter-Übertragung-Button
+            const weatherButton = document.createElement('button');
+            weatherButton.innerHTML = '🌤️ Nur Wetter übertragen';
+            weatherButton.className = 'bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:from-blue-400 hover:to-blue-500 transition-all duration-300 mr-2';
+            weatherButton.onclick = transferWeatherToProtocol;
+            
+            // Buttons hinzufügen
+            const existingButton = buttonContainer.querySelector('button');
+            if (existingButton) {
+                buttonContainer.insertBefore(previewButton, existingButton);
+                buttonContainer.insertBefore(weatherButton, existingButton);
+            }
+        }
+    }
+}
+
+// Erweiterte Initialisierung
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Index.html für Datenübertragung bereit');
+    
+    // Buttons aktualisieren
+    updateProtocolButtons();
+    
+    // Debug-Tastenkürzel
+    document.addEventListener('keydown', function(e) {
+        // Ctrl+Shift+D für Debug
+        if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+            e.preventDefault();
+            debugCollectedData();
+        }
+        
+        // Ctrl+Shift+P für Vorschau
+        if (e.ctrlKey && e.shiftKey && e.key === 'P') {
+            e.preventDefault();
+            previewTransferData();
+        }
+    });
+    
+    // Automatisches Speichern der Eingaben
+    document.addEventListener('input', function(e) {
+        if (e.target.id && e.target.value) {
+            console.log(`💾 Gespeichert: ${e.target.id} = ${e.target.value}`);
+        }
+    });
+    
+    console.log('✅ Datenübertragung initialisiert');
+});
+
+// Zusätzliche Hilfsfunktionen für bessere User Experience
+function showDataStatus() {
+    const weatherCount = Object.values({
+        outsideTemp: document.getElementById('outside-temp')?.value || '',
+        windSpeed: document.getElementById('wind-speed')?.value || '',
+        windDirection: document.getElementById('wind-direction')?.value || '',
+        airPressure: document.getElementById('air-pressure')?.value || '',
+        humidity: document.getElementById('humidity')?.value || ''
+    }).filter(val => val !== '').length;
+    
+    const measurementCount = Object.values({
+        n50: document.getElementById('n50')?.value || '',
+        volume: document.getElementById('volume')?.value || '',
+        pressure: document.getElementById('pressure')?.value || ''
+    }).filter(val => val !== '').length;
+    
+    const tableCount = collectTableData('#underpressureTable').length + collectTableData('#overpressureTable').length;
+    
+    return {
+        weather: weatherCount,
+        measurement: measurementCount,
+        tables: tableCount
+    };
+}
+    </script>
+
+
 
 
 </body>
