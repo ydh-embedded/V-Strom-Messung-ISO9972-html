@@ -557,6 +557,7 @@ Empfehlungen:
     </div>
 
     <script>
+
         // Optimiertes JavaScript für protocol.html - Ersetzt den gesamten <script> Bereich
 
         // Interaktive Funktionen für das Formular
@@ -674,7 +675,7 @@ Empfehlungen:
             console.log('📏 Fülle Messparameter:', measurementData);
 
             const fieldMapping = {
-                'Netto-Raumvolumen V': measurementData.volume,
+                // 'Netto-Raumvolumen V': measurementData.volume, // Entfernt - wird auf Seite 4/5 eingefügt
                 'Hüllfläche': measurementData.surfaceArea,
                 'Geschossanzahl': measurementData.floors,
                 'Nutzungsart': measurementData.usageType
@@ -691,12 +692,14 @@ Empfehlungen:
                 }
             });
 
-            // Zusätzlich: Berechnete Werte in die Anzeige-Karten einfügen
+            // Zusätzlich: Berechnete Werte in die Anzeige-Karten einfügen (Seite 4/5)
             updateDisplayCards(measurementData);
         }
 
         // Anzeige-Karten aktualisieren (Seite 5)
         function updateDisplayCards(measurementData) {
+            console.log('📊 Aktualisiere Anzeige-Karten (Seite 4/5):', measurementData);
+
             // n₅₀-Wert
             if (measurementData.n50) {
                 const n50Card = document.querySelector('.control-n50');
@@ -726,6 +729,20 @@ Empfehlungen:
                     pressureCard.textContent = measurementData.pressure;
                 }
             }
+        }
+
+        // Hilfsfunktion für Hervorhebung von Elementen (nicht nur Input-Felder)
+        function highlightElement(element, color) {
+            const originalColor = element.style.backgroundColor;
+            element.style.backgroundColor = color;
+            element.style.transition = 'background-color 0.3s ease';
+            element.style.borderRadius = '8px';
+            element.style.padding = '4px 8px';
+
+            setTimeout(() => {
+                element.style.backgroundColor = originalColor;
+                element.style.padding = '';
+            }, 2000);
         }
 
         // Tabellen befüllen
