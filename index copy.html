@@ -17,6 +17,8 @@
 
 <body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 font-sans">
 
+
+
     <!-- SECTION Navigation -->
     <nav id="main-nav" class="nav-container shadow-xl fixed top-0 left-0 right-0 z-50">
         <div class="max-w-7xl mx-auto px-4 lg:px-6">
@@ -73,11 +75,11 @@
                         </span>
                     </button>
 
-                    <button onclick="exportData()"
+                    <button onclick="transferSystem?.transferAllData()"
                         class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
                         <span class="relative z-10 flex items-center gap-2">
                             <span class="text-base">📋</span>
-                            <span class="hidden sm:inline">Export</span>
+                            <span class="hidden sm:inline">Protokoll</span>
                         </span>
                     </button>
                 </div>
@@ -102,11 +104,11 @@
                     </div>
 
                     <!-- Action Buttons -->
-                    <button onclick="exportData()"
+                    <button onclick="printProtocol()"
                         class="action-btn bg-gradient-to-r from-emerald-600 to-green-600 text-green-100 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:from-emerald-500 hover:to-green-500">
                         <span class="flex items-center gap-2">
-                            <span class="text-base">📤</span>
-                            <span class="hidden xl:inline">Export</span>
+                            <span class="text-base">🖨️</span>
+                            <span class="hidden xl:inline">Drucken</span>
                         </span>
                     </button>
 
@@ -165,8 +167,11 @@
                                 Neue Messung starten
                             </button>
                         </div>
-                    </div>
-                </div>
+
+
+
+
+
             </section>
         </div>
 
@@ -512,6 +517,7 @@
         </div>
     </main>
 
+
     <!-- JavaScript für Anchor-Navigation -->
     <script src="./js/chart.js"></script>
 
@@ -528,7 +534,10 @@
     <script src="./js/sectionID.js"></script>
 
     <!--  Datenübertragung zur protocol.html -->
-    <script src="./js/export.js"></script>
+    <script src="./js/transfer.js"></script>
+
+
+
 
 </body>
 
