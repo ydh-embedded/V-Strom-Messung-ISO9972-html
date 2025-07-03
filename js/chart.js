@@ -1,480 +1,476 @@
-/**
- * CHART.JS INTEGRATION - BLOWER-DOOR DIAGRAMM
- * Erstellt echte grafische Diagramme aus übertragenen Messdaten
- */
+// chart.js - Blower-Door Chart System für protocol.html
+// Erstellt: 2025-07-04
 
-// Erweitere das bestehende Transfer-System um Chart-Funktionalität
-function enhanceTransferWithChart() {
+// Globale Chart-Variablen
+let blowerDoorChart = null;
+let chartData = {
+    parameters: {
+        n50: 3.0,
+        volume: 500,
+        pressure: 100
+    },
+    measurements: {
+        underpressure: [
+            { pressure: -10, volume: 850 },
+            { pressure: -20, volume: 1200 },
+            { pressure: -30, volume: 1480 },
+            { pressure: -40, volume: 1720 },
+            { pressure: -50, volume: 1950 }
+        ],
+        overpressure: [
+            { pressure: 10, volume: 820 },
+            { pressure: 20, volume: 1150 },
+            { pressure: 30, volume: 1420 },
+            { pressure: 40, volume: 1680 },
+            { pressure: 50, volume: 1920 }
+        ]
+    }
+};
+
+/**
+ * Berechnet die theoretische Kurve basierend auf der Potenzfunktion
+ * V = C × ΔP^n, wobei n ≈ 0,65 für turbulente Strömung
+ */
+function calculateTheoreticalCurve(n50, volume, maxPressure = 100) {
+    const curve = [];
+    const C = (n50 * volume) / Math.pow(50, 0.65); // Koeffizient aus 50 Pa Referenz
     
-    // NEUE FUNKTION: Erstelle echtes Chart.js Diagramm
-    function createBlowerDoorChart(chartData, measurements) {
-        console.log("📈 Erstelle Blower-Door Diagramm...");
-        console.log("Chart-Daten:", chartData);
-        console.log("Messdaten:", measurements);
-        
-        // Finde oder erstelle Chart-Container
-        const chartContainer = findOrCreateChartContainer();
-        
-        if (!chartContainer) {
-            console.error("❌ Chart-Container nicht gefunden");
-            return;
-        }
-        
-        // Erstelle Canvas-Element
-        const canvas = document.createElement('canvas');
-        canvas.id = 'blower-door-chart';
-        canvas.width = 800;
-        canvas.height = 400;
-        
-        // Ersetze Platzhalter mit Canvas
-        chartContainer.innerHTML = '';
-        chartContainer.appendChild(canvas);
-        
-        // Prüfe ob Chart.js verfügbar ist
-        if (typeof Chart === 'undefined') {
-            console.log("📦 Chart.js nicht verfügbar, lade externe Bibliothek...");
-            loadChartJS(canvas, chartData, measurements);
-            return;
-        }
-        
-        // Erstelle Chart mit verfügbarer Chart.js
-        createChart(canvas, chartData, measurements);
+    for (let pressure = 10; pressure <= maxPressure; pressure += 5) {
+        const volumeFlow = C * Math.pow(pressure, 0.65);
+        curve.push({ pressure, volume: volumeFlow });
+        curve.push({ pressure: -pressure, volume: volumeFlow });
     }
     
-    // FUNKTION: Finde oder erstelle Chart-Container
-    function findOrCreateChartContainer() {
-        // Suche nach bestehendem Chart-Platzhalter
-        let container = document.querySelector('.chart-placeholder');
-        
-        if (!container) {
-            // Suche nach alternativen Selektoren
-            container = document.querySelector('#chart-container');
-        }
-        
-        if (!container) {
-            // Erstelle Container falls nicht vorhanden
-            const diagramSection = findDiagramSection();
-            if (diagramSection) {
-                container = document.createElement('div');
-                container.className = 'chart-placeholder';
-                container.style.cssText = `
-                    width: 100%;
-                    height: 500px;
-                    background: #f8fafc;
-                    border-radius: 12px;
-                    padding: 20px;
-                    margin: 20px 0;
-                `;
-                diagramSection.appendChild(container);
-            }
-        }
-        
-        return container;
+    return curve.sort((a, b) => a.pressure - b.pressure);
+}
+
+/**
+ * Generiert simulierte Messpunkte mit realistischen Variationen
+ */
+function generateSimulatedPoints(n50, volume, maxPressure = 100) {
+    const points = [];
+    const C = (n50 * volume) / Math.pow(50, 0.65);
+    
+    // Unterdruck-Simulationen
+    for (let pressure = 10; pressure <= maxPressure; pressure += 10) {
+        const theoreticalVolume = C * Math.pow(pressure, 0.65);
+        const variation = theoreticalVolume * (0.02 + Math.random() * 0.06); // 2-8% Variation
+        const actualVolume = theoreticalVolume + (Math.random() - 0.5) * variation;
+        points.push({ pressure: -pressure, volume: Math.max(0, actualVolume) });
     }
     
-    // FUNKTION: Finde Diagramm-Sektion
-    function findDiagramSection() {
-        // Suche nach "Diagramm" Text
-        const headings = document.querySelectorAll('h1, h2, h3, h4, .section-title');
-        for (let heading of headings) {
-            if (heading.textContent.toLowerCase().includes('diagramm')) {
-                return heading.parentElement || heading.nextElementSibling;
-            }
-        }
-        
-        // Fallback: Suche nach Seite 5
-        const pages = document.querySelectorAll('.page');
-        if (pages[4]) { // Index 4 = Seite 5
-            return pages[4];
-        }
-        
-        return document.body;
+    // Überdruck-Simulationen
+    for (let pressure = 10; pressure <= maxPressure; pressure += 10) {
+        const theoreticalVolume = C * Math.pow(pressure, 0.65);
+        const variation = theoreticalVolume * (0.02 + Math.random() * 0.06);
+        const actualVolume = theoreticalVolume + (Math.random() - 0.5) * variation;
+        points.push({ pressure: pressure, volume: Math.max(0, actualVolume) });
     }
     
-    // FUNKTION: Lade Chart.js extern falls nicht verfügbar
-    function loadChartJS(canvas, chartData, measurements) {
-        const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js';
-        script.onload = () => {
-            console.log("✅ Chart.js extern geladen");
-            createChart(canvas, chartData, measurements);
-        };
-        script.onerror = () => {
-            console.error("❌ Chart.js konnte nicht geladen werden");
-            showFallbackChart(canvas.parentElement, chartData, measurements);
-        };
-        document.head.appendChild(script);
+    return points;
+}
+
+/**
+ * Erstellt oder aktualisiert das Blower-Door Chart
+ */
+function createOrUpdateChart() {
+    const ctx = document.getElementById('blowerDoorChart');
+    if (!ctx) {
+        console.error('❌ Chart-Canvas nicht gefunden!');
+        return;
     }
     
-    // HAUPTFUNKTION: Erstelle Chart.js Diagramm
-    function createChart(canvas, chartData, measurements) {
-        console.log("🎨 Erstelle Chart.js Diagramm...");
-        
-        const ctx = canvas.getContext('2d');
-        
-        // Bereite Datensätze vor
-        const datasets = [];
-        
-        // Unterdruckmessungen (rote Punkte)
-        if (chartData.options.showUnderpressure && measurements.underpressure.length > 0) {
-            datasets.push({
-                label: 'Unterdruckmessungen',
-                data: measurements.underpressure.map(point => ({
-                    x: Math.abs(point.pressure), // Absolute Werte für bessere Darstellung
-                    y: point.volume
-                })),
-                backgroundColor: 'rgba(239, 68, 68, 0.8)',
-                borderColor: 'rgba(239, 68, 68, 1)',
-                borderWidth: 2,
-                pointRadius: 8,
-                pointHoverRadius: 10,
-                type: 'scatter',
-                showLine: true,
-                tension: 0.4
-            });
-        }
-        
-        // Überdruckmessungen (grüne Punkte)
-        if (chartData.options.showOverpressure && measurements.overpressure.length > 0) {
-            datasets.push({
-                label: 'Überdruckmessungen',
-                data: measurements.overpressure.map(point => ({
-                    x: point.pressure,
-                    y: point.volume
-                })),
-                backgroundColor: 'rgba(16, 185, 129, 0.8)',
-                borderColor: 'rgba(16, 185, 129, 1)',
-                borderWidth: 2,
-                pointRadius: 8,
-                pointHoverRadius: 10,
-                type: 'scatter',
-                showLine: true,
-                tension: 0.4
-            });
-        }
-        
-        // Theoretische Kurve
-        if (chartData.options.showTheoretical && chartData.parameters.n50 && chartData.parameters.volume) {
-            const theoreticalData = generateTheoreticalCurve(chartData.parameters);
-            datasets.push({
-                label: 'Theoretische Kurve',
-                data: theoreticalData,
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                borderColor: 'rgba(59, 130, 246, 1)',
-                borderWidth: 3,
-                pointRadius: 0,
-                type: 'line',
-                showLine: true,
-                tension: 0.4,
-                borderDash: [5, 5]
-            });
-        }
-        
-        // Erstelle Chart
-        const chart = new Chart(ctx, {
-            type: 'scatter',
-            data: { datasets },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
+    // Bestehende Chart zerstören
+    if (blowerDoorChart) {
+        blowerDoorChart.destroy();
+    }
+
+    // Daten vorbereiten
+    const theoreticalCurve = calculateTheoreticalCurve(
+        chartData.parameters.n50,
+        chartData.parameters.volume,
+        chartData.parameters.pressure
+    );
+    
+    const simulatedPoints = generateSimulatedPoints(
+        chartData.parameters.n50,
+        chartData.parameters.volume,
+        chartData.parameters.pressure
+    );
+
+    // Chart erstellen
+    blowerDoorChart = new Chart(ctx.getContext('2d'), {
+        type: 'scatter',
+        data: {
+            datasets: [
+                {
+                    label: 'Theoretische Kurve',
+                    data: theoreticalCurve.map(p => ({ x: p.pressure, y: p.volume })),
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    type: 'line',
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    borderWidth: 2
+                },
+                {
+                    label: 'Simulierte Punkte',
+                    data: simulatedPoints.map(p => ({ x: p.pressure, y: p.volume })),
+                    borderColor: '#f59e0b',
+                    backgroundColor: '#f59e0b',
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                },
+                {
+                    label: 'Unterdruckmessungen',
+                    data: chartData.measurements.underpressure.map(p => ({ x: p.pressure, y: p.volume })),
+                    borderColor: '#ef4444',
+                    backgroundColor: '#ef4444',
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointStyle: 'circle'
+                },
+                {
+                    label: 'Überdruckmessungen',
+                    data: chartData.measurements.overpressure.map(p => ({ x: p.pressure, y: p.volume })),
+                    borderColor: '#22c55e',
+                    backgroundColor: '#22c55e',
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointStyle: 'circle'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: false
+                },
+                legend: {
+                    display: false // Wir verwenden unsere eigene Legende
+                },
+                tooltip: {
+                    callbacks: {
+                        title: function(context) {
+                            return `Druck: ${context[0].parsed.x} Pa`;
+                        },
+                        label: function(context) {
+                            return `${context.dataset.label}: ${Math.round(context.parsed.y)} m³/h`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'bottom',
                     title: {
                         display: true,
-                        text: 'Blower-Door Messung - Druckverlauf',
-                        font: { size: 18, weight: 'bold' },
-                        color: '#1f2937'
+                        text: 'Differenzdruck [Pa]',
+                        color: '#e2e8f0',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
                     },
-                    legend: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#e2e8f0'
+                    }
+                },
+                y: {
+                    title: {
                         display: true,
-                        position: 'top',
-                        labels: {
-                            usePointStyle: true,
-                            font: { size: 12 }
+                        text: 'Volumenstrom [m³/h]',
+                        color: '#e2e8f0',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
                         }
                     },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        titleColor: 'white',
-                        bodyColor: 'white',
-                        cornerRadius: 8,
-                        callbacks: {
-                            label: function(context) {
-                                return `${context.dataset.label}: ${context.parsed.x} Pa → ${context.parsed.y} m³/h`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Druckdifferenz [Pa]',
-                            font: { size: 14, weight: 'bold' }
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.1)'
-                        }
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
                     },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Volumenstrom [m³/h]',
-                            font: { size: 14, weight: 'bold' }
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.1)'
-                        }
-                    }
-                },
-                elements: {
-                    point: {
-                        hoverBorderWidth: 3
+                    ticks: {
+                        color: '#e2e8f0'
                     }
                 }
             }
-        });
-        
-        // Chart-Container stylen
-        canvas.parentElement.style.backgroundColor = 'white';
-        canvas.parentElement.style.border = '2px solid #e5e7eb';
-        canvas.parentElement.style.borderRadius = '12px';
-        canvas.parentElement.style.padding = '20px';
-        canvas.parentElement.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-        
-        console.log("✅ Chart.js Diagramm erstellt mit", datasets.length, "Datensätzen");
-        
-        // Zeige Chart-Info
-        showChartInfo(chartData, measurements, canvas.parentElement);
-        
-        return chart;
-    }
-    
-    // FUNKTION: Generiere theoretische Kurve
-    function generateTheoreticalCurve(parameters) {
-        const n50 = parseFloat(parameters.n50);
-        const volume = parseFloat(parameters.volume);
-        
-        if (!n50 || !volume) return [];
-        
-        const data = [];
-        
-        // Generiere Punkte von 10 Pa bis 100 Pa
-        for (let pressure = 10; pressure <= 100; pressure += 5) {
-            // Vereinfachte Berechnung: V = n50 * volume * (pressure/50)^0.65
-            const flow = n50 * volume * Math.pow(pressure / 50, 0.65);
-            data.push({ x: pressure, y: flow });
         }
-        
-        return data;
-    }
+    });
+
+    // Ergebniswerte aktualisieren
+    updateResultValues();
     
-    // FUNKTION: Zeige Chart-Informationen
-    function showChartInfo(chartData, measurements, container) {
-        const infoDiv = document.createElement('div');
-        infoDiv.style.cssText = `
-            margin-top: 20px;
-            padding: 15px;
-            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-            border-radius: 8px;
-            border-left: 4px solid #3b82f6;
-        `;
-        
-        const totalPoints = (measurements.underpressure?.length || 0) + (measurements.overpressure?.length || 0);
-        
-        infoDiv.innerHTML = `
-            <h4 style="margin: 0 0 10px 0; color: #1e40af;">📊 Diagramm-Informationen</h4>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px;">
-                <div>
-                    <strong>Messpunkte:</strong><br>
-                    • Unterdruck: ${measurements.underpressure?.length || 0} Werte<br>
-                    • Überdruck: ${measurements.overpressure?.length || 0} Werte<br>
-                    • Gesamt: ${totalPoints} Messpunkte
-                </div>
-                <div>
-                    <strong>Parameter:</strong><br>
-                    • n₅₀-Wert: ${chartData.parameters.n50 || 'N/A'} [1/h]<br>
-                    • Volumen: ${chartData.parameters.volume || 'N/A'} [m³]<br>
-                    • Max. Druck: ${chartData.parameters.pressure || 'N/A'} [Pa]
-                </div>
-            </div>
-            <div style="margin-top: 10px; font-size: 12px; color: #6b7280;">
-                Diagramm erstellt am: ${new Date().toLocaleString('de-DE')}
-            </div>
-        `;
-        
-        container.appendChild(infoDiv);
-    }
-    
-    // FALLBACK: Zeige SVG-Chart falls Chart.js nicht verfügbar
-    function showFallbackChart(container, chartData, measurements) {
-        console.log("🎨 Erstelle SVG-Fallback-Chart...");
-        
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', '100%');
-        svg.setAttribute('height', '400');
-        svg.setAttribute('viewBox', '0 0 800 400');
-        svg.style.backgroundColor = 'white';
-        svg.style.border = '2px solid #e5e7eb';
-        svg.style.borderRadius = '12px';
-        
-        // Zeichne Achsen
-        const axesGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        
-        // X-Achse
-        const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        xAxis.setAttribute('x1', '60');
-        xAxis.setAttribute('y1', '340');
-        xAxis.setAttribute('x2', '740');
-        xAxis.setAttribute('y2', '340');
-        xAxis.setAttribute('stroke', '#374151');
-        xAxis.setAttribute('stroke-width', '2');
-        
-        // Y-Achse
-        const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        yAxis.setAttribute('x1', '60');
-        yAxis.setAttribute('y1', '60');
-        yAxis.setAttribute('x2', '60');
-        yAxis.setAttribute('y2', '340');
-        yAxis.setAttribute('stroke', '#374151');
-        yAxis.setAttribute('stroke-width', '2');
-        
-        axesGroup.appendChild(xAxis);
-        axesGroup.appendChild(yAxis);
-        svg.appendChild(axesGroup);
-        
-        // Zeichne Messpunkte
-        drawMeasurementPoints(svg, measurements);
-        
-        // Beschriftungen
-        const title = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        title.setAttribute('x', '400');
-        title.setAttribute('y', '30');
-        title.setAttribute('text-anchor', 'middle');
-        title.setAttribute('font-size', '18');
-        title.setAttribute('font-weight', 'bold');
-        title.setAttribute('fill', '#1f2937');
-        title.textContent = 'Blower-Door Messung - Druckverlauf (SVG)';
-        svg.appendChild(title);
-        
-        container.innerHTML = '';
-        container.appendChild(svg);
-        
-        console.log("✅ SVG-Fallback-Chart erstellt");
-    }
-    
-    // FUNKTION: Zeichne Messpunkte im SVG
-    function drawMeasurementPoints(svg, measurements) {
-        const chartArea = { x: 60, y: 60, width: 680, height: 280 };
-        
-        // Finde Min/Max Werte für Skalierung
-        const allPoints = [...(measurements.underpressure || []), ...(measurements.overpressure || [])];
-        if (allPoints.length === 0) return;
-        
-        const maxPressure = Math.max(...allPoints.map(p => Math.abs(p.pressure))) || 50;
-        const maxVolume = Math.max(...allPoints.map(p => p.volume)) || 2000;
-        
-        // Zeichne Unterdruckpunkte (rot)
-        measurements.underpressure?.forEach(point => {
-            const x = chartArea.x + (Math.abs(point.pressure) / maxPressure) * chartArea.width;
-            const y = chartArea.y + chartArea.height - (point.volume / maxVolume) * chartArea.height;
-            
-            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            circle.setAttribute('cx', x);
-            circle.setAttribute('cy', y);
-            circle.setAttribute('r', '6');
-            circle.setAttribute('fill', '#ef4444');
-            circle.setAttribute('stroke', '#dc2626');
-            circle.setAttribute('stroke-width', '2');
-            
-            svg.appendChild(circle);
-        });
-        
-        // Zeichne Überdruckpunkte (grün)
-        measurements.overpressure?.forEach(point => {
-            const x = chartArea.x + (point.pressure / maxPressure) * chartArea.width;
-            const y = chartArea.y + chartArea.height - (point.volume / maxVolume) * chartArea.height;
-            
-            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            circle.setAttribute('cx', x);
-            circle.setAttribute('cy', y);
-            circle.setAttribute('r', '6');
-            circle.setAttribute('fill', '#10b981');
-            circle.setAttribute('stroke', '#059669');
-            circle.setAttribute('stroke-width', '2');
-            
-            svg.appendChild(circle);
-        });
-    }
-    
-    // ERWEITERE DIE BESTEHENDE updateChartDisplay FUNKTION
-    if (window.completeTransferSystem) {
-        const originalUpdateChart = window.completeTransferSystem.updateChartDisplay;
-        
-        window.completeTransferSystem.updateChartDisplay = function(chartData) {
-            console.log("🎨 Erweiterte Chart-Anzeige mit echtem Diagramm...");
-            
-            // Führe originale Funktion aus (für Kompatibilität)
-            if (originalUpdateChart) {
-                originalUpdateChart.call(this, chartData);
-            }
-            
-            // Sammle Messdaten aus dem Transfer
-            const transferData = JSON.parse(sessionStorage.getItem('blowerDoorTransfer') || '{}');
-            const measurements = transferData.measurements || { underpressure: [], overpressure: [], combined: [] };
-            
-            // Erstelle echtes Diagramm
-            setTimeout(() => {
-                createBlowerDoorChart(chartData, measurements);
-            }, 1000);
-        };
-        
-        console.log("✅ Transfer-System mit Chart-Integration erweitert");
-    }
-    
-    // GLOBALE TEST-FUNKTION
-    window.testChartCreation = function() {
-        const testChartData = {
-            options: {
-                showTheoretical: true,
-                showUnderpressure: true,
-                showOverpressure: true
-            },
-            parameters: {
-                n50: '2.1',
-                volume: '350',
-                pressure: '75'
-            }
-        };
-        
-        const testMeasurements = {
-            underpressure: [
-                {pressure: -10, volume: 850},
-                {pressure: -20, volume: 1200},
-                {pressure: -30, volume: 1480},
-                {pressure: -40, volume: 1720},
-                {pressure: -50, volume: 1950}
-            ],
-            overpressure: [
-                {pressure: 10, volume: 820},
-                {pressure: 20, volume: 1150},
-                {pressure: 30, volume: 1420},
-                {pressure: 40, volume: 1680},
-                {pressure: 50, volume: 1920}
-            ]
-        };
-        
-        createBlowerDoorChart(testChartData, testMeasurements);
-    };
-    
-    return {
-        createBlowerDoorChart,
-        testChartCreation: window.testChartCreation
-    };
+    console.log('📊 Blower-Door Chart erstellt/aktualisiert');
 }
 
-// Initialisiere Chart-Erweiterung
-const chartExtension = enhanceTransferWithChart();
+/**
+ * Aktualisiert die Ergebniswerte in der UI
+ */
+function updateResultValues() {
+    const n50 = chartData.parameters.n50;
+    const volume = chartData.parameters.volume;
+    const q50 = (n50 * 2.68).toFixed(2); // Vereinfachte Berechnung für q₅₀
+    const v50 = (n50 * volume).toFixed(0);
 
-console.log("📈 Chart-Integration geladen!");
-console.log("🧪 Test-Befehl: testChartCreation()");
-console.log("✅ Echte Diagramme werden jetzt beim Transfer erstellt");
+    // Werte in den result-cards aktualisieren
+    document.querySelectorAll('[data-transfer="n50"]').forEach(el => {
+        el.textContent = n50;
+    });
+    document.querySelectorAll('[data-transfer="q50"]').forEach(el => {
+        el.textContent = q50;
+    });
+    document.querySelectorAll('[data-transfer="v50"]').forEach(el => {
+        el.textContent = v50;
+    });
+    document.querySelectorAll('[data-transfer="volume"]').forEach(el => {
+        el.textContent = volume;
+    });
+    document.querySelectorAll('[data-transfer="pressure"]').forEach(el => {
+        el.textContent = chartData.parameters.pressure;
+    });
+    
+    console.log(`📊 Ergebniswerte aktualisiert: n₅₀=${n50}, q₅₀=${q50}, V₅₀=${v50}`);
+}
+
+/**
+ * Erstellt ein Test-Diagramm mit Beispieldaten
+ */
+function createTestChart() {
+    console.log('🧪 Erstelle Test-Diagramm...');
+    
+    // Zufällige Testparameter generieren
+    chartData.parameters.n50 = 1.5 + Math.random() * 2.5; // 1.5-4.0
+    chartData.parameters.volume = 300 + Math.random() * 400; // 300-700
+    chartData.parameters.pressure = 80 + Math.random() * 40; // 80-120
+    
+    // Neue Messdaten generieren
+    const newUnderpressure = [];
+    const newOverpressure = [];
+    
+    for (let i = 1; i <= 5; i++) {
+        const pressure = i * 10;
+        const baseVolume = 600 + (i * 250) + (Math.random() - 0.5) * 100;
+        
+        newUnderpressure.push({
+            pressure: -pressure,
+            volume: Math.round(baseVolume * 0.95) // Leicht niedrigere Werte für Unterdruck
+        });
+        
+        newOverpressure.push({
+            pressure: pressure,
+            volume: Math.round(baseVolume * 1.05) // Leicht höhere Werte für Überdruck
+        });
+    }
+    
+    chartData.measurements.underpressure = newUnderpressure;
+    chartData.measurements.overpressure = newOverpressure;
+    
+    createOrUpdateChart();
+    
+    console.log('✅ Test-Diagramm erstellt', chartData.parameters);
+}
+
+/**
+ * Leert das aktuelle Diagramm
+ */
+function clearChart() {
+    if (blowerDoorChart) {
+        blowerDoorChart.destroy();
+        blowerDoorChart = null;
+        console.log('🗑️ Diagramm geleert');
+    } else {
+        console.log('ℹ️ Kein Diagramm zum Löschen vorhanden');
+    }
+}
+
+/**
+ * Exportiert das Diagramm als PNG-Datei
+ */
+function exportChart() {
+    if (blowerDoorChart) {
+        const link = document.createElement('a');
+        link.download = `blower-door-diagramm-${new Date().toISOString().split('T')[0]}.png`;
+        link.href = blowerDoorChart.toBase64Image();
+        link.click();
+        console.log('💾 Diagramm exportiert');
+    } else {
+        alert('Kein Diagramm zum Exportieren verfügbar!');
+        console.warn('⚠️ Export fehlgeschlagen: Kein Diagramm vorhanden');
+    }
+}
+
+/**
+ * Lädt Transfer-Daten aus dem sessionStorage
+ */
+function loadTransferData() {
+    try {
+        const transferData = JSON.parse(sessionStorage.getItem('blowerDoorTransfer') || '{}');
+        
+        if (transferData.chart) {
+            chartData.parameters = { ...chartData.parameters, ...transferData.chart.parameters };
+            console.log('📊 Chart-Parameter aus Transfer geladen:', chartData.parameters);
+        }
+        
+        if (transferData.measurements) {
+            if (transferData.measurements.underpressure) {
+                chartData.measurements.underpressure = transferData.measurements.underpressure;
+            }
+            if (transferData.measurements.overpressure) {
+                chartData.measurements.overpressure = transferData.measurements.overpressure;
+            }
+            console.log('📊 Messdaten aus Transfer geladen:', chartData.measurements);
+        }
+        
+        // Wetterdaten übertragen
+        if (transferData.weather) {
+            Object.entries(transferData.weather).forEach(([key, value]) => {
+                const elements = document.querySelectorAll(`[data-transfer="${key}"]`);
+                elements.forEach(el => {
+                    if (el.tagName === 'INPUT') {
+                        el.value = value;
+                    } else {
+                        el.textContent = value;
+                    }
+                });
+            });
+            console.log('🌤️ Wetterdaten übertragen:', transferData.weather);
+        }
+        
+        console.log('📥 Transfer-Daten erfolgreich geladen');
+        
+        // Diagramm automatisch erstellen wenn Daten vorhanden
+        if (transferData.chart || transferData.measurements) {
+            createOrUpdateChart();
+        }
+        
+        return true;
+        
+    } catch (error) {
+        console.error('❌ Fehler beim Laden der Transfer-Daten:', error);
+        return false;
+    }
+}
+
+/**
+ * Speichert aktuelle Chart-Daten in sessionStorage
+ */
+function saveTransferData() {
+    try {
+        const currentData = JSON.parse(sessionStorage.getItem('blowerDoorTransfer') || '{}');
+        
+        currentData.chart = {
+            parameters: chartData.parameters,
+            timestamp: new Date().toISOString()
+        };
+        
+        currentData.measurements = chartData.measurements;
+        
+        sessionStorage.setItem('blowerDoorTransfer', JSON.stringify(currentData));
+        console.log('💾 Chart-Daten gespeichert');
+        
+    } catch (error) {
+        console.error('❌ Fehler beim Speichern der Transfer-Daten:', error);
+    }
+}
+
+/**
+ * Initialisiert das Chart-System
+ */
+function initializeChartSystem() {
+    console.log('🚀 Chart-System wird initialisiert...');
+    
+    // Prüfe ob Chart.js verfügbar ist
+    if (typeof Chart === 'undefined') {
+        console.error('❌ Chart.js nicht verfügbar! Bitte laden Sie Chart.js vor dieser Datei.');
+        return false;
+    }
+    
+    // Chart.js Konfiguration
+    Chart.defaults.color = '#e2e8f0';
+    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+    
+    // Transfer-Daten laden
+    const transferLoaded = loadTransferData();
+    
+    // Test-Diagramm erstellen falls keine Transfer-Daten vorhanden
+    if (!transferLoaded) {
+        setTimeout(() => {
+            if (!blowerDoorChart) {
+                console.log('📊 Erstelle Standard-Diagramm...');
+                createOrUpdateChart();
+            }
+        }, 500);
+    }
+    
+    console.log('✅ Chart-System initialisiert');
+    return true;
+}
+
+// Globale API für externe Zugriffe
+window.protocolChart = {
+    // Haupt-Funktionen
+    create: createOrUpdateChart,
+    clear: clearChart,
+    export: exportChart,
+    
+    // Test-Funktionen
+    createTest: createTestChart,
+    
+    // Daten-Management
+    loadData: loadTransferData,
+    saveData: saveTransferData,
+    
+    // Parameter-Updates
+    updateParameters: function(params) {
+        chartData.parameters = { ...chartData.parameters, ...params };
+        createOrUpdateChart();
+        saveTransferData();
+    },
+    
+    // Messdaten-Updates
+    updateMeasurements: function(measurements) {
+        chartData.measurements = { ...chartData.measurements, ...measurements };
+        createOrUpdateChart();
+        saveTransferData();
+    },
+    
+    // Getter für aktuelle Daten
+    getCurrentData: function() {
+        return { ...chartData };
+    },
+    
+    // Chart-Instanz abrufen
+    getChart: function() {
+        return blowerDoorChart;
+    }
+};
+
+// Automatische Initialisierung wenn DOM geladen ist
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📋 Protocol Chart-System wird geladen...');
+    
+    // Kurze Verzögerung für Chart.js Initialisierung
+    setTimeout(() => {
+        initializeChartSystem();
+    }, 100);
+});
+
+// Debug-Funktionen (nur in development)
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    window.chartDebug = {
+        data: () => console.log('📊 Chart Data:', chartData),
+        chart: () => console.log('📊 Chart Instance:', blowerDoorChart),
+        transfer: () => console.log('📥 Transfer Data:', JSON.parse(sessionStorage.getItem('blowerDoorTransfer') || '{}')),
+        reset: () => {
+            sessionStorage.removeItem('blowerDoorTransfer');
+            location.reload();
+        }
+    };
+}

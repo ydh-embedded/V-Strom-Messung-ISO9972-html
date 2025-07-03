@@ -424,6 +424,20 @@ Beispiele:
                 <h4>Max. Druck [Pa]</h4>
                 <div class="control-value" data-transfer="pressure">200</div>
             </div>
+            <button onclick="testVisualChart()"
+                class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-lg">
+                🧪 Test-Diagramm erstellen
+            </button>
+
+            <button onclick="clearChart()"
+                class="bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-500 hover:to-slate-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-lg">
+                🗑️ Diagramm leeren
+            </button>
+
+            <button onclick="exportChart()"
+                class="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-lg">
+                💾 Als Bild speichern
+            </button>
         </div>
 
         <div class="section-title">Diagramm:</div>
@@ -431,85 +445,205 @@ Beispiele:
         <!-- CHART CONTAINER - WICHTIG FÜR DIAGRAMM -->
         <div class="chart-placeholder" id="chart-container"
             style="width: 100%; height: 500px; background: #f8fafc; border-radius: 12px; padding: 20px; margin: 20px 0; border: 2px dashed #cbd5e1;">
-            <div style="text-align: center; color: #64748b; padding: 50px 0;">
-                <div style="font-size: 24px; margin-bottom: 15px;">📊</div>
-                <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">Blower-Door Diagramm wird
-                    geladen...</div>
-                <div style="font-size: 14px;">Das Diagramm wird automatisch erstellt, sobald Messdaten übertragen
-                    werden.</div>
-                <div style="margin-top: 20px;">
-                    <button onclick="testChartCreation()"
-                        style="background: #3b82f6; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
-                        🧪 Test-Diagramm erstellen
-                    </button>
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-slate-200 mb-2">Blower-Door Messung</h2>
+                <p class="text-slate-400">Druckverlauf-Diagramm nach ISO 9972:2018</p>
+            </div>
+
+            <!-- Chart Area -->
+            <div id="chart-area" class="bg-slate-800/50 rounded-xl p-6 mb-6" style="min-height: 500px;">
+                <div class="flex items-center justify-center h-96 text-slate-500">
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">📈</div>
+                        <div class="text-lg font-medium">Diagramm-Bereich</div>
+                        <div class="text-sm opacity-70">Wird automatisch beim Datenempfang erstellt</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart Controls -->
+            <div id="chart-controls" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div class="data-card rounded-lg p-4 text-center">
+                    <div class="text-xs text-slate-400 mb-1">Status</div>
+                    <div id="chart-status-value" class="text-lg font-bold text-amber-400">Wartend</div>
+                </div>
+                <div class="data-card rounded-lg p-4 text-center">
+                    <div class="text-xs text-slate-400 mb-1">Unterdruck</div>
+                    <div id="underpressure-count" class="text-lg font-bold text-red-400">0</div>
+                </div>
+                <div class="data-card rounded-lg p-4 text-center">
+                    <div class="text-xs text-slate-400 mb-1">Überdruck</div>
+                    <div id="overpressure-count" class="text-lg font-bold text-green-400">0</div>
+                </div>
+                <div class="data-card rounded-lg p-4 text-center">
+                    <div class="text-xs text-slate-400 mb-1">Gesamt</div>
+                    <div id="total-points" class="text-lg font-bold text-blue-400">0</div>
+                </div>
+                <div class="data-card rounded-lg p-4 text-center">
+                    <div class="text-xs text-slate-400 mb-1">n₅₀-Wert</div>
+                    <div id="n50-display" class="text-lg font-bold text-rose-400">N/A</div>
                 </div>
             </div>
         </div>
 
-        <div class="result-cards">
-            <div class="result-card">
-                <div class="value" data-transfer="n50">1.5</div>
-                <div class="label">n₅₀-Wert [1/h]</div>
-            </div>
-            <div class="result-card">
-                <div class="value" data-transfer="q50">4.02</div>
-                <div class="label">q₅₀-Wert [m³/(h·m²)]</div>
-            </div>
-            <div class="result-card">
-                <div class="value" data-transfer="v50">450</div>
-                <div class="label">V₅₀ [m³/h]</div>
-            </div>
-        </div>
+        <!-- Data Summary -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-        <div class="footer">
-            <div class="footer-logo">FLIB</div>
-            <div>
-                <div>Prüfergebnis:</div>
-                <div>gemessen am: </div>
-            </div>
-            <div>
-                <div><strong>Bestanden</strong></div>
-                <div><strong>November 2025</strong></div>
-            </div>
-            <div style="font-size: 14px;">Seite 5 von 6</div>
-        </div>
-    </div>
+            <!-- Measurement Data -->
+            <div class="data-card rounded-xl p-6">
+                <h3 class="text-lg font-bold text-slate-200 mb-4 flex items-center">
+                    <span class="text-xl mr-2">📊</span>
+                    Messdaten-Übersicht
+                </h3>
 
-    <!-- ANCHOR Seite 6 -->
-    <div class="page">
-        <div class="hole-second"></div>
-        <div class="hole-third"></div>
-        <div class="header">
-            <div class="header-background"></div>
-            <div class="logo-placeholder">LOGO</div>
-            <div class="title">
-                <h1>Blower-Door</h1>
-                <p>Prüfverfahren gem. ISO 9972:2018</p>
-            </div>
-            <div class="map-placeholder">Karte</div>
-        </div>
+                <div id="measurement-summary" class="space-y-4">
+                    <!-- Underpressure Data -->
+                    <div class="bg-slate-800/50 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-red-300">📉 Unterdruckmessungen</span>
+                            <span id="underpressure-range" class="text-xs text-slate-400">-</span>
+                        </div>
+                        <div id="underpressure-data" class="text-xs text-slate-500">
+                            Keine Daten verfügbar
+                        </div>
+                    </div>
 
-        <div class="section-title">Auswertung:</div>
-
-        <div class="definitions-grid">
-            <div class="definition-card definition-blue">
-                <h4>🔵 Grundlegende Definitionen</h4>
-                <p><strong>n₅₀-Wert:</strong> Luftwechselrate bei 50 Pa Druckdifferenz</p>
-                <p><strong>q₅₀-Wert:</strong> Spezifischer Leckagestrom pro m² Hüllfläche</p>
-                <p><strong>V₅₀:</strong> Volumenstrom bei 50 Pa Druckdifferenz</p>
+                    <!-- Overpressure Data -->
+                    <div class="bg-slate-800/50 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-green-300">📈 Überdruckmessungen</span>
+                            <span id="overpressure-range" class="text-xs text-slate-400">-</span>
+                        </div>
+                        <div id="overpressure-data" class="text-xs text-slate-500">
+                            Keine Daten verfügbar
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="definition-card definition-green">
-                <h4>🟢 Technische Parameter</h4>
-                <p><strong>Potenzfunktion:</strong> V = C × ΔP^n</p>
-                <p><strong>Typischer n-Wert:</strong> 0,65 (für turbulente Strömung)</p>
-                <p><strong>Messbereich:</strong> 10-100 Pa (nach ISO 9972)</p>
-            </div>
-        </div>
+            <!-- Parameters & Results -->
+            <div class="data-card rounded-xl p-6">
+                <h3 class="text-lg font-bold text-slate-200 mb-4 flex items-center">
+                    <span class="text-xl mr-2">⚙️</span>
+                    Parameter & Ergebnisse
+                </h3>
 
-        <div class="interactive-text-area">
-            <h4>📝 Detaillierte Bewertung der Messergebnisse</h4>
-            <textarea class="editable-text evaluation-text" id="evaluation-text" placeholder="Hier können Sie eine detaillierte Bewertung der Messergebnisse eintragen...
+                <div class="space-y-4">
+                    <!-- Input Parameters -->
+                    <div class="bg-slate-800/50 rounded-lg p-4">
+                        <div class="text-sm font-medium text-blue-300 mb-2">📐 Eingabeparameter</div>
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            <div>
+                                <span class="text-slate-400">Volumen:</span>
+                                <span id="volume-param" class="text-slate-200 ml-1">-</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400">n₅₀:</span>
+                                <span id="n50-param" class="text-slate-200 ml-1">-</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400">Max. Druck:</span>
+                                <span id="pressure-param" class="text-slate-200 ml-1">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Calculated Results -->
+                    <div class="bg-slate-800/50 rounded-lg p-4">
+                        <div class="text-sm font-medium text-rose-300 mb-2">🎯 Berechnete Werte</div>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">q₅₀-Wert:</span>
+                                <span id="q50-result" class="text-slate-200">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">V₅₀:</span>
+                                <span id="v50-result" class="text-slate-200">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">Bewertung:</span>
+                                <span id="evaluation" class="text-slate-200">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transfer Info -->
+                    <div class="bg-slate-800/50 rounded-lg p-4">
+                        <div class="text-sm font-medium text-amber-300 mb-2">📅 Transfer-Info</div>
+                        <div class="text-xs text-slate-400">
+                            <div id="transfer-time">Letzte Übertragung: -</div>
+                            <div id="transfer-source">Quelle: -</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-cards">
+                    <div class="result-card">
+                        <div class="value" data-transfer="n50">1.5</div>
+                        <div class="label">n₅₀-Wert [1/h]</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="value" data-transfer="q50">4.02</div>
+                        <div class="label">q₅₀-Wert [m³/(h·m²)]</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="value" data-transfer="v50">450</div>
+                        <div class="label">V₅₀ [m³/h]</div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <div class="footer-logo">FLIB</div>
+                    <div>
+                        <div>Prüfergebnis:</div>
+                        <div>gemessen am: </div>
+                    </div>
+                    <div>
+                        <div><strong>Bestanden</strong></div>
+                        <div><strong>November 2025</strong></div>
+                    </div>
+                    <div style="font-size: 14px;">Seite 5 von 6</div>
+                </div>
+            </div>
+
+
+
+
+            <!-- ANCHOR Seite 6 -->
+            <div class="page">
+                <div class="hole-second"></div>
+                <div class="hole-third"></div>
+                <div class="header">
+                    <div class="header-background"></div>
+                    <div class="logo-placeholder">LOGO</div>
+                    <div class="title">
+                        <h1>Blower-Door</h1>
+                        <p>Prüfverfahren gem. ISO 9972:2018</p>
+                    </div>
+                    <div class="map-placeholder">Karte</div>
+                </div>
+
+                <div class="section-title">Auswertung:</div>
+
+                <div class="definitions-grid">
+                    <div class="definition-card definition-blue">
+                        <h4>🔵 Grundlegende Definitionen</h4>
+                        <p><strong>n₅₀-Wert:</strong> Luftwechselrate bei 50 Pa Druckdifferenz</p>
+                        <p><strong>q₅₀-Wert:</strong> Spezifischer Leckagestrom pro m² Hüllfläche</p>
+                        <p><strong>V₅₀:</strong> Volumenstrom bei 50 Pa Druckdifferenz</p>
+                    </div>
+
+                    <div class="definition-card definition-green">
+                        <h4>🟢 Technische Parameter</h4>
+                        <p><strong>Potenzfunktion:</strong> V = C × ΔP^n</p>
+                        <p><strong>Typischer n-Wert:</strong> 0,65 (für turbulente Strömung)</p>
+                        <p><strong>Messbereich:</strong> 10-100 Pa (nach ISO 9972)</p>
+                    </div>
+                </div>
+
+                <div class="interactive-text-area">
+                    <h4>📝 Detaillierte Bewertung der Messergebnisse</h4>
+                    <textarea class="editable-text evaluation-text" id="evaluation-text" placeholder="Hier können Sie eine detaillierte Bewertung der Messergebnisse eintragen...
 
 Beispielhafte Bewertungskriterien:
 • Bewertung der gemessenen n₅₀-Werte im Vergleich zu Grenzwerten
@@ -525,46 +659,223 @@ Der gemessene n₅₀-Wert von 1,5 h⁻¹ entspricht exakt dem KfW-Grenzwert fü
 Empfehlungen:
 - Alle größeren Leckagen wurden bereits während der Messung identifiziert und sollten abgedichtet werden
 - Nachkontrolle in 6 Monaten empfohlen"></textarea>
-            <div class="text-hint">Tipp: Bewerten Sie hier die Messergebnisse fachlich und geben Sie konkrete
-                Empfehlungen</div>
-        </div>
+                    <div class="text-hint">Tipp: Bewerten Sie hier die Messergebnisse fachlich und geben Sie konkrete
+                        Empfehlungen</div>
+                </div>
 
-        <div class="signature-boxes">
-            <div class="signature-box">
-                <div><strong>Techniker(FH) D.Heinicke</strong></div>
-                <div style="margin-top: 70px;">
-                    <div style="font-size: 12px;">
-                        <p>...............................................................</p> Datum, Unterschrift
-                        Messtechniker
+                <div class="signature-boxes">
+                    <div class="signature-box">
+                        <div><strong>Techniker(FH) D.Heinicke</strong></div>
+                        <div style="margin-top: 70px;">
+                            <div style="font-size: 12px;">
+                                <p>...............................................................</p> Datum,
+                                Unterschrift
+                                Messtechniker
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="signature-box">
+                        <div><strong>Dipl.-Ing C. Quiatkowski</strong></div>
+                        <div style="margin-top: 70px;">
+                            <div style="font-size: 12px;">
+                                <p>...............................................................</p>Datum,
+                                Unterschrift
+                                Auftraggeber
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <div class="footer-logo">FLIB</div>
+                    <div>
+                        <div>Prüfergebnis:</div>
+                        <div>gemessen am: </div>
+                    </div>
+                    <div>
+                        <div><strong>Bestanden</strong></div>
+                        <div><strong>November 2025</strong></div>
+                    </div>
+                    <div style="font-size: 14px;">Seite 6 von 6</div>
                 </div>
             </div>
 
-            <div class="signature-box">
-                <div><strong>Dipl.-Ing C. Quiatkowski</strong></div>
-                <div style="margin-top: 70px;">
-                    <div style="font-size: 12px;">
-                        <p>...............................................................</p>Datum, Unterschrift
-                        Auftraggeber
+
+
+            <!-- JavaScript für Chart-Seite -->
+            <script>
+                // Chart-Seite spezifische Funktionen
+
+                // Aktualisiere Status-Anzeige
+                function updateChartStatus(status, color = 'amber') {
+                    const statusElement = document.getElementById('chart-status-value');
+                    if (statusElement) {
+                        statusElement.textContent = status;
+                        statusElement.className = `text-lg font-bold text-${color}-400`;
+                    }
+                }
+
+                // Aktualisiere Daten-Zusammenfassung
+                function updateDataSummary(measurements) {
+                    if (!measurements) return;
+
+                    // Zähler aktualisieren
+                    document.getElementById('underpressure-count').textContent = measurements.underpressure?.length || 0;
+                    document.getElementById('overpressure-count').textContent = measurements.overpressure?.length || 0;
+                    document.getElementById('total-points').textContent =
+                        (measurements.underpressure?.length || 0) + (measurements.overpressure?.length || 0);
+
+                    // Unterdruck-Details
+                    if (measurements.underpressure?.length > 0) {
+                        const pressures = measurements.underpressure.map(p => Math.abs(p.pressure));
+                        const volumes = measurements.underpressure.map(p => p.volume);
+                        document.getElementById('underpressure-range').textContent =
+                            `${Math.min(...pressures)}-${Math.max(...pressures)} Pa`;
+                        document.getElementById('underpressure-data').textContent =
+                            `Volumenstrom: ${Math.min(...volumes)}-${Math.max(...volumes)} m³/h`;
+                    }
+
+                    // Überdruck-Details
+                    if (measurements.overpressure?.length > 0) {
+                        const pressures = measurements.overpressure.map(p => p.pressure);
+                        const volumes = measurements.overpressure.map(p => p.volume);
+                        document.getElementById('overpressure-range').textContent =
+                            `${Math.min(...pressures)}-${Math.max(...pressures)} Pa`;
+                        document.getElementById('overpressure-data').textContent =
+                            `Volumenstrom: ${Math.min(...volumes)}-${Math.max(...volumes)} m³/h`;
+                    }
+                }
+
+                // Aktualisiere Parameter-Anzeige
+                function updateParameters(chartData) {
+                    if (!chartData) return;
+
+                    document.getElementById('volume-param').textContent =
+                        chartData.parameters?.volume ? `${chartData.parameters.volume} m³` : '-';
+                    document.getElementById('n50-param').textContent =
+                        chartData.parameters?.n50 ? `${chartData.parameters.n50} 1/h` : '-';
+                    document.getElementById('n50-display').textContent =
+                        chartData.parameters?.n50 || 'N/A';
+                    document.getElementById('pressure-param').textContent =
+                        chartData.parameters?.pressure ? `${chartData.parameters.pressure} Pa` : '-';
+
+                    // Berechne Ergebnisse
+                    if (chartData.parameters?.n50 && chartData.parameters?.volume) {
+                        const n50 = parseFloat(chartData.parameters.n50);
+                        const volume = parseFloat(chartData.parameters.volume);
+
+                        const q50 = (n50 * 2.68).toFixed(2);
+                        const v50 = (n50 * volume).toFixed(0);
+                        const evaluation = n50 <= 1.5 ? 'Bestanden' : 'Nicht bestanden';
+
+                        document.getElementById('q50-result').textContent = `${q50} m³/(h·m²)`;
+                        document.getElementById('v50-result').textContent = `${v50} m³/h`;
+                        document.getElementById('evaluation').textContent = evaluation;
+                        document.getElementById('evaluation').className =
+                            `text-${n50 <= 1.5 ? 'green' : 'red'}-400`;
+                    }
+                }
+
+                // Leere Chart
+                function clearChart() {
+                    const chartArea = document.getElementById('chart-area');
+                    if (chartArea) {
+                        chartArea.innerHTML = `
+                    <div class="flex items-center justify-center h-96 text-slate-500">
+                        <div class="text-center">
+                            <div class="text-6xl mb-4">📈</div>
+                            <div class="text-lg font-medium">Diagramm-Bereich</div>
+                            <div class="text-sm opacity-70">Wird automatisch beim Datenempfang erstellt</div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                `;
+                    }
+                    updateChartStatus('Geleert', 'slate');
+                }
 
-        <div class="footer">
-            <div class="footer-logo">FLIB</div>
-            <div>
-                <div>Prüfergebnis:</div>
-                <div>gemessen am: </div>
-            </div>
-            <div>
-                <div><strong>Bestanden</strong></div>
-                <div><strong>November 2025</strong></div>
-            </div>
-            <div style="font-size: 14px;">Seite 6 von 6</div>
-        </div>
-    </div>
+                // Exportiere Chart als Bild
+                function exportChart() {
+                    const canvas = document.querySelector('#chart-area canvas');
+                    if (canvas) {
+                        const link = document.createElement('a');
+                        link.download = `blower-door-diagramm-${new Date().toISOString().split('T')[0]}.png`;
+                        link.href = canvas.toDataURL();
+                        link.click();
+                        updateChartStatus('Exportiert', 'green');
+                    } else {
+                        alert('Kein Diagramm zum Exportieren verfügbar!');
+                    }
+                }
 
+                // Überschreibe Transfer-Funktion für Chart-Seite
+                if (typeof enhanceWithVisualChart === 'function') {
+                    // Erweitere für Chart-Seite
+                    setTimeout(() => {
+                        if (window.completeTransferSystem) {
+                            const originalUpdateChart = window.completeTransferSystem.updateChartDisplay;
+
+                            window.completeTransferSystem.updateChartDisplay = function (chartData) {
+                                console.log("🎨 Chart-Seite: Aktualisiere Diagramm...");
+
+                                const transferData = JSON.parse(sessionStorage.getItem('blowerDoorTransfer') || '{}');
+                                const measurements = transferData.measurements || { underpressure: [], overpressure: [], combined: [] };
+
+                                // Aktualisiere UI
+                                updateChartStatus('Erstelle...', 'blue');
+                                updateDataSummary(measurements);
+                                updateParameters(chartData);
+
+                                // Verstecke Status-Banner
+                                const statusBanner = document.getElementById('chart-status');
+                                if (statusBanner) {
+                                    statusBanner.style.display = 'none';
+                                }
+
+                                // Erstelle Diagramm im chart-area
+                                const chartArea = document.getElementById('chart-area');
+                                if (chartArea) {
+                                    chartArea.innerHTML = '';
+
+                                    // Verwende die bestehende Visual Chart Funktion
+                                    setTimeout(() => {
+                                        if (typeof transferVisualChart === 'function') {
+                                            transferVisualChart(chartData, measurements);
+                                            updateChartStatus('Aktiv', 'green');
+
+                                            // Transfer-Info aktualisieren
+                                            document.getElementById('transfer-time').textContent =
+                                                'Letzte Übertragung: ' + new Date().toLocaleString('de-DE');
+                                            document.getElementById('transfer-source').textContent =
+                                                'Quelle: ' + (transferData.transferType || 'Unbekannt');
+                                        }
+                                    }, 100);
+                                }
+                            };
+                        }
+                    }, 1000);
+                }
+
+                // Auto-load beim Seitenaufruf
+                document.addEventListener('DOMContentLoaded', () => {
+                    console.log("📊 Chart-Seite geladen");
+
+                    // Prüfe auf übertragene Daten
+                    const transferData = sessionStorage.getItem('blowerDoorTransfer');
+                    if (transferData) {
+                        try {
+                            const data = JSON.parse(transferData);
+                            console.log("📥 Gefundene Übertragungsdaten, lade automatisch...");
+
+                            if (window.completeTransferSystem && data.chart) {
+                                window.completeTransferSystem.updateChartDisplay(data.chart);
+                            }
+                        } catch (error) {
+                            console.error("❌ Fehler beim Laden der Übertragungsdaten:", error);
+                        }
+                    }
+                });
+            </script>
 </body>
 
 </html>
