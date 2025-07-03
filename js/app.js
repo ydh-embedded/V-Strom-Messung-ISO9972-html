@@ -1,110 +1,136 @@
-// js/app.js
+// =================================================================
+// app.js - Hauptanwendung und Navigation
+// =================================================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialisiert alle anderen Skripte und Event-Listener
-    initializeScrollHandling();
-    initializeDate();
-    
-    // Stellt sicher, dass die Initialisierungsfunktionen aus den anderen Skripten aufgerufen werden
-    if (typeof initMeasurementPage === "function") initMeasurementPage();
-    if (typeof initWeatherSystem === "function") initWeatherSystem();
-    if (typeof initProtocolPage === "function") initProtocolPage();
-
-    // Startseite beim ersten Laden anzeigen
-    showPage('home');
+    console.log("App.js: DOM geladen. Initialisiere Basis-UI.");
+    initializeApp();
 });
 
+function initializeApp() {
+    initializeScrollHandling();
+    initializeDate();
+    showPage('home');
+}
+
 /**
- * Zeigt eine bestimmte Seite an und blendet die anderen aus.
- * Macht die Funktion global verfügbar, damit sie von onclick-Attributen im HTML aufgerufen werden kann.
- * @param {string} pageId - Die ID der anzuzeigenden Seite.
+ * Zeigt eine bestimmte Seite an und blendet andere aus
  */
 window.showPage = function(pageId) {
-    const pages = document.querySelectorAll('.page');
-    pages.forEach(page => page.classList.remove('active'));
+    // Alle Seiten ausblenden
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+    });
 
+    // Zielseite anzeigen
     const targetPage = document.getElementById(pageId);
     if (targetPage) {
         targetPage.classList.add('active');
     }
 
-    // Spezifische Aktionen beim Seitenwechsel
+    // Seitenspezifische Initialisierung
+    handlePageSpecificActions(pageId);
+}
+
+function handlePageSpecificActions(pageId) {
     switch (pageId) {
+        case 'measurement':
+            // Messseite initialisieren falls noch nicht geschehen
+            if (typeof initMeasurementPage === 'function') {
+                initMeasurementPage();
+            }
+            break;
         case 'analysis':
-            // Verzögerung, um sicherzustellen, dass das Canvas-Element für Chart.js sichtbar ist
+            // Chart initialisieren mit Verzögerung
             setTimeout(() => {
-                if (!window.chart) {
-                    initChart();
-                } else {
-                    updateChart();
+                if (typeof initChart === 'function') {
+                    if (!window.chart) {
+                        initChart();
+                    } else {
+                        updateChart();
+                    }
                 }
             }, 100);
             break;
         case 'protocol':
-            // Lädt den Protokollinhalt dynamisch, falls noch nicht geschehen
-            if (!targetPage.querySelector('.protocol-container')) {
+            // Protokoll aktualisieren
+            if (typeof updateProtocolPage === 'function') {
                 updateProtocolPage();
             }
-            // Überträgt automatisch die neuesten Daten ins Protokoll
-            setTimeout(() => transferDataToProtocol(), 200);
+            setTimeout(() => {
+                if (typeof transferDataToProtocol === 'function') {
+                    transferDataToProtocol();
+                }
+            }, 200);
+            break;
+        case 'weather':
+            // Wettersystem initialisieren
+            if (typeof initWeatherSystem === 'function') {
+                initWeatherSystem();
+            }
             break;
     }
 }
 
 /**
- * Wechselt zwischen den Tabs (z.B. Unterdruck/Überdruck).
- * @param {string} tabName - Der Name des zu aktivierenden Tabs.
+ * Wechselt zwischen Tabs
  */
 window.switchTab = function(tabName) {
-    const tabContents = document.querySelectorAll('.tab-content');
-    tabContents.forEach(content => content.classList.remove('active'));
+    // Alle Tab-Inhalte ausblenden
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
 
-    const tabButtons = document.querySelectorAll('.tab-button');
-    tabButtons.forEach(button => button.classList.remove('active'));
+    // Alle Tab-Buttons deaktivieren
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active');
+    });
 
+    // Gewählten Tab aktivieren
     const selectedContent = document.getElementById(tabName + '-content');
-    if (selectedContent) selectedContent.classList.add('active');
-
     const selectedButton = document.getElementById('tab-' + tabName);
+    
+    if (selectedContent) selectedContent.classList.add('active');
     if (selectedButton) selectedButton.classList.add('active');
 }
 
 /**
- * Initialisiert das Scroll-Verhalten für die Navigation (blendet Header aus/ein).
+ * Initialisiert Scroll-Handling für Header
  */
 function initializeScrollHandling() {
     let isScrolling = false;
     let headerHidden = false;
-
+    
     const handleScroll = () => {
         if (isScrolling) return;
         isScrolling = true;
 
-        window.requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
             const scrollY = window.scrollY;
             const header = document.getElementById('main-header');
             const nav = document.getElementById('main-nav');
 
-            const hideThreshold = 150;
-            const showThreshold = 100;
-
-            if (scrollY > hideThreshold && !headerHidden) {
+            // Header ausblenden/einblenden
+            if (scrollY > 150 && !headerHidden) {
                 header?.classList.add('hidden');
                 headerHidden = true;
-            } else if (scrollY < showThreshold && headerHidden) {
+            } else if (scrollY < 100 && headerHidden) {
                 header?.classList.remove('hidden');
                 headerHidden = false;
             }
 
+            // Navigation-Styling bei Scroll
             if (scrollY > 50) {
                 nav?.classList.add('scrolled');
             } else {
                 nav?.classList.remove('scrolled');
             }
+
             isScrolling = false;
         });
     };
 
+    // Scroll-Event mit Throttling
     let scrollTimer;
     window.addEventListener('scroll', () => {
         clearTimeout(scrollTimer);
@@ -113,22 +139,26 @@ function initializeScrollHandling() {
 }
 
 /**
- * Setzt das aktuelle Datum in alle relevanten Felder beim Start.
+ * Initialisiert Datum in allen relevanten Feldern
  */
 function initializeDate() {
     const heute = new Date();
     const deutschesDatum = heute.toLocaleDateString('de-DE');
+    
     document.querySelectorAll('.auto-datum').forEach(feld => {
         feld.textContent = deutschesDatum;
     });
 }
 
 /**
- * Ermöglicht das manuelle Ändern des Datums über einen Prompt.
+ * Ermöglicht manuelles Ändern des Datums
  */
 window.setzeDatum = function() {
-    const aktuellesDatum = document.querySelector('.auto-datum')?.textContent || new Date().toLocaleDateString('de-DE');
+    const aktuellesDatum = document.querySelector('.auto-datum')?.textContent || 
+                          new Date().toLocaleDateString('de-DE');
+    
     const datum = prompt("Datum eingeben (TT.MM.JJJJ):", aktuellesDatum);
+    
     if (datum && /^\d{1,2}\.\d{1,2}\.\d{4}$/.test(datum)) {
         document.querySelectorAll('.auto-datum').forEach(feld => {
             feld.textContent = datum;
