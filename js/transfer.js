@@ -398,6 +398,11 @@ class CompleteTransferSystem {
             // NEUE FUNKTIONEN: Tabellen und Diagramm
             if (data.measurements) {
                 this.fillMeasurementTables(data.measurements);
+                
+                // Scroll zu Seite 4 nach einem kurzen Delay, um die Tabellen zu zeigen
+                setTimeout(() => {
+                    this.scrollToMeasurementTables();
+                }, 2000);
             }
             
             if (data.chart) {
@@ -496,65 +501,283 @@ class CompleteTransferSystem {
         console.log(`📊 ${fieldsUpdated} Felder aktualisiert`);
     }
 
-    // NEUE FUNKTION: Fülle Messdaten-Tabellen in protocol.html
+    // ERWEITERTE FUNKTION: Fülle Messdaten-Tabellen in protocol.html
     fillMeasurementTables(measurements) {
-        console.log("📊 Fülle Messdaten-Tabellen...");
+        console.log("📊 Fülle Messdaten-Tabellen auf Seite 4...");
         
-        // Unterdruck-Tabelle füllen
+        let totalRowsInserted = 0;
+        
+        // Unterdruck-Tabelle füllen (erste .data-table)
         if (measurements.underpressure && measurements.underpressure.length > 0) {
             this.fillProtocolTable('Unterdruckmessungen', measurements.underpressure, 0);
+            totalRowsInserted += measurements.underpressure.length;
         }
         
-        // Überdruck-Tabelle füllen  
+        // Überdruck-Tabelle füllen (zweite .data-table)
         if (measurements.overpressure && measurements.overpressure.length > 0) {
             this.fillProtocolTable('Überdruckmessungen', measurements.overpressure, 1);
+            totalRowsInserted += measurements.overpressure.length;
         }
         
-        // Kombinierte Tabelle füllen
+        // Kombinierte Tabelle füllen (falls vorhanden - dritte Tabelle)
         if (measurements.combined && measurements.combined.length > 0) {
             this.fillProtocolTable('Kombinierte Messungen', measurements.combined, 2);
+            totalRowsInserted += measurements.combined.length;
         }
+        
+        // Zeige Gesamt-Summary
+        if (totalRowsInserted > 0) {
+            this.showMeasurementSummary(measurements, totalRowsInserted);
+        }
+        
+        console.log(`📊 Gesamt: ${totalRowsInserted} Messwerte in Tabellen eingefügt`);
     }
     
-    // NEUE FUNKTION: Fülle spezifische Tabelle in protocol.html
+    // NEUE FUNKTION: Zeige Messdaten-Zusammenfassung
+    showMeasurementSummary(measurements, totalRows) {
+        const summaryDiv = document.createElement('div');
+        summaryDiv.style.cssText = `
+            position: fixed;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #1e40af, #1d4ed8);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.4);
+            z-index: 1000;
+            text-align: center;
+            font-weight: 600;
+            animation: slideIn 0.5s ease-out;
+        `;
+        
+        summaryDiv.innerHTML = `
+            <div style="font-size: 18px; margin-bottom: 15px;">📊 Messdaten-Transfer abgeschlossen</div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; font-size: 14px;">
+                <div style="background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px;">
+                    <div style="font-size: 20px; color: #ef4444;">↓</div>
+                    <div>Unterdruck</div>
+                    <div style="font-size: 16px; font-weight: bold;">${measurements.underpressure.length} Werte</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px;">
+                    <div style="font-size: 20px; color: #10b981;">↑</div>
+                    <div>Überdruck</div>
+                    <div style="font-size: 16px; font-weight: bold;">${measurements.overpressure.length} Werte</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px;">
+                    <div style="font-size: 20px; color: #f59e0b;">↕</div>
+                    <div>Kombiniert</div>
+                    <div style="font-size: 16px; font-weight: bold;">${measurements.combined.length} Werte</div>
+                </div>
+            </div>
+            <div style="margin-top: 15px; font-size: 12px; opacity: 0.9;">
+                Insgesamt ${totalRows} Messwerte in Seite 4 Tabellen eingefügt
+            </div>
+        `;
+        
+        document.body.appendChild(summaryDiv);
+        
+        setTimeout(() => {
+            summaryDiv.style.animation = 'slideOut 0.5s ease-out';
+            setTimeout(() => summaryDiv.remove(), 500);
+        }, 5000);
+    }
+    
+    // ERWEITERTE FUNKTION: Fülle spezifische Tabelle in protocol.html
     fillProtocolTable(tableName, data, tableIndex) {
         console.log(`📋 Fülle ${tableName} mit ${data.length} Zeilen...`);
         
-        // Finde Tabellen über verschiedene Selektoren
-        const tables = document.querySelectorAll('.data-table, table');
+        // Verschiedene Strategien zum Finden der Tabellen
+        let targetTable = null;
         
-        if (tables[tableIndex]) {
-            const tbody = tables[tableIndex].querySelector('tbody');
+        // Strategie 1: Über Index (für Seite 4 Tabellen)
+        const dataTables = document.querySelectorAll('.data-table');
+        if (dataTables[tableIndex]) {
+            targetTable = dataTables[tableIndex];
+            console.log(`✅ Tabelle gefunden über Index ${tableIndex}: .data-table`);
+        }
+        
+        // Strategie 2: Über Text-Suche in Überschriften (Fallback)
+        if (!targetTable) {
+            const allTables = document.querySelectorAll('table');
+            allTables.forEach((table, index) => {
+                const heading = table.closest('.info-block')?.querySelector('h3');
+                if (heading && heading.textContent.toLowerCase().includes(tableName.toLowerCase().split('messungen')[0])) {
+                    targetTable = table;
+                    console.log(`✅ Tabelle gefunden über Überschrift: "${heading.textContent}"`);
+                }
+            });
+        }
+        
+        if (targetTable) {
+            const tbody = targetTable.querySelector('tbody');
             if (tbody) {
-                // Leere existierende Daten
+                console.log(`📊 Ersetze ${tbody.children.length} vorhandene Zeilen mit ${data.length} neuen Zeilen`);
+                
+                // Leere existierende Daten komplett
                 tbody.innerHTML = '';
                 
-                // Füge neue Daten ein
+                // Füge neue Daten ein mit erweiterten Informationen
                 data.forEach((row, index) => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${row.pressure}</td>
-                        <td>${row.volume}</td>
-                        <td style="color: #10b981; font-weight: bold;">📥 ${row.type}</td>
+                        <td style="font-weight: bold;">${index + 1}</td>
+                        <td style="color: #dc2626; font-weight: bold;">${row.pressure}</td>
+                        <td style="color: #2563eb; font-weight: bold;">${row.volume}</td>
+                        <td style="color: #10b981; font-weight: bold; background: #f0fdf4; border-radius: 4px; text-align: center;">
+                            📥 ${row.type}
+                        </td>
                     `;
+                    
+                    // Zeilen-Animation
+                    tr.style.backgroundColor = '#fef3c7';
+                    tr.style.transition = 'background-color 2s ease';
+                    
                     tbody.appendChild(tr);
+                    
+                    // Animiere Zeile nach dem Einfügen
+                    setTimeout(() => {
+                        tr.style.backgroundColor = '';
+                    }, 500 + (index * 100));
                 });
                 
-                // Tabelle hervorheben
-                tables[tableIndex].style.backgroundColor = '#f0fdf4';
-                tables[tableIndex].style.border = '3px solid #10b981';
-                tables[tableIndex].style.borderRadius = '8px';
+                // Tabelle und Container hervorheben
+                this.highlightTable(targetTable, tableName);
                 
-                setTimeout(() => {
-                    tables[tableIndex].style.backgroundColor = '';
-                    tables[tableIndex].style.border = '';
-                }, 3000);
+                console.log(`✅ ${tableName}: ${data.length} Zeilen erfolgreich eingefügt`);
                 
-                console.log(`✅ ${tableName}: ${data.length} Zeilen eingefügt`);
+                // Zeige Tabellen-spezifische Benachrichtigung
+                this.showTableNotification(tableName, data.length);
+                
+            } else {
+                console.log(`❌ Kein tbody in Tabelle ${tableIndex} gefunden für ${tableName}`);
             }
         } else {
             console.log(`❌ Tabelle ${tableIndex} nicht gefunden für ${tableName}`);
+            // Zeige alle verfügbaren Tabellen für Debugging
+            this.debugAvailableTables();
+        }
+    }
+    
+    // NEUE FUNKTION: Hebe Tabelle visuell hervor
+    highlightTable(table, tableName) {
+        // Finde den Container (info-block)
+        const container = table.closest('.info-block') || table.parentElement;
+        
+        // Tabellen-Hervorhebung
+        table.style.backgroundColor = '#f0fdf4';
+        table.style.border = '3px solid #10b981';
+        table.style.borderRadius = '8px';
+        table.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
+        table.style.transition = 'all 0.5s ease';
+        
+        // Container-Hervorhebung
+        if (container) {
+            container.style.backgroundColor = '#f8fafc';
+            container.style.border = '2px solid #10b981';
+            container.style.borderRadius = '12px';
+            container.style.transform = 'scale(1.02)';
+            container.style.transition = 'all 0.5s ease';
+            
+            // Überschrift hervorheben
+            const heading = container.querySelector('h3');
+            if (heading) {
+                heading.style.color = '#10b981';
+                heading.style.textShadow = '0 2px 4px rgba(16, 185, 129, 0.3)';
+                heading.innerHTML = `📊 ${heading.textContent} (${tableName} übertragen)`;
+            }
+        }
+        
+        // Entferne Hervorhebung nach Delay
+        setTimeout(() => {
+            table.style.backgroundColor = '';
+            table.style.border = '1px solid #d1d5db';
+            table.style.boxShadow = '';
+            
+            if (container) {
+                container.style.backgroundColor = '';
+                container.style.border = '';
+                container.style.transform = '';
+            }
+        }, 4000);
+    }
+    
+    // NEUE FUNKTION: Zeige tabellen-spezifische Benachrichtigung
+    showTableNotification(tableName, rowCount) {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+            z-index: 1000;
+            font-weight: 600;
+            font-size: 14px;
+            animation: slideIn 0.5s ease-out;
+            border-left: 4px solid #34d399;
+        `;
+        notification.innerHTML = `
+            <div style="font-size: 16px; margin-bottom: 4px;">📊 ${tableName}</div>
+            <div style="font-size: 12px; opacity: 0.9;">${rowCount} Messwerte eingefügt</div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.5s ease-out';
+            setTimeout(() => notification.remove(), 500);
+        }, 3000);
+    }
+    
+    // NEUE FUNKTION: Debug verfügbare Tabellen
+    debugAvailableTables() {
+        console.log("🔍 === DEBUG: Verfügbare Tabellen ===");
+        
+        const allTables = document.querySelectorAll('table');
+        allTables.forEach((table, index) => {
+            const heading = table.closest('.info-block')?.querySelector('h3')?.textContent || 'Unbekannt';
+            const rowCount = table.querySelectorAll('tbody tr').length;
+            const className = table.className;
+            
+            console.log(`Tabelle ${index}:`, {
+                heading: heading,
+                class: className,
+                rows: rowCount,
+                hasDataTable: table.classList.contains('data-table')
+            });
+        });
+        
+        console.log("=== Ende Debug ===");
+    }
+    
+    // NEUE FUNKTION: Scrolle zu den Messdaten-Tabellen (Seite 4)
+    scrollToMeasurementTables() {
+        // Finde die erste data-table (sollte Unterdrucktabelle sein)
+        const firstDataTable = document.querySelector('.data-table');
+        
+        if (firstDataTable) {
+            // Smooth scroll zur Tabelle
+            firstDataTable.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+            
+            // Kurze Hervorhebung nach dem Scrollen
+            setTimeout(() => {
+                firstDataTable.style.backgroundColor = '#fef3c7';
+                firstDataTable.style.transition = 'background-color 1s ease';
+                
+                setTimeout(() => {
+                    firstDataTable.style.backgroundColor = '';
+                }, 1500);
+            }, 1000);
+            
+            console.log("📍 Automatisch zu Messdaten-Tabellen gescrollt");
         }
     }
     
@@ -793,9 +1016,482 @@ styles.textContent = `
         from { transform: translateX(100%) scale(0.8); opacity: 0; }
         to { transform: translateX(0) scale(1); opacity: 1; }
     }
+    
+    @keyframes slideOut {
+        from { transform: translateX(0) scale(1); opacity: 1; }
+        to { transform: translateX(100%) scale(0.8); opacity: 0; }
+    }
+    
+    .data-table {
+        transition: all 0.5s ease;
+    }
+    
+    .data-table tbody tr {
+        transition: background-color 0.3s ease;
+    }
+    
+    .data-table tbody tr:hover {
+        background-color: #f8fafc;
+    }
 `;
+
+
+
 document.head.appendChild(styles);
 
 console.log("✅ Vollständiges Transfer-System geladen und bereit!");
 console.log("🎯 Neue Funktionen: Tabellen + Diagramm + erweiterte Visualisierung");
 console.log("🚀 Verwenden Sie den Button 'VOLLSTÄNDIGER TRANSFER' zum Testen");
+
+
+/**
+ * KORRIGIERTE VERSION - VISUELLES DIAGRAMM-TRANSFER
+ * Behebt den "Assignment to constant variable" Fehler
+ */
+
+
+// Erweitere das Transfer-System um visuelles Diagramm
+function enhanceWithVisualChart() {
+    
+    // NEUE FUNKTION: Übertrage visuelles Diagramm
+    function transferVisualChart(chartData, measurements) {
+        console.log("🎨 Übertrage visuelles Diagramm zur Protocol-Seite...");
+        
+        const chartContainer = findChartContainer();
+        if (!chartContainer) {
+            console.log("❌ Chart-Container nicht gefunden");
+            return;
+        }
+        
+        // Erstelle visuelles Diagramm basierend auf bestehender Analyse-Seite
+        createVisualChart(chartContainer, chartData, measurements);
+    }
+    
+    // FUNKTION: Finde Chart-Container auf Seite 5
+    function findChartContainer() {
+        // Suche nach verschiedenen Chart-Container Möglichkeiten
+        return document.querySelector('.chart-placeholder') || 
+               document.querySelector('#chart-container') ||
+               document.querySelector('#chart') ||
+               createChartContainer();
+    }
+    
+    // FUNKTION: Erstelle Chart-Container falls nicht vorhanden
+    function createChartContainer() {
+        const diagramSection = findDiagramSection();
+        if (!diagramSection) return null;
+        
+        const container = document.createElement('div');
+        container.className = 'chart-placeholder';
+        container.style.cssText = `
+            width: 100%;
+            margin: 20px 0;
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+        `;
+        
+        diagramSection.appendChild(container);
+        return container;
+    }
+    
+    // FUNKTION: Finde Diagramm-Sektion
+    function findDiagramSection() {
+        // Suche nach "Diagramm" Überschrift
+        const headings = document.querySelectorAll('.section-title, h3, h4');
+        for (let heading of headings) {
+            if (heading.textContent.toLowerCase().includes('diagramm')) {
+                return heading.parentElement;
+            }
+        }
+        
+        // Fallback: Seite 5
+        const pages = document.querySelectorAll('.page');
+        return pages[4]; // Index 4 = Seite 5
+    }
+    
+    // HAUPTFUNKTION: Erstelle visuelles Diagramm
+    function createVisualChart(container, chartData, measurements) {
+        console.log("🎨 Erstelle visuelles Canvas-Diagramm...");
+        
+        // Canvas erstellen
+        const canvas = document.createElement('canvas');
+        canvas.id = 'protocol-chart';
+        canvas.width = 855;
+        canvas.height = 320;
+        canvas.style.cssText = `
+            display: block;
+            box-sizing: border-box;
+            height: 400px;
+            width: 100%;
+            background: #1e293b;
+            border-radius: 8px;
+        `;
+        
+        // Chart-Info Container
+        const chartWrapper = document.createElement('div');
+        chartWrapper.style.cssText = `
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+        `;
+        
+        const chartTitle = document.createElement('div');
+        chartTitle.style.cssText = `
+            color: #e2e8f0;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        `;
+        chartTitle.innerHTML = '📊 Blower-Door Messung - Druckverlauf';
+        
+        chartWrapper.appendChild(chartTitle);
+        chartWrapper.appendChild(canvas);
+        
+        // Füge Chart-Informationen hinzu
+        const chartInfo = createChartInfo(chartData, measurements);
+        chartWrapper.appendChild(chartInfo);
+        
+        // Ersetze Container-Inhalt
+        container.innerHTML = '';
+        container.appendChild(chartWrapper);
+        
+        // Zeichne das Diagramm
+        drawChart(canvas, chartData, measurements);
+    }
+    
+    // FUNKTION: Zeichne Chart auf Canvas
+    function drawChart(canvas, chartData, measurements) {
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        
+        // Hintergrund
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(0, 0, width, height);
+        
+        // Chart-Bereich definieren
+        const chartArea = {
+            x: 80,
+            y: 60,
+            width: width - 160,
+            height: height - 120
+        };
+        
+        // Bestimme Datenbereich
+        const allPoints = [
+            ...(measurements.underpressure || []),
+            ...(measurements.overpressure || [])
+        ];
+        
+        if (allPoints.length === 0) {
+            drawEmptyChart(ctx, chartArea);
+            return;
+        }
+        
+        const maxPressure = Math.max(...allPoints.map(p => Math.abs(p.pressure)), 50);
+        const maxVolume = Math.max(...allPoints.map(p => p.volume), 2000);
+        
+        // Zeichne Achsen
+        drawAxes(ctx, chartArea, maxPressure, maxVolume);
+        
+        // Zeichne Theoretische Kurve (falls aktiviert)
+        if (chartData.options.showTheoretical && chartData.parameters.n50 && chartData.parameters.volume) {
+            drawTheoreticalCurve(ctx, chartArea, chartData.parameters, maxPressure, maxVolume);
+        }
+        
+        // Zeichne Messpunkte
+        if (chartData.options.showUnderpressure && measurements.underpressure) {
+            drawMeasurementPoints(ctx, chartArea, measurements.underpressure, '#ef4444', maxPressure, maxVolume, true);
+        }
+        
+        if (chartData.options.showOverpressure && measurements.overpressure) {
+            drawMeasurementPoints(ctx, chartArea, measurements.overpressure, '#10b981', maxPressure, maxVolume, false);
+        }
+        
+        // Zeichne Legende
+        drawLegend(ctx, chartData.options, width);
+        
+        console.log("✅ Visuelles Diagramm gezeichnet");
+    }
+    
+    // FUNKTION: Zeichne leeres Diagramm
+    function drawEmptyChart(ctx, chartArea) {
+        ctx.fillStyle = '#475569';
+        ctx.font = '16px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Keine Messdaten vorhanden', chartArea.x + chartArea.width / 2, chartArea.y + chartArea.height / 2);
+    }
+    
+    // FUNKTION: Zeichne Achsen
+    function drawAxes(ctx, chartArea, maxPressure, maxVolume) {
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 2;
+        
+        // X-Achse
+        ctx.beginPath();
+        ctx.moveTo(chartArea.x, chartArea.y + chartArea.height);
+        ctx.lineTo(chartArea.x + chartArea.width, chartArea.y + chartArea.height);
+        ctx.stroke();
+        
+        // Y-Achse
+        ctx.beginPath();
+        ctx.moveTo(chartArea.x, chartArea.y);
+        ctx.lineTo(chartArea.x, chartArea.y + chartArea.height);
+        ctx.stroke();
+        
+        // Achsenbeschriftungen
+        ctx.fillStyle = '#e2e8f0';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        
+        // X-Achse Beschriftung
+        for (let i = 0; i <= 5; i++) {
+            const x = chartArea.x + (i / 5) * chartArea.width;
+            const value = (i / 5) * maxPressure;
+            ctx.fillText(value.toFixed(0), x, chartArea.y + chartArea.height + 20);
+        }
+        
+        // Y-Achse Beschriftung
+        ctx.textAlign = 'right';
+        for (let i = 0; i <= 5; i++) {
+            const y = chartArea.y + chartArea.height - (i / 5) * chartArea.height;
+            const value = (i / 5) * maxVolume;
+            ctx.fillText(value.toFixed(0), chartArea.x - 10, y + 4);
+        }
+        
+        // Achsentitel
+        ctx.font = 'bold 14px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Druckdifferenz [Pa]', chartArea.x + chartArea.width / 2, chartArea.y + chartArea.height + 50);
+        
+        ctx.save();
+        ctx.translate(20, chartArea.y + chartArea.height / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText('Volumenstrom [m³/h]', 0, 0);
+        ctx.restore();
+    }
+    
+    // FUNKTION: Zeichne theoretische Kurve
+    function drawTheoreticalCurve(ctx, chartArea, parameters, maxPressure, maxVolume) {
+        const n50 = parseFloat(parameters.n50);
+        const volume = parseFloat(parameters.volume);
+        
+        if (!n50 || !volume) return;
+        
+        ctx.strokeStyle = '#3b82f6';
+        ctx.setLineDash([5, 5]);
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        
+        let firstPoint = true;
+        for (let pressure = 5; pressure <= maxPressure; pressure += 1) {
+            const flow = n50 * volume * Math.pow(pressure / 50, 0.65);
+            const x = chartArea.x + (pressure / maxPressure) * chartArea.width;
+            const y = chartArea.y + chartArea.height - (flow / maxVolume) * chartArea.height;
+            
+            if (firstPoint) {
+                ctx.moveTo(x, y);
+                firstPoint = false;
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+    
+    // FUNKTION: Zeichne Messpunkte
+    function drawMeasurementPoints(ctx, chartArea, points, color, maxPressure, maxVolume, isUnderpressure) {
+        ctx.fillStyle = color;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        
+        // Verbindungslinie
+        if (points.length > 1) {
+            ctx.globalAlpha = 0.6;
+            ctx.beginPath();
+            
+            points.forEach((point, index) => {
+                const pressure = isUnderpressure ? Math.abs(point.pressure) : point.pressure;
+                const x = chartArea.x + (pressure / maxPressure) * chartArea.width;
+                const y = chartArea.y + chartArea.height - (point.volume / maxVolume) * chartArea.height;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+        
+        // Punkte
+        points.forEach(point => {
+            const pressure = isUnderpressure ? Math.abs(point.pressure) : point.pressure;
+            const x = chartArea.x + (pressure / maxPressure) * chartArea.width;
+            const y = chartArea.y + chartArea.height - (point.volume / maxVolume) * chartArea.height;
+            
+            ctx.beginPath();
+            ctx.arc(x, y, 6, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Weißer Rand
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.strokeStyle = color;
+        });
+    }
+    
+    // KORRIGIERTE FUNKTION: Zeichne Legende
+    function drawLegend(ctx, options, width) {
+        let legendY = 20; // ← GEÄNDERT: let statt const
+        let legendX = width - 200;
+        
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'left';
+        
+        if (options.showUnderpressure) {
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(legendX, legendY, 12, 12);
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillText('Unterdruck', legendX + 20, legendY + 10);
+            legendY += 20; // ← Jetzt funktioniert das!
+        }
+        
+        if (options.showOverpressure) {
+            ctx.fillStyle = '#10b981';
+            ctx.fillRect(legendX, legendY, 12, 12);
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillText('Überdruck', legendX + 20, legendY + 10);
+            legendY += 20; // ← Und das auch!
+        }
+        
+        if (options.showTheoretical) {
+            ctx.strokeStyle = '#3b82f6';
+            ctx.setLineDash([5, 5]);
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(legendX, legendY + 6);
+            ctx.lineTo(legendX + 12, legendY + 6);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillText('Theoretisch', legendX + 20, legendY + 10);
+        }
+    }
+    
+    // FUNKTION: Erstelle Chart-Informationen
+    function createChartInfo(chartData, measurements) {
+        const infoDiv = document.createElement('div');
+        infoDiv.style.cssText = `
+            margin-top: 20px;
+            padding: 20px;
+            background: #334155;
+            border-radius: 8px;
+            color: #e2e8f0;
+        `;
+        
+        const totalUnder = measurements.underpressure?.length || 0;
+        const totalOver = measurements.overpressure?.length || 0;
+        const totalPoints = totalUnder + totalOver;
+        
+        infoDiv.innerHTML = `
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: center;">
+                <div style="background: #475569; padding: 15px; border-radius: 6px;">
+                    <div style="font-size: 24px; color: #ef4444; margin-bottom: 8px;">📉</div>
+                    <div style="font-size: 18px; font-weight: bold;">${totalUnder}</div>
+                    <div style="font-size: 12px; opacity: 0.8;">Unterdruckmessungen</div>
+                </div>
+                <div style="background: #475569; padding: 15px; border-radius: 6px;">
+                    <div style="font-size: 24px; color: #10b981; margin-bottom: 8px;">📈</div>
+                    <div style="font-size: 18px; font-weight: bold;">${totalOver}</div>
+                    <div style="font-size: 12px; opacity: 0.8;">Überdruckmessungen</div>
+                </div>
+                <div style="background: #475569; padding: 15px; border-radius: 6px;">
+                    <div style="font-size: 24px; color: #3b82f6; margin-bottom: 8px;">📊</div>
+                    <div style="font-size: 18px; font-weight: bold;">${totalPoints}</div>
+                    <div style="font-size: 12px; opacity: 0.8;">Gesamt-Messpunkte</div>
+                </div>
+            </div>
+            <div style="margin-top: 15px; text-align: center; font-size: 12px; opacity: 0.7;">
+                n₅₀: ${chartData.parameters.n50 || 'N/A'} [1/h] • 
+                Volumen: ${chartData.parameters.volume || 'N/A'} [m³] • 
+                erstellt: ${new Date().toLocaleString('de-DE')}
+            </div>
+        `;
+        
+        return infoDiv;
+    }
+    
+    // ERWEITERE DIE BESTEHENDE updateChartDisplay FUNKTION
+    if (window.completeTransferSystem) {
+        const originalUpdateChart = window.completeTransferSystem.updateChartDisplay;
+        
+        window.completeTransferSystem.updateChartDisplay = function(chartData) {
+            console.log("🎨 Erstelle visuelles Diagramm (wie Analyse-Seite)...");
+            
+            // Sammle Messdaten aus dem Transfer
+            const transferData = JSON.parse(sessionStorage.getItem('blowerDoorTransfer') || '{}');
+            const measurements = transferData.measurements || { underpressure: [], overpressure: [], combined: [] };
+            
+            // Erstelle visuelles Diagramm
+            setTimeout(() => {
+                transferVisualChart(chartData, measurements);
+            }, 500);
+        };
+        
+        console.log("✅ Transfer-System mit visuellem Diagramm erweitert");
+    }
+    
+    // GLOBALE TEST-FUNKTION
+    window.testVisualChart = function() {
+        console.log("🧪 Teste visuelles Diagramm...");
+        
+        const testChartData = {
+            options: {
+                showTheoretical: true,
+                showUnderpressure: true,
+                showOverpressure: true
+            },
+            parameters: {
+                n50: '2.1',
+                volume: '350',
+                pressure: '75'
+            }
+        };
+        
+        const testMeasurements = {
+            underpressure: [
+                {pressure: -10, volume: 850},
+                {pressure: -20, volume: 1200},
+                {pressure: -30, volume: 1480},
+                {pressure: -40, volume: 1720},
+                {pressure: -50, volume: 1950}
+            ],
+            overpressure: [
+                {pressure: 10, volume: 820},
+                {pressure: 20, volume: 1150},
+                {pressure: 30, volume: 1420},
+                {pressure: 40, volume: 1680},
+                {pressure: 50, volume: 1920}
+            ]
+        };
+        
+        transferVisualChart(testChartData, testMeasurements);
+    };
+}
+
+// Initialisiere visuelle Chart-Erweiterung
+enhanceWithVisualChart();
+
+console.log("🎨 Korrigiertes visuelles Diagramm-System geladen!");
+console.log("🧪 Test-Befehl: testVisualChart()");
+console.log("✅ Fehler behoben - Das Diagramm funktioniert jetzt!");

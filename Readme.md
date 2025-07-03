@@ -16,6 +16,14 @@
  -  Zeigt sowohl theoretische Kurve als auch simulierte Messpunkte
  -  Berechnet wichtige Kennwerte automatisch
 
+##  Was passiert technisch:
+
+- Daten-Sammlung: Alle Tabellendaten aus index.html werden gesammelt
+- Transfer: Daten werden via SessionStorage übertragen
+- Tabellen-Erkennung: System findet .data-table Elemente auf Seite 4
+- Daten-Ersetzung: Statische Zeilen werden komplett ersetzt
+- Visuelle Bestätigung: Hervorhebungen, Animationen, Benachrichtigungen
+- Auto-Navigation: Automatisches Scrollen zu den gefüllten Tabellen
 
  ## Live-Server 
 
