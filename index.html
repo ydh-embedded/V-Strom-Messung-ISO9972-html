@@ -42,7 +42,7 @@
                 <!-- Navigation Buttons -->
                 <div class="flex items-center space-x-2 lg:space-x-3">
                     <button onclick="showPage('home')"
-                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-lg bg-gradient-to-r">
                         <span class="relative z-10 flex items-center gap-2">
                             <span class="text-base">🏠</span>
                             <span class="hidden sm:inline">Start</span>
@@ -50,7 +50,7 @@
                     </button>
 
                     <button onclick="getLocationByIP()"
-                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-lg bg-gradient-to-r">
                         <span class="relative z-10 flex items-center gap-2">
                             <span class="text-base">🌤️</span>
                             <span class="hidden sm:inline">Wetter</span>
@@ -58,7 +58,7 @@
                     </button>
 
                     <button onclick="showPage('measurement')"
-                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-lg bg-gradient-to-r">
                         <span class="relative z-10 flex items-center gap-2">
                             <span class="text-base">📊</span>
                             <span class="hidden sm:inline">Messung</span>
@@ -66,7 +66,7 @@
                     </button>
 
                     <button onclick="showPage('analysis')"
-                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                        class="nav-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-lg bg-gradient-to-r">
                         <span class="relative z-10 flex items-center gap-2">
                             <span class="text-base">📈</span>
                             <span class="hidden sm:inline">Analyse</span>
@@ -80,7 +80,25 @@
                             <span class="hidden sm:inline">Export</span>
                         </span>
                     </button>
+
+                    <button onclick="exportData()"
+                        class="action-btn px-3 lg:px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-lg  bg-gradient-to-r  logo-glow text-green-100 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:from-emerald-500 hover:to-green-500">
+                        <span class="flex items-center gap-2">
+                            <span class="text-base">📤</span>
+                            <span class="hidden xl:inline">Export</span>
+                        </span>
+                    </button>
                 </div>
+
+                <!-- Action Buttons Datum manuell setzen-->
+                <button onclick="setzeDatum()"
+                    class="action-btn bg-gradient-to-r logo-glow shadow-lg text-blue-100 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:from-blue-500 hover:to-indigo-500">
+                    <span class="flex items-center gap-2 ">
+                        <span class="text-base">📅</span>
+                        <span class="auto-datum font-semibold text-xs">2.7.2025</span>
+                    </span>
+                </button>
+
 
                 <!-- Right Section: Weather Display + Action Buttons -->
                 <div class="flex items-center space-x-3">
@@ -101,30 +119,10 @@
                         </div>
                     </div>
 
-                    <!-- Action Buttons -->
-                    <button onclick="exportData()"
-                        class="action-btn bg-gradient-to-r from-emerald-600 to-green-600 text-green-100 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:from-emerald-500 hover:to-green-500">
-                        <span class="flex items-center gap-2">
-                            <span class="text-base">📤</span>
-                            <span class="hidden xl:inline">Export</span>
-                        </span>
-                    </button>
 
-                    <button onclick="setzeDatum()"
-                        class="action-btn bg-gradient-to-r from-blue-600 to-indigo-600 text-blue-100 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:from-blue-500 hover:to-indigo-500">
-                        <span class="flex items-center gap-2">
-                            <span class="text-base">📅</span>
-                            <span class="auto-datum font-semibold text-xs">2.7.2025</span>
-                        </span>
-                    </button>
 
-                    <!-- Weather Update Button (Mobile) -->
-                    <button onclick="updateNavWeather()"
-                        class="action-btn lg:hidden bg-gradient-to-r from-rose-600 to-pink-600 text-rose-100 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:from-rose-500 hover:to-pink-500">
-                        <span class="flex items-center gap-1">
-                            <span class="text-base">🌤️</span>
-                        </span>
-                    </button>
+
+
                 </div>
             </div>
         </div>

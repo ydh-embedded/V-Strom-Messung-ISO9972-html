@@ -9,39 +9,7 @@ console.log("🚀 EINFACHES TRANSFER-SYSTEM STARTET");
 // SOFORT AUSFÜHRBARE FUNKTIONEN
 // =============================================================================
 
-// Erstelle sofort einen Test-Button
-function createTestButton() {
-    // Entferne alten Button
-    const oldBtn = document.getElementById('simple-transfer-btn');
-    if (oldBtn) oldBtn.remove();
 
-    const button = document.createElement('button');
-    button.id = 'simple-transfer-btn';
-    button.innerHTML = '🚀 TRANSFER TEST';
-    button.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 10000;
-        background: #ff0000;
-        color: white;
-        border: none;
-        padding: 20px;
-        border-radius: 10px;
-        font-size: 18px;
-        font-weight: bold;
-        cursor: pointer;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    `;
-    
-    button.onclick = function() {
-        console.log("🔥 TEST BUTTON GEKLICKT!");
-        transferDataNow();
-    };
-    
-    document.body.appendChild(button);
-    console.log("✅ Test-Button erstellt");
-}
 
 // Sammle alle verfügbaren Daten
 function collectData() {

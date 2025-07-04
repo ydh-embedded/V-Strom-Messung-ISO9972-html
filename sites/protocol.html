@@ -476,26 +476,23 @@ Beispiele:
 
         <div class="measurement-controls">
 
-            <div class="control-card">
+            <div class="control-card flex-layout">
 
+                <div class="btn-chart-enhanced">
+                    <button onclick="testVisualChart()" class="btn-enhanced btn-gray">
+                        <span>🧪 Test-Diagramm</span>
+                    </button>
 
-                <button onclick="testVisualChart()"
-                    class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-lg">
-                    🧪 Test-Diagramm erstellen
-                </button>
+                    <button onclick="clearChart()" class="btn-enhanced btn-gray">
+                        <span>🗑️ Diagramm leeren</span>
+                    </button>
 
-                <button onclick="clearChart()"
-                    class="bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-500 hover:to-slate-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-lg">
-                    🗑️ Diagramm leeren
-                </button>
-
-                <button onclick="exportChart()"
-                    class="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-lg">
-                    💾 Als Bild speichern
-                </button>
+                    <button onclick="exportChart()" class="btn-enhanced btn-gray">
+                        <span>💾 Als Bild speichern</span>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
 
     </div>
 
