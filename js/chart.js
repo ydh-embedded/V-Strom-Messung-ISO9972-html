@@ -1,6 +1,17 @@
-// chart.js - Blower-Door Chart System für protocol.html
+// =================================================================
 // Erstellt: 2025-07-04
-
+// 
+// 📊 chart.js - Blower-Door Chart System für protocol.html
+//
+// Chart.js Integration: Erstellt Blower-Door Diagramme
+// Theoretische Kurven: Berechnung mit Potenzfunktion V = C × ΔP^n
+// Simulierte Daten: Generierung realistischer Testdaten
+// Messdaten-Visualisierung: Unter-/Überdruck-Darstellung
+// Export-Funktionen: PNG-Download der Diagramme
+// SessionStorage Transfer: Datenübertragung zwischen Seiten
+//
+//
+// =================================================================
 // Globale Chart-Variablen
 let blowerDoorChart = null;
 let chartData = {

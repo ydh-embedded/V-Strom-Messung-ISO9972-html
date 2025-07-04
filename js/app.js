@@ -1,5 +1,15 @@
 // =================================================================
 // app.js - Hauptanwendung und Navigation
+//
+// 🎯 app.js - Kern & Navigation
+//
+// Tab-System: Wechsel zwischen verschiedenen Bereichen
+// Scroll-Handling: Header ausblenden/einblenden bei Scroll
+// Seiten-Management: Single-Page-Application mit showPage()
+// Datum-Management: Automatische Datumsinitialisierung
+// Page-spezifische Initialisierung: Lädt je nach Seite die richtigen Module
+//
+//
 // =================================================================
 
 document.addEventListener('DOMContentLoaded', function() {

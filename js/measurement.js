@@ -1,7 +1,13 @@
 
 
 // =================================================================
-// measurement.js - Messdatenerfassung und Chart
+// 🔬 measurement.js - Messdatenerfassung
+//
+// Slider-Steuerung:    n50, Volumen, Druck-Parameter
+// Tabellen-Management: Dynamische Zeilen für Messwerte
+// Datenvalidierung:    Eingabeprüfung für Druck/Volumenstrom
+// Chart-Update:        Live-Aktualisierung bei Datenänderung
+// Berechnungen:        n50, q50, V50 Kennwerte
 // =================================================================
 
 // Globale Variablen

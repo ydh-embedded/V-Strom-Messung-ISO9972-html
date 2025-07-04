@@ -1,5 +1,12 @@
 // =================================================================
-// weather.js - Wetter-System
+// 🌤️ weather.js - Wetter-Integration
+//
+// GPS-Standort:        Geolocation API
+// IP-Geolocation:      Fallback über ipapi.co
+// OpenMeteo API:       Aktuelle Wetterdaten
+// Autom. Felderfüllung: Werte in Eingabefelder
+// Windrichtung:        Grad zu Himmelsrichtung
+// Status-Management:   User-Feedback für API-Calls
 // =================================================================
 
 
