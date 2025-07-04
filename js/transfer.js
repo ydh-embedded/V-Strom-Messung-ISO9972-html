@@ -2,6 +2,7 @@
  * ./js/transfer.js
  * ERWEITERTE TRANSFER-SYSTEM - KOMPLETT MIT TABELLEN UND DIAGRAMM
  * Überträgt alle Daten zwischen index.html und protocol.html
+ * ANGEPASST: Transparenter Hintergrund und dunkelgrüne Schriftfarbe
  */
 
 console.log("🚀 ERWEITERTE TRANSFER-SYSTEM STARTET");
@@ -488,7 +489,10 @@ class CompleteTransferSystem {
                 
                 if (exactMatch && mapping.value) {
                     input.value = mapping.value;
-                    input.style.backgroundColor = '#e6ffe6';
+                    // ANGEPASST: Transparenter Hintergrund und dunkelgrüne Schriftfarbe
+                    input.style.backgroundColor = 'transparent';
+                    input.style.color = '#064e3b';
+                    input.style.fontWeight = 'bold';
                     input.style.border = '2px solid #10b981';
                     fieldsUpdated++;
                     console.log(`✅ ${mapping.name}: ${mapping.value} (${mapping.key})`);
@@ -623,23 +627,23 @@ class CompleteTransferSystem {
                 data.forEach((row, index) => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td style="font-weight: bold;">${index + 1}</td>
-                        <td style="color: #dc2626; font-weight: bold;">${row.pressure}</td>
-                        <td style="color: #2563eb; font-weight: bold;">${row.volume}</td>
-                        <td style="color: #10b981; font-weight: bold; background: #f0fdf4; border-radius: 4px; text-align: center;">
+                        <td style="font-weight: bold; background: transparent; color: #064e3b;">${index + 1}</td>
+                        <td style="color: #064e3b; font-weight: bold; background: transparent;">${row.pressure}</td>
+                        <td style="color: #064e3b; font-weight: bold; background: transparent;">${row.volume}</td>
+                        <td style="color: #064e3b; font-weight: bold; background: transparent; border-radius: 4px; text-align: center;">
                             📥 ${row.type}
                         </td>
                     `;
                     
-                    // Zeilen-Animation
-                    tr.style.backgroundColor = '#fef3c7';
+                    // ANGEPASST: Transparenter Hintergrund für Zeilen-Animation
+                    tr.style.backgroundColor = 'rgba(254, 243, 199, 0.3)';
                     tr.style.transition = 'background-color 2s ease';
                     
                     tbody.appendChild(tr);
                     
                     // Animiere Zeile nach dem Einfügen
                     setTimeout(() => {
-                        tr.style.backgroundColor = '';
+                        tr.style.backgroundColor = 'transparent';
                     }, 500 + (index * 100));
                 });
                 
@@ -666,8 +670,8 @@ class CompleteTransferSystem {
         // Finde den Container (info-block)
         const container = table.closest('.info-block') || table.parentElement;
         
-        // Tabellen-Hervorhebung
-        table.style.backgroundColor = '#f0fdf4';
+        // ANGEPASST: Tabellen-Hervorhebung mit transparentem Hintergrund
+        table.style.backgroundColor = 'transparent';
         table.style.border = '3px solid #10b981';
         table.style.borderRadius = '8px';
         table.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
@@ -675,7 +679,7 @@ class CompleteTransferSystem {
         
         // Container-Hervorhebung
         if (container) {
-            container.style.backgroundColor = '#f8fafc';
+            container.style.backgroundColor = 'rgba(248, 250, 252, 0.5)';
             container.style.border = '2px solid #10b981';
             container.style.borderRadius = '12px';
             container.style.transform = 'scale(1.02)';
@@ -692,12 +696,12 @@ class CompleteTransferSystem {
         
         // Entferne Hervorhebung nach Delay
         setTimeout(() => {
-            table.style.backgroundColor = '';
+            table.style.backgroundColor = 'transparent';
             table.style.border = '1px solid #d1d5db';
             table.style.boxShadow = '';
             
             if (container) {
-                container.style.backgroundColor = '';
+                container.style.backgroundColor = 'transparent';
                 container.style.border = '';
                 container.style.transform = '';
             }
@@ -770,11 +774,11 @@ class CompleteTransferSystem {
             
             // Kurze Hervorhebung nach dem Scrollen
             setTimeout(() => {
-                firstDataTable.style.backgroundColor = '#fef3c7';
+                firstDataTable.style.backgroundColor = 'rgba(254, 243, 199, 0.3)';
                 firstDataTable.style.transition = 'background-color 1s ease';
                 
                 setTimeout(() => {
-                    firstDataTable.style.backgroundColor = '';
+                    firstDataTable.style.backgroundColor = 'transparent';
                 }, 1500);
             }, 1000);
             
@@ -782,717 +786,28 @@ class CompleteTransferSystem {
         }
     }
     
-    // NEUE FUNKTION: Aktualisiere Diagramm-Anzeige
-    updateChartDisplay(chartData) {
-        console.log("📈 Aktualisiere Diagramm-Anzeige...");
-        
-        // Aktualisiere Chart-Platzhalter
-        const chartPlaceholder = document.querySelector('.chart-placeholder div');
-        if (chartPlaceholder) {
-            const options = chartData.options;
-            const values = chartData.calculatedValues;
-            
-            chartPlaceholder.innerHTML = `
-                <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 12px; border: 3px solid #3b82f6; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);">
-                    <div style="font-size: 20px; font-weight: bold; color: #1e40af; margin-bottom: 20px;">
-                        📊 Übertragenes Diagramm-Setup
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-                        <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                            <strong style="color: #1f2937; font-size: 16px;">🎛️ Aktivierte Kurven:</strong><br><br>
-                            ${options.showTheoretical ? '✅ <span style="color: #10b981;">Theoretisch</span>' : '❌ <span style="color: #ef4444;">Theoretisch</span>'}<br>
-                            ${options.showReal ? '✅ <span style="color: #10b981;">Real</span>' : '❌ <span style="color: #ef4444;">Real</span>'}<br>
-                            ${options.showUnderpressure ? '✅ <span style="color: #10b981;">Unterdruck</span>' : '❌ <span style="color: #ef4444;">Unterdruck</span>'}<br>
-                            ${options.showOverpressure ? '✅ <span style="color: #10b981;">Überdruck</span>' : '❌ <span style="color: #ef4444;">Überdruck</span>'}
-                        </div>
-                        <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                            <strong style="color: #1f2937; font-size: 16px;">📐 Berechnete Werte:</strong><br><br>
-                            n₅₀: <span style="color: #dc2626; font-weight: bold; font-size: 18px;">${values.n50}</span><br>
-                            q₅₀: <span style="color: #dc2626; font-weight: bold; font-size: 18px;">${values.q50}</span><br>
-                            V₅₀: <span style="color: #dc2626; font-weight: bold; font-size: 18px;">${values.v50}</span>
-                        </div>
-                    </div>
-                    <div style="background: #1f2937; color: white; padding: 12px; border-radius: 6px; font-size: 12px;">
-                        📅 Übertragen am: ${new Date().toLocaleString('de-DE')}<br>
-                        ⚙️ Parameter: n₅₀=${chartData.parameters.n50}, Vol=${chartData.parameters.volume}m³, p=${chartData.parameters.pressure}Pa
-                    </div>
-                </div>
-            `;
-            
-            console.log("✅ Chart-Platzhalter aktualisiert");
+    this.updateChartDisplay = function(chartData) {
+        console.log("📈 Protocol-Seite: Aktualisiere Diagramm mit Chart.js...");
+
+        const transferData = JSON.parse(sessionStorage.getItem('blowerDoorTransfer') || '{}');
+        const measurements = transferData.measurements || { underpressure: [], overpressure: [], combined: [] };
+
+        // Update UI elements (status, summary, parameters)
+        this.updateChartStatus('Erstelle...', 'blue');
+        this.updateDataSummary(measurements);
+        this.updateParameters(chartData);
+
+        // Hide status banner
+        const statusBanner = document.getElementById('chart-status');
+        if (statusBanner) {
+            statusBanner.style.display = 'none';
         }
-        
-        // Aktualisiere Result-Cards falls vorhanden
-        this.updateResultCards(chartData.calculatedValues, chartData.parameters);
-    }
-    
-    // ERWEITERTE FUNKTION: Aktualisiere Result-Cards
-    updateResultCards(calculatedValues, parameters) {
-        console.log("🎯 Aktualisiere Result-Cards...");
-        
-        // Suche nach Result-Cards
-        const resultCards = document.querySelectorAll('.result-card .value');
-        
-        if (resultCards.length >= 3) {
-            // n50-Wert
-            if (calculatedValues.n50 && calculatedValues.n50 !== 'N/A') {
-                resultCards[0].textContent = calculatedValues.n50;
-                resultCards[0].style.backgroundColor = '#dcfce7';
-                resultCards[0].style.border = '2px solid #10b981';
-                resultCards[0].style.borderRadius = '6px';
-                resultCards[0].style.padding = '4px 8px';
-            } else if (parameters.n50) {
-                resultCards[0].textContent = parameters.n50;
-                resultCards[0].style.backgroundColor = '#fef3c7';
-                resultCards[0].style.border = '2px solid #f59e0b';
-                resultCards[0].style.borderRadius = '6px';
-                resultCards[0].style.padding = '4px 8px';
-            }
-            
-            // q50-Wert  
-            if (calculatedValues.q50 && calculatedValues.q50 !== 'N/A') {
-                resultCards[1].textContent = calculatedValues.q50;
-                resultCards[1].style.backgroundColor = '#dcfce7';
-                resultCards[1].style.border = '2px solid #10b981';
-                resultCards[1].style.borderRadius = '6px';
-                resultCards[1].style.padding = '4px 8px';
-            } else if (parameters.n50 && parameters.volume) {
-                // Berechne q50
-                const q50 = (parseFloat(parameters.n50) * 2.68).toFixed(2);
-                resultCards[1].textContent = q50;
-                resultCards[1].style.backgroundColor = '#fef3c7';
-                resultCards[1].style.border = '2px solid #f59e0b';
-                resultCards[1].style.borderRadius = '6px';
-                resultCards[1].style.padding = '4px 8px';
-            }
-            
-            // V50-Wert
-            if (calculatedValues.v50 && calculatedValues.v50 !== 'N/A') {
-                resultCards[2].textContent = calculatedValues.v50;
-                resultCards[2].style.backgroundColor = '#dcfce7';
-                resultCards[2].style.border = '2px solid #10b981';
-                resultCards[2].style.borderRadius = '6px';
-                resultCards[2].style.padding = '4px 8px';
-            } else if (parameters.n50 && parameters.volume) {
-                // Berechne V50
-                const v50 = (parseFloat(parameters.n50) * parseFloat(parameters.volume)).toFixed(0);
-                resultCards[2].textContent = v50;
-                resultCards[2].style.backgroundColor = '#fef3c7';
-                resultCards[2].style.border = '2px solid #f59e0b';
-                resultCards[2].style.borderRadius = '6px';
-                resultCards[2].style.padding = '4px 8px';
-            }
-            
-            console.log("✅ Result-Cards aktualisiert");
-        }
-    }
 
-    // Neue Funktion für Result Elements
-    updateResultElements(data) {
-        console.log("🎯 Aktualisiere Result-Elemente...");
-        
-        // Suche nach Elementen mit data-transfer Attributen
-        const elements = document.querySelectorAll('[data-transfer]');
-        
-        elements.forEach(element => {
-            const transferKey = element.getAttribute('data-transfer');
-            let value = null;
-            
-            // Zuordnung der Werte
-            switch(transferKey) {
-                case 'n50':
-                    value = data.building['n50'];
-                    break;
-                case 'volume':
-                    value = data.building['volume'];
-                    break;
-                case 'pressure':
-                    value = data.building['pressure'];
-                    break;
-                case 'q50':
-                    // Berechne q50 falls n50 und volume vorhanden
-                    if (data.building['n50'] && data.building['volume']) {
-                        const n50 = parseFloat(data.building['n50']);
-                        const volume = parseFloat(data.building['volume']);
-                        // Beispielberechnung für q50 (vereinfacht)
-                        value = (n50 * 2.68).toFixed(2);
-                    }
-                    break;
-                case 'v50':
-                    // Berechne v50 falls n50 und volume vorhanden
-                    if (data.building['n50'] && data.building['volume']) {
-                        const n50 = parseFloat(data.building['n50']);
-                        const volume = parseFloat(data.building['volume']);
-                        value = (n50 * volume).toFixed(0);
-                    }
-                    break;
-            }
-            
-            if (value) {
-                element.textContent = value;
-                element.style.backgroundColor = '#f0fdf4';
-                element.style.border = '2px solid #10b981';
-                element.style.borderRadius = '4px';
-                element.style.padding = '2px 4px';
-                console.log(`✅ ${transferKey}: ${value}`);
-            }
-        });
-    }
-
-    showSuccessMessage(message) {
-        const notification = document.createElement('div');
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            padding: 18px 28px;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            font-weight: 600;
-            font-size: 16px;
-            max-width: 350px;
-            animation: slideIn 0.5s ease-out;
-        `;
-        notification.innerHTML = `
-            <div style="font-size: 18px; margin-bottom: 5px;">🎉 Transfer erfolgreich!</div>
-            <div style="font-size: 14px; opacity: 0.9;">${message}</div>
-        `;
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.remove();
-        }, 5000);
-    }
-}
-
-// =============================================================================
-// GLOBALE INITIALISIERUNG
-// =============================================================================
-
-// Erstelle globale Instanz
-let completeTransferSystem;
-
-// Initialisiere beim Laden
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        completeTransferSystem = new CompleteTransferSystem();
-    });
-} else {
-    completeTransferSystem = new CompleteTransferSystem();
-}
-
-// Globale Funktionen für Rückwärtskompatibilität
-window.transferAllData = function() {
-    return completeTransferSystem?.transferAllData();
-};
-
-window.transferWeatherToProtocol = function() {
-    return completeTransferSystem?.transferAllData();
-};
-
-window.transferMeasurementToProtocol = function() {
-    return completeTransferSystem?.transferAllData();
-};
-
-// Debug-Funktionen
-window.debugTransferData = function() {
-    if (completeTransferSystem && completeTransferSystem.pageType === 'index') {
-        const data = completeTransferSystem.collectAllData();
-        console.log("🔍 Debug-Daten:", data);
-        return data;
-    }
-};
-
-window.testCompleteTransfer = function() {
-    return completeTransferSystem?.transferAllData();
-};
-
-// CSS für Animationen
-const styles = document.createElement('style');
-styles.textContent = `
-    @keyframes slideIn {
-        from { transform: translateX(100%) scale(0.8); opacity: 0; }
-        to { transform: translateX(0) scale(1); opacity: 1; }
-    }
-    
-    @keyframes slideOut {
-        from { transform: translateX(0) scale(1); opacity: 1; }
-        to { transform: translateX(100%) scale(0.8); opacity: 0; }
-    }
-    
-    .data-table {
-        transition: all 0.5s ease;
-    }
-    
-    .data-table tbody tr {
-        transition: background-color 0.3s ease;
-    }
-    
-    .data-table tbody tr:hover {
-        background-color: #f8fafc;
-    }
-`;
-
-
-
-document.head.appendChild(styles);
-
-console.log("✅ Vollständiges Transfer-System geladen und bereit!");
-console.log("🎯 Neue Funktionen: Tabellen + Diagramm + erweiterte Visualisierung");
-console.log("🚀 Verwenden Sie den Button 'VOLLSTÄNDIGER TRANSFER' zum Testen");
-
-
-/**
- * KORRIGIERTE VERSION - VISUELLES DIAGRAMM-TRANSFER
- * Behebt den "Assignment to constant variable" Fehler
- */
-
-
-// Erweitere das Transfer-System um visuelles Diagramm
-function enhanceWithVisualChart() {
-    
-    // NEUE FUNKTION: Übertrage visuelles Diagramm
-    function transferVisualChart(chartData, measurements) {
-        console.log("🎨 Übertrage visuelles Diagramm zur Protocol-Seite...");
-        
-        const chartContainer = findChartContainer();
-        if (!chartContainer) {
-            console.log("❌ Chart-Container nicht gefunden");
+        // Get the canvas element
+        const chartAreaDiv = document.getElementById('chart-area');
+        if (!chartAreaDiv) {
+            console.error("❌ Chart-Area Div nicht gefunden!");
             return;
         }
-        
-        // Erstelle visuelles Diagramm basierend auf bestehender Analyse-Seite
-        createVisualChart(chartContainer, chartData, measurements);
-    }
-    
-    // FUNKTION: Finde Chart-Container auf Seite 5
-    function findChartContainer() {
-        // Suche nach verschiedenen Chart-Container Möglichkeiten
-        return document.querySelector('.chart-placeholder') || 
-               document.querySelector('#chart-container') ||
-               document.querySelector('#chart') ||
-               createChartContainer();
-    }
-    
-    // FUNKTION: Erstelle Chart-Container falls nicht vorhanden
-    function createChartContainer() {
-        const diagramSection = findDiagramSection();
-        if (!diagramSection) return null;
-        
-        const container = document.createElement('div');
-        container.className = 'chart-placeholder';
-        container.style.cssText = `
-            width: 100%;
-            margin: 20px 0;
-            background: #0f172a;
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid #334155;
-        `;
-        
-        diagramSection.appendChild(container);
-        return container;
-    }
-    
-    // FUNKTION: Finde Diagramm-Sektion
-    function findDiagramSection() {
-        // Suche nach "Diagramm" Überschrift
-        const headings = document.querySelectorAll('.section-title, h3, h4');
-        for (let heading of headings) {
-            if (heading.textContent.toLowerCase().includes('diagramm')) {
-                return heading.parentElement;
-            }
-        }
-        
-        // Fallback: Seite 5
-        const pages = document.querySelectorAll('.page');
-        return pages[4]; // Index 4 = Seite 5
-    }
-    
-    // HAUPTFUNKTION: Erstelle visuelles Diagramm
-    function createVisualChart(container, chartData, measurements) {
-        console.log("🎨 Erstelle visuelles Canvas-Diagramm...");
-        
-        // Canvas erstellen
-        const canvas = document.createElement('canvas');
-        canvas.id = 'protocol-chart';
-        canvas.width = 855;
-        canvas.height = 320;
-        canvas.style.cssText = `
-            display: block;
-            box-sizing: border-box;
-            height: 400px;
-            width: 100%;
-            background: #1e293b;
-            border-radius: 8px;
-        `;
-        
-        // Chart-Info Container
-        const chartWrapper = document.createElement('div');
-        chartWrapper.style.cssText = `
-            background: #0f172a;
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid #334155;
-        `;
-        
-        const chartTitle = document.createElement('div');
-        chartTitle.style.cssText = `
-            color: #e2e8f0;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-align: center;
-        `;
-        chartTitle.innerHTML = '📊 Blower-Door Messung - Druckverlauf';
-        
-        chartWrapper.appendChild(chartTitle);
-        chartWrapper.appendChild(canvas);
-        
-        // Füge Chart-Informationen hinzu
-        const chartInfo = createChartInfo(chartData, measurements);
-        chartWrapper.appendChild(chartInfo);
-        
-        // Ersetze Container-Inhalt
-        container.innerHTML = '';
-        container.appendChild(chartWrapper);
-        
-        // Zeichne das Diagramm
-        drawChart(canvas, chartData, measurements);
-    }
-    
-    // FUNKTION: Zeichne Chart auf Canvas
-    function drawChart(canvas, chartData, measurements) {
-        const ctx = canvas.getContext('2d');
-        const width = canvas.width;
-        const height = canvas.height;
-        
-        // Hintergrund
-        ctx.fillStyle = '#1e293b';
-        ctx.fillRect(0, 0, width, height);
-        
-        // Chart-Bereich definieren
-        const chartArea = {
-            x: 80,
-            y: 60,
-            width: width - 160,
-            height: height - 120
-        };
-        
-        // Bestimme Datenbereich
-        const allPoints = [
-            ...(measurements.underpressure || []),
-            ...(measurements.overpressure || [])
-        ];
-        
-        if (allPoints.length === 0) {
-            drawEmptyChart(ctx, chartArea);
-            return;
-        }
-        
-        const maxPressure = Math.max(...allPoints.map(p => Math.abs(p.pressure)), 50);
-        const maxVolume = Math.max(...allPoints.map(p => p.volume), 2000);
-        
-        // Zeichne Achsen
-        drawAxes(ctx, chartArea, maxPressure, maxVolume);
-        
-        // Zeichne Theoretische Kurve (falls aktiviert)
-        if (chartData.options.showTheoretical && chartData.parameters.n50 && chartData.parameters.volume) {
-            drawTheoreticalCurve(ctx, chartArea, chartData.parameters, maxPressure, maxVolume);
-        }
-        
-        // Zeichne Messpunkte
-        if (chartData.options.showUnderpressure && measurements.underpressure) {
-            drawMeasurementPoints(ctx, chartArea, measurements.underpressure, '#ef4444', maxPressure, maxVolume, true);
-        }
-        
-        if (chartData.options.showOverpressure && measurements.overpressure) {
-            drawMeasurementPoints(ctx, chartArea, measurements.overpressure, '#10b981', maxPressure, maxVolume, false);
-        }
-        
-        // Zeichne Legende
-        drawLegend(ctx, chartData.options, width);
-        
-        console.log("✅ Visuelles Diagramm gezeichnet");
-    }
-    
-    // FUNKTION: Zeichne leeres Diagramm
-    function drawEmptyChart(ctx, chartArea) {
-        ctx.fillStyle = '#475569';
-        ctx.font = '16px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('Keine Messdaten vorhanden', chartArea.x + chartArea.width / 2, chartArea.y + chartArea.height / 2);
-    }
-    
-    // FUNKTION: Zeichne Achsen
-    function drawAxes(ctx, chartArea, maxPressure, maxVolume) {
-        ctx.strokeStyle = '#64748b';
-        ctx.lineWidth = 2;
-        
-        // X-Achse
-        ctx.beginPath();
-        ctx.moveTo(chartArea.x, chartArea.y + chartArea.height);
-        ctx.lineTo(chartArea.x + chartArea.width, chartArea.y + chartArea.height);
-        ctx.stroke();
-        
-        // Y-Achse
-        ctx.beginPath();
-        ctx.moveTo(chartArea.x, chartArea.y);
-        ctx.lineTo(chartArea.x, chartArea.y + chartArea.height);
-        ctx.stroke();
-        
-        // Achsenbeschriftungen
-        ctx.fillStyle = '#e2e8f0';
-        ctx.font = '12px Arial';
-        ctx.textAlign = 'center';
-        
-        // X-Achse Beschriftung
-        for (let i = 0; i <= 5; i++) {
-            const x = chartArea.x + (i / 5) * chartArea.width;
-            const value = (i / 5) * maxPressure;
-            ctx.fillText(value.toFixed(0), x, chartArea.y + chartArea.height + 20);
-        }
-        
-        // Y-Achse Beschriftung
-        ctx.textAlign = 'right';
-        for (let i = 0; i <= 5; i++) {
-            const y = chartArea.y + chartArea.height - (i / 5) * chartArea.height;
-            const value = (i / 5) * maxVolume;
-            ctx.fillText(value.toFixed(0), chartArea.x - 10, y + 4);
-        }
-        
-        // Achsentitel
-        ctx.font = 'bold 14px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('Druckdifferenz [Pa]', chartArea.x + chartArea.width / 2, chartArea.y + chartArea.height + 50);
-        
-        ctx.save();
-        ctx.translate(20, chartArea.y + chartArea.height / 2);
-        ctx.rotate(-Math.PI / 2);
-        ctx.fillText('Volumenstrom [m³/h]', 0, 0);
-        ctx.restore();
-    }
-    
-    // FUNKTION: Zeichne theoretische Kurve
-    function drawTheoreticalCurve(ctx, chartArea, parameters, maxPressure, maxVolume) {
-        const n50 = parseFloat(parameters.n50);
-        const volume = parseFloat(parameters.volume);
-        
-        if (!n50 || !volume) return;
-        
-        ctx.strokeStyle = '#3b82f6';
-        ctx.setLineDash([5, 5]);
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        
-        let firstPoint = true;
-        for (let pressure = 5; pressure <= maxPressure; pressure += 1) {
-            const flow = n50 * volume * Math.pow(pressure / 50, 0.65);
-            const x = chartArea.x + (pressure / maxPressure) * chartArea.width;
-            const y = chartArea.y + chartArea.height - (flow / maxVolume) * chartArea.height;
-            
-            if (firstPoint) {
-                ctx.moveTo(x, y);
-                firstPoint = false;
-            } else {
-                ctx.lineTo(x, y);
-            }
-        }
-        
-        ctx.stroke();
-        ctx.setLineDash([]);
-    }
-    
-    // FUNKTION: Zeichne Messpunkte
-    function drawMeasurementPoints(ctx, chartArea, points, color, maxPressure, maxVolume, isUnderpressure) {
-        ctx.fillStyle = color;
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 2;
-        
-        // Verbindungslinie
-        if (points.length > 1) {
-            ctx.globalAlpha = 0.6;
-            ctx.beginPath();
-            
-            points.forEach((point, index) => {
-                const pressure = isUnderpressure ? Math.abs(point.pressure) : point.pressure;
-                const x = chartArea.x + (pressure / maxPressure) * chartArea.width;
-                const y = chartArea.y + chartArea.height - (point.volume / maxVolume) * chartArea.height;
-                
-                if (index === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
-                }
-            });
-            
-            ctx.stroke();
-            ctx.globalAlpha = 1;
-        }
-        
-        // Punkte
-        points.forEach(point => {
-            const pressure = isUnderpressure ? Math.abs(point.pressure) : point.pressure;
-            const x = chartArea.x + (pressure / maxPressure) * chartArea.width;
-            const y = chartArea.y + chartArea.height - (point.volume / maxVolume) * chartArea.height;
-            
-            ctx.beginPath();
-            ctx.arc(x, y, 6, 0, 2 * Math.PI);
-            ctx.fill();
-            
-            // Weißer Rand
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.strokeStyle = color;
-        });
-    }
-    
-    // KORRIGIERTE FUNKTION: Zeichne Legende
-    function drawLegend(ctx, options, width) {
-        let legendY = 20; // ← GEÄNDERT: let statt const
-        let legendX = width - 200;
-        
-        ctx.font = '12px Arial';
-        ctx.textAlign = 'left';
-        
-        if (options.showUnderpressure) {
-            ctx.fillStyle = '#ef4444';
-            ctx.fillRect(legendX, legendY, 12, 12);
-            ctx.fillStyle = '#e2e8f0';
-            ctx.fillText('Unterdruck', legendX + 20, legendY + 10);
-            legendY += 20; // ← Jetzt funktioniert das!
-        }
-        
-        if (options.showOverpressure) {
-            ctx.fillStyle = '#10b981';
-            ctx.fillRect(legendX, legendY, 12, 12);
-            ctx.fillStyle = '#e2e8f0';
-            ctx.fillText('Überdruck', legendX + 20, legendY + 10);
-            legendY += 20; // ← Und das auch!
-        }
-        
-        if (options.showTheoretical) {
-            ctx.strokeStyle = '#3b82f6';
-            ctx.setLineDash([5, 5]);
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(legendX, legendY + 6);
-            ctx.lineTo(legendX + 12, legendY + 6);
-            ctx.stroke();
-            ctx.setLineDash([]);
-            ctx.fillStyle = '#e2e8f0';
-            ctx.fillText('Theoretisch', legendX + 20, legendY + 10);
-        }
-    }
-    
-    // FUNKTION: Erstelle Chart-Informationen
-    function createChartInfo(chartData, measurements) {
-        const infoDiv = document.createElement('div');
-        infoDiv.style.cssText = `
-            margin-top: 20px;
-            padding: 20px;
-            background: #334155;
-            border-radius: 8px;
-            color: #e2e8f0;
-        `;
-        
-        const totalUnder = measurements.underpressure?.length || 0;
-        const totalOver = measurements.overpressure?.length || 0;
-        const totalPoints = totalUnder + totalOver;
-        
-        infoDiv.innerHTML = `
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: center;">
-                <div style="background: #475569; padding: 15px; border-radius: 6px;">
-                    <div style="font-size: 24px; color: #ef4444; margin-bottom: 8px;">📉</div>
-                    <div style="font-size: 18px; font-weight: bold;">${totalUnder}</div>
-                    <div style="font-size: 12px; opacity: 0.8;">Unterdruckmessungen</div>
-                </div>
-                <div style="background: #475569; padding: 15px; border-radius: 6px;">
-                    <div style="font-size: 24px; color: #10b981; margin-bottom: 8px;">📈</div>
-                    <div style="font-size: 18px; font-weight: bold;">${totalOver}</div>
-                    <div style="font-size: 12px; opacity: 0.8;">Überdruckmessungen</div>
-                </div>
-                <div style="background: #475569; padding: 15px; border-radius: 6px;">
-                    <div style="font-size: 24px; color: #3b82f6; margin-bottom: 8px;">📊</div>
-                    <div style="font-size: 18px; font-weight: bold;">${totalPoints}</div>
-                    <div style="font-size: 12px; opacity: 0.8;">Gesamt-Messpunkte</div>
-                </div>
-            </div>
-            <div style="margin-top: 15px; text-align: center; font-size: 12px; opacity: 0.7;">
-                n₅₀: ${chartData.parameters.n50 || 'N/A'} [1/h] • 
-                Volumen: ${chartData.parameters.volume || 'N/A'} [m³] • 
-                erstellt: ${new Date().toLocaleString('de-DE')}
-            </div>
-        `;
-        
-        return infoDiv;
-    }
-    
-    // ERWEITERE DIE BESTEHENDE updateChartDisplay FUNKTION
-    if (window.completeTransferSystem) {
-        const originalUpdateChart = window.completeTransferSystem.updateChartDisplay;
-        
-        window.completeTransferSystem.updateChartDisplay = function(chartData) {
-            console.log("🎨 Erstelle visuelles Diagramm (wie Analyse-Seite)...");
-            
-            // Sammle Messdaten aus dem Transfer
-            const transferData = JSON.parse(sessionStorage.getItem('blowerDoorTransfer') || '{}');
-            const measurements = transferData.measurements || { underpressure: [], overpressure: [], combined: [] };
-            
-            // Erstelle visuelles Diagramm
-            setTimeout(() => {
-                transferVisualChart(chartData, measurements);
-            }, 500);
-        };
-        
-        console.log("✅ Transfer-System mit visuellem Diagramm erweitert");
-    }
-    
-    // GLOBALE TEST-FUNKTION
-    window.testVisualChart = function() {
-        console.log("🧪 Teste visuelles Diagramm...");
-        
-        const testChartData = {
-            options: {
-                showTheoretical: true,
-                showUnderpressure: true,
-                showOverpressure: true
-            },
-            parameters: {
-                n50: '2.1',
-                volume: '350',
-                pressure: '75'
-            }
-        };
-        
-        const testMeasurements = {
-            underpressure: [
-                {pressure: -10, volume: 850},
-                {pressure: -20, volume: 1200},
-                {pressure: -30, volume: 1480},
-                {pressure: -40, volume: 1720},
-                {pressure: -50, volume: 1950}
-            ],
-            overpressure: [
-                {pressure: 10, volume: 820},
-                {pressure: 20, volume: 1150},
-                {pressure: 30, volume: 1420},
-                {pressure: 40, volume: 1680},
-                {pressure: 50, volume: 1920}
-            ]
-        };
-        
-        transferVisualChart(testChartData, testMeasurements);
-    };
-}
 
-// Initialisiere visuelle Chart-Erweiterung
-enhanceWithVisualChart();
-
-console.log("🎨 Korrigiertes visuelles Diagramm-System geladen!");
-console.log("🧪 Test-Befehl: testVisualChart()");
-console.log("✅ Fehler behoben - Das Diagramm funktioniert jetzt!");
+        // Clear previous content
