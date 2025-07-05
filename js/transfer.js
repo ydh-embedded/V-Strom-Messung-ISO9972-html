@@ -1142,7 +1142,7 @@ function enhanceWithVisualChart() {
         canvas.style.cssText = `
             display: block;
             box-sizing: border-box;
-            height: 380px;
+            height: 550px;
             width: 100%;
             max-width: 600px;
             margin: 0 auto;
@@ -1200,10 +1200,10 @@ function enhanceWithVisualChart() {
         
         // Chart-Bereich definieren - ANGEPASST für Querformat
         const chartArea = {
-            x: 80,           // Mehr Platz links für Y-Achse
-            y: 50,           // Etwas mehr Platz oben
-            width: width - 200,  // Mehr Rand rechts für Legende
-            height: height - 100 // Platz für X-Achse unten
+            x: 80,
+            y: 50,
+            width: width - 150,
+            height: height - 150
         };
         
         // Bestimme Datenbereich
@@ -1378,7 +1378,7 @@ function enhanceWithVisualChart() {
     // OPTIMIERTE FUNKTION: Zeichne Legende - QUERFORMAT
     function drawLegend(ctx, options, width) {
         let legendY = 20; 
-        let legendX = width - 180; // Mehr Platz bei breiterem Canvas
+        let legendX = width - 120; // Mehr Platz bei breiterem Canvas
         
         ctx.font = '12px Arial'; // Etwas größere Schrift bei mehr Platz
         ctx.textAlign = 'left';
