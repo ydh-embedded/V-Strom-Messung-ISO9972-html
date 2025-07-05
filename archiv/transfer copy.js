@@ -2,6 +2,7 @@
  * ./js/transfer.js
  * ERWEITERTE TRANSFER-SYSTEM - KOMPLETT MIT TABELLEN UND DIAGRAMM
  * Überträgt alle Daten zwischen index.html und protocol.html
+ * ANGEPASST: Transparenter Hintergrund und dunkelgrüne Schriftfarbe
  */
 
 console.log("🚀 ERWEITERTE TRANSFER-SYSTEM STARTET");
@@ -488,7 +489,10 @@ class CompleteTransferSystem {
                 
                 if (exactMatch && mapping.value) {
                     input.value = mapping.value;
-                    input.style.backgroundColor = '#e6ffe6';
+                    // ANGEPASST: Transparenter Hintergrund und dunkelgrüne Schriftfarbe
+                    input.style.backgroundColor = 'transparent';
+                    input.style.color = '#064e3b';
+                    input.style.fontWeight = 'bold';
                     input.style.border = '2px solid #10b981';
                     fieldsUpdated++;
                     console.log(`✅ ${mapping.name}: ${mapping.value} (${mapping.key})`);
@@ -623,23 +627,23 @@ class CompleteTransferSystem {
                 data.forEach((row, index) => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td style="font-weight: bold;">${index + 1}</td>
-                        <td style="color: #dc2626; font-weight: bold;">${row.pressure}</td>
-                        <td style="color: #2563eb; font-weight: bold;">${row.volume}</td>
-                        <td style="color: #10b981; font-weight: bold; background: #f0fdf4; border-radius: 4px; text-align: center;">
+                        <td style="font-weight: bold; background: transparent; color: #064e3b;">${index + 1}</td>
+                        <td style="color: #064e3b; font-weight: bold; background: transparent;">${row.pressure}</td>
+                        <td style="color: #064e3b; font-weight: bold; background: transparent;">${row.volume}</td>
+                        <td style="color: #064e3b; font-weight: bold; background: transparent; border-radius: 4px; text-align: center;">
                             📥 ${row.type}
                         </td>
                     `;
                     
-                    // Zeilen-Animation
-                    tr.style.backgroundColor = '#fef3c7';
+                    // ANGEPASST: Transparenter Hintergrund für Zeilen-Animation
+                    tr.style.backgroundColor = 'rgba(254, 243, 199, 0.3)';
                     tr.style.transition = 'background-color 2s ease';
                     
                     tbody.appendChild(tr);
                     
                     // Animiere Zeile nach dem Einfügen
                     setTimeout(() => {
-                        tr.style.backgroundColor = '';
+                        tr.style.backgroundColor = 'transparent';
                     }, 500 + (index * 100));
                 });
                 
@@ -666,8 +670,8 @@ class CompleteTransferSystem {
         // Finde den Container (info-block)
         const container = table.closest('.info-block') || table.parentElement;
         
-        // Tabellen-Hervorhebung
-        table.style.backgroundColor = '#f0fdf4';
+        // ANGEPASST: Tabellen-Hervorhebung mit transparentem Hintergrund
+        table.style.backgroundColor = 'transparent';
         table.style.border = '3px solid #10b981';
         table.style.borderRadius = '8px';
         table.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
@@ -675,7 +679,7 @@ class CompleteTransferSystem {
         
         // Container-Hervorhebung
         if (container) {
-            container.style.backgroundColor = '#f8fafc';
+            container.style.backgroundColor = 'rgba(248, 250, 252, 0.5)';
             container.style.border = '2px solid #10b981';
             container.style.borderRadius = '12px';
             container.style.transform = 'scale(1.02)';
@@ -692,12 +696,12 @@ class CompleteTransferSystem {
         
         // Entferne Hervorhebung nach Delay
         setTimeout(() => {
-            table.style.backgroundColor = '';
+            table.style.backgroundColor = 'transparent';
             table.style.border = '1px solid #d1d5db';
             table.style.boxShadow = '';
             
             if (container) {
-                container.style.backgroundColor = '';
+                container.style.backgroundColor = 'transparent';
                 container.style.border = '';
                 container.style.transform = '';
             }
@@ -770,11 +774,11 @@ class CompleteTransferSystem {
             
             // Kurze Hervorhebung nach dem Scrollen
             setTimeout(() => {
-                firstDataTable.style.backgroundColor = '#fef3c7';
+                firstDataTable.style.backgroundColor = 'rgba(254, 243, 199, 0.3)';
                 firstDataTable.style.transition = 'background-color 1s ease';
                 
                 setTimeout(() => {
-                    firstDataTable.style.backgroundColor = '';
+                    firstDataTable.style.backgroundColor = 'transparent';
                 }, 1500);
             }, 1000);
             
@@ -793,26 +797,26 @@ class CompleteTransferSystem {
             const values = chartData.calculatedValues;
             
             chartPlaceholder.innerHTML = `
-                <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 12px; border: 3px solid #3b82f6; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);">
-                    <div style="font-size: 20px; font-weight: bold; color: #1e40af; margin-bottom: 20px;">
+                <div style="text-align: center; padding: 20px; background: rgba(240, 249, 255, 0.5); border-radius: 12px; border: 3px solid #3b82f6; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);">
+                    <div style="font-size: 20px; font-weight: bold; color: #064e3b; margin-bottom: 20px;">
                         📊 Übertragenes Diagramm-Setup
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-                        <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                            <strong style="color: #1f2937; font-size: 16px;">🎛️ Aktivierte Kurven:</strong><br><br>
-                            ${options.showTheoretical ? '✅ <span style="color: #10b981;">Theoretisch</span>' : '❌ <span style="color: #ef4444;">Theoretisch</span>'}<br>
-                            ${options.showReal ? '✅ <span style="color: #10b981;">Real</span>' : '❌ <span style="color: #ef4444;">Real</span>'}<br>
-                            ${options.showUnderpressure ? '✅ <span style="color: #10b981;">Unterdruck</span>' : '❌ <span style="color: #ef4444;">Unterdruck</span>'}<br>
-                            ${options.showOverpressure ? '✅ <span style="color: #10b981;">Überdruck</span>' : '❌ <span style="color: #ef4444;">Überdruck</span>'}
+                        <div style="background: rgba(255, 255, 255, 0.3); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <strong style="color: #064e3b; font-size: 16px;">🎛️ Aktivierte Kurven:</strong><br><br>
+                            ${options.showTheoretical ? '✅ <span style="color: #064e3b;">Theoretisch</span>' : '❌ <span style="color: #ef4444;">Theoretisch</span>'}<br>
+                            ${options.showReal ? '✅ <span style="color: #064e3b;">Real</span>' : '❌ <span style="color: #ef4444;">Real</span>'}<br>
+                            ${options.showUnderpressure ? '✅ <span style="color: #064e3b;">Unterdruck</span>' : '❌ <span style="color: #ef4444;">Unterdruck</span>'}<br>
+                            ${options.showOverpressure ? '✅ <span style="color: #064e3b;">Überdruck</span>' : '❌ <span style="color: #ef4444;">Überdruck</span>'}
                         </div>
-                        <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                            <strong style="color: #1f2937; font-size: 16px;">📐 Berechnete Werte:</strong><br><br>
-                            n₅₀: <span style="color: #dc2626; font-weight: bold; font-size: 18px;">${values.n50}</span><br>
-                            q₅₀: <span style="color: #dc2626; font-weight: bold; font-size: 18px;">${values.q50}</span><br>
-                            V₅₀: <span style="color: #dc2626; font-weight: bold; font-size: 18px;">${values.v50}</span>
+                        <div style="background: rgba(255, 255, 255, 0.3); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <strong style="color: #064e3b; font-size: 16px;">📐 Berechnete Werte:</strong><br><br>
+                            n₅₀: <span style="color: #064e3b; font-weight: bold; font-size: 18px;">${values.n50}</span><br>
+                            q₅₀: <span style="color: #064e3b; font-weight: bold; font-size: 18px;">${values.q50}</span><br>
+                            V₅₀: <span style="color: #064e3b; font-weight: bold; font-size: 18px;">${values.v50}</span>
                         </div>
                     </div>
-                    <div style="background: #1f2937; color: white; padding: 12px; border-radius: 6px; font-size: 12px;">
+                    <div style="background: rgba(31, 41, 55, 0.8); color: white; padding: 12px; border-radius: 6px; font-size: 12px;">
                         📅 Übertragen am: ${new Date().toLocaleString('de-DE')}<br>
                         ⚙️ Parameter: n₅₀=${chartData.parameters.n50}, Vol=${chartData.parameters.volume}m³, p=${chartData.parameters.pressure}Pa
                     </div>
@@ -837,13 +841,18 @@ class CompleteTransferSystem {
             // n50-Wert
             if (calculatedValues.n50 && calculatedValues.n50 !== 'N/A') {
                 resultCards[0].textContent = calculatedValues.n50;
-                resultCards[0].style.backgroundColor = '#dcfce7';
+                // ANGEPASST: Transparenter Hintergrund und dunkelgrüne Schriftfarbe
+                resultCards[0].style.backgroundColor = 'transparent';
+                resultCards[0].style.color = '#064e3b';
+                resultCards[0].style.fontWeight = 'bold';
                 resultCards[0].style.border = '2px solid #10b981';
                 resultCards[0].style.borderRadius = '6px';
                 resultCards[0].style.padding = '4px 8px';
             } else if (parameters.n50) {
                 resultCards[0].textContent = parameters.n50;
-                resultCards[0].style.backgroundColor = '#fef3c7';
+                resultCards[0].style.backgroundColor = 'transparent';
+                resultCards[0].style.color = '#064e3b';
+                resultCards[0].style.fontWeight = 'bold';
                 resultCards[0].style.border = '2px solid #f59e0b';
                 resultCards[0].style.borderRadius = '6px';
                 resultCards[0].style.padding = '4px 8px';
@@ -852,7 +861,9 @@ class CompleteTransferSystem {
             // q50-Wert  
             if (calculatedValues.q50 && calculatedValues.q50 !== 'N/A') {
                 resultCards[1].textContent = calculatedValues.q50;
-                resultCards[1].style.backgroundColor = '#dcfce7';
+                resultCards[1].style.backgroundColor = 'transparent';
+                resultCards[1].style.color = '#064e3b';
+                resultCards[1].style.fontWeight = 'bold';
                 resultCards[1].style.border = '2px solid #10b981';
                 resultCards[1].style.borderRadius = '6px';
                 resultCards[1].style.padding = '4px 8px';
@@ -860,7 +871,9 @@ class CompleteTransferSystem {
                 // Berechne q50
                 const q50 = (parseFloat(parameters.n50) * 2.68).toFixed(2);
                 resultCards[1].textContent = q50;
-                resultCards[1].style.backgroundColor = '#fef3c7';
+                resultCards[1].style.backgroundColor = 'transparent';
+                resultCards[1].style.color = '#064e3b';
+                resultCards[1].style.fontWeight = 'bold';
                 resultCards[1].style.border = '2px solid #f59e0b';
                 resultCards[1].style.borderRadius = '6px';
                 resultCards[1].style.padding = '4px 8px';
@@ -869,7 +882,9 @@ class CompleteTransferSystem {
             // V50-Wert
             if (calculatedValues.v50 && calculatedValues.v50 !== 'N/A') {
                 resultCards[2].textContent = calculatedValues.v50;
-                resultCards[2].style.backgroundColor = '#dcfce7';
+                resultCards[2].style.backgroundColor = 'transparent';
+                resultCards[2].style.color = '#064e3b';
+                resultCards[2].style.fontWeight = 'bold';
                 resultCards[2].style.border = '2px solid #10b981';
                 resultCards[2].style.borderRadius = '6px';
                 resultCards[2].style.padding = '4px 8px';
@@ -877,7 +892,9 @@ class CompleteTransferSystem {
                 // Berechne V50
                 const v50 = (parseFloat(parameters.n50) * parseFloat(parameters.volume)).toFixed(0);
                 resultCards[2].textContent = v50;
-                resultCards[2].style.backgroundColor = '#fef3c7';
+                resultCards[2].style.backgroundColor = 'transparent';
+                resultCards[2].style.color = '#064e3b';
+                resultCards[2].style.fontWeight = 'bold';
                 resultCards[2].style.border = '2px solid #f59e0b';
                 resultCards[2].style.borderRadius = '6px';
                 resultCards[2].style.padding = '4px 8px';
@@ -930,7 +947,10 @@ class CompleteTransferSystem {
             
             if (value) {
                 element.textContent = value;
-                element.style.backgroundColor = '#f0fdf4';
+                // ANGEPASST: Transparenter Hintergrund und dunkelgrüne Schriftfarbe
+                element.style.backgroundColor = 'transparent';
+                element.style.color = '#064e3b';
+                element.style.fontWeight = 'bold';
                 element.style.border = '2px solid #10b981';
                 element.style.borderRadius = '4px';
                 element.style.padding = '2px 4px';
@@ -1032,7 +1052,7 @@ styles.textContent = `
     }
     
     .data-table tbody tr:hover {
-        background-color: #f8fafc;
+        background-color: rgba(248, 250, 252, 0.5);
     }
 `;
 
@@ -1043,6 +1063,7 @@ document.head.appendChild(styles);
 console.log("✅ Vollständiges Transfer-System geladen und bereit!");
 console.log("🎯 Neue Funktionen: Tabellen + Diagramm + erweiterte Visualisierung");
 console.log("🚀 Verwenden Sie den Button 'VOLLSTÄNDIGER TRANSFER' zum Testen");
+console.log("🎨 ANGEPASST: Transparenter Hintergrund und dunkelgrüne Schriftfarbe (#064e3b)");
 
 
 /**
@@ -1087,7 +1108,7 @@ function enhanceWithVisualChart() {
         container.style.cssText = `
             width: 100%;
             margin: 20px 0;
-            background: #0f172a;
+            background: rgba(15, 23, 42, 0.1);
             border-radius: 12px;
             padding: 20px;
             border: 1px solid #334155;
@@ -1126,14 +1147,14 @@ function enhanceWithVisualChart() {
             box-sizing: border-box;
             height: 400px;
             width: 100%;
-            background: #1e293b;
+            background: rgba(30, 41, 59, 0.1);
             border-radius: 8px;
         `;
         
         // Chart-Info Container
         const chartWrapper = document.createElement('div');
         chartWrapper.style.cssText = `
-            background: #0f172a;
+            background: rgba(15, 23, 42, 0.1);
             border-radius: 12px;
             padding: 20px;
             border: 1px solid #334155;
@@ -1141,7 +1162,7 @@ function enhanceWithVisualChart() {
         
         const chartTitle = document.createElement('div');
         chartTitle.style.cssText = `
-            color: #e2e8f0;
+            color: #064e3b;
             font-size: 18px;
             font-weight: bold;
             margin-bottom: 15px;
@@ -1171,7 +1192,7 @@ function enhanceWithVisualChart() {
         const height = canvas.height;
         
         // Hintergrund
-        ctx.fillStyle = '#1e293b';
+        ctx.fillStyle = 'rgba(30, 41, 59, 0.1)';
         ctx.fillRect(0, 0, width, height);
         
         // Chart-Bereich definieren
@@ -1221,7 +1242,7 @@ function enhanceWithVisualChart() {
     
     // FUNKTION: Zeichne leeres Diagramm
     function drawEmptyChart(ctx, chartArea) {
-        ctx.fillStyle = '#475569';
+        ctx.fillStyle = '#064e3b';
         ctx.font = '16px Arial';
         ctx.textAlign = 'center';
         ctx.fillText('Keine Messdaten vorhanden', chartArea.x + chartArea.width / 2, chartArea.y + chartArea.height / 2);
@@ -1245,7 +1266,7 @@ function enhanceWithVisualChart() {
         ctx.stroke();
         
         // Achsenbeschriftungen
-        ctx.fillStyle = '#e2e8f0';
+        ctx.fillStyle = '#064e3b';
         ctx.font = '12px Arial';
         ctx.textAlign = 'center';
         
@@ -1362,7 +1383,7 @@ function enhanceWithVisualChart() {
         if (options.showUnderpressure) {
             ctx.fillStyle = '#ef4444';
             ctx.fillRect(legendX, legendY, 12, 12);
-            ctx.fillStyle = '#e2e8f0';
+            ctx.fillStyle = '#064e3b';
             ctx.fillText('Unterdruck', legendX + 20, legendY + 10);
             legendY += 20; // ← Jetzt funktioniert das!
         }
@@ -1370,7 +1391,7 @@ function enhanceWithVisualChart() {
         if (options.showOverpressure) {
             ctx.fillStyle = '#10b981';
             ctx.fillRect(legendX, legendY, 12, 12);
-            ctx.fillStyle = '#e2e8f0';
+            ctx.fillStyle = '#064e3b';
             ctx.fillText('Überdruck', legendX + 20, legendY + 10);
             legendY += 20; // ← Und das auch!
         }
@@ -1384,7 +1405,7 @@ function enhanceWithVisualChart() {
             ctx.lineTo(legendX + 12, legendY + 6);
             ctx.stroke();
             ctx.setLineDash([]);
-            ctx.fillStyle = '#e2e8f0';
+            ctx.fillStyle = '#064e3b';
             ctx.fillText('Theoretisch', legendX + 20, legendY + 10);
         }
     }
@@ -1395,9 +1416,9 @@ function enhanceWithVisualChart() {
         infoDiv.style.cssText = `
             margin-top: 20px;
             padding: 20px;
-            background: #334155;
+            background: rgba(51, 65, 85, 0.3);
             border-radius: 8px;
-            color: #e2e8f0;
+            color: #064e3b;
         `;
         
         const totalUnder = measurements.underpressure?.length || 0;
@@ -1406,23 +1427,23 @@ function enhanceWithVisualChart() {
         
         infoDiv.innerHTML = `
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: center;">
-                <div style="background: #475569; padding: 15px; border-radius: 6px;">
+                <div style="background: rgba(71, 85, 105, 0.3); padding: 15px; border-radius: 6px;">
                     <div style="font-size: 24px; color: #ef4444; margin-bottom: 8px;">📉</div>
-                    <div style="font-size: 18px; font-weight: bold;">${totalUnder}</div>
-                    <div style="font-size: 12px; opacity: 0.8;">Unterdruckmessungen</div>
+                    <div style="font-size: 18px; font-weight: bold; color: #064e3b;">${totalUnder}</div>
+                    <div style="font-size: 12px; opacity: 0.8; color: #064e3b;">Unterdruckmessungen</div>
                 </div>
-                <div style="background: #475569; padding: 15px; border-radius: 6px;">
+                <div style="background: rgba(71, 85, 105, 0.3); padding: 15px; border-radius: 6px;">
                     <div style="font-size: 24px; color: #10b981; margin-bottom: 8px;">📈</div>
-                    <div style="font-size: 18px; font-weight: bold;">${totalOver}</div>
-                    <div style="font-size: 12px; opacity: 0.8;">Überdruckmessungen</div>
+                    <div style="font-size: 18px; font-weight: bold; color: #064e3b;">${totalOver}</div>
+                    <div style="font-size: 12px; opacity: 0.8; color: #064e3b;">Überdruckmessungen</div>
                 </div>
-                <div style="background: #475569; padding: 15px; border-radius: 6px;">
+                <div style="background: rgba(71, 85, 105, 0.3); padding: 15px; border-radius: 6px;">
                     <div style="font-size: 24px; color: #3b82f6; margin-bottom: 8px;">📊</div>
-                    <div style="font-size: 18px; font-weight: bold;">${totalPoints}</div>
-                    <div style="font-size: 12px; opacity: 0.8;">Gesamt-Messpunkte</div>
+                    <div style="font-size: 18px; font-weight: bold; color: #064e3b;">${totalPoints}</div>
+                    <div style="font-size: 12px; opacity: 0.8; color: #064e3b;">Gesamt-Messpunkte</div>
                 </div>
             </div>
-            <div style="margin-top: 15px; text-align: center; font-size: 12px; opacity: 0.7;">
+            <div style="margin-top: 15px; text-align: center; font-size: 12px; opacity: 0.7; color: #064e3b;">
                 n₅₀: ${chartData.parameters.n50 || 'N/A'} [1/h] • 
                 Volumen: ${chartData.parameters.volume || 'N/A'} [m³] • 
                 erstellt: ${new Date().toLocaleString('de-DE')}
@@ -1493,6 +1514,6 @@ function enhanceWithVisualChart() {
 // Initialisiere visuelle Chart-Erweiterung
 enhanceWithVisualChart();
 
-console.log("🎨 Korrigiertes visuelles Diagramm-System geladen!");
+console.log("🎨 Angepasstes visuelles Diagramm-System geladen!");
 console.log("🧪 Test-Befehl: testVisualChart()");
-console.log("✅ Fehler behoben - Das Diagramm funktioniert jetzt!");
+console.log("✅ Styling angepasst - Transparenter Hintergrund und dunkelgrüne Schriftfarbe!");

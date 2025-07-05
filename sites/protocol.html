@@ -412,88 +412,56 @@ Beispiele:
         </div>
 
 
-        <div class="section-title">Diagramm:</div>
+        <!-- NOTE chart-placeholder -->
+        <div class="section-title">Diagramm:
 
-        <!-- CHART CONTAINER - WICHTIG FÜR DIAGRAMM -->
-        <div class="chart-placeholder" id="chart-container"
-            style="width: 100%; height: 500px; background: #f8fafc; border-radius: 12px; padding: 20px; margin: 20px 0; border: 2px dashed #cbd5e1;">
-            <div class="text-center mb-6">
-                <h2 class="text-2xl font-bold text-slate-200 mb-2">📈 Blower-Door Messung</h2>
-                <p class="text-slate-400">Druckverlauf-Diagramm nach ISO 9972:2018</p>
-            </div>
-
-            <!-- Chart Area -->
-            <div id="chart-area" class="bg-slate-800/50 rounded-xl p-6 mb-6" style="min-height: 500px;">
-                <div class="flex items-center justify-center h-96 text-slate-500">
-                    <div class="text-center">
-                        <div class="text-6xl mb-4"></div>
-                        <div class="text-lg font-medium"></div>
-                        <div class="text-sm opacity-70"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chart Controls -->
-            <div id="chart-controls" class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                <div class="data-card rounded-lg p-4 text-center">
-                    <div class="text-xs text-slate-400 mb-1"></div>
-                    <div id="chart-status-value" class="text-lg font-bold text-amber-400"></div>
-                </div>
-                <div class="data-card rounded-lg p-4 text-center">
-                    <div class="text-xs text-slate-400 mb-1"></div>
-                    <div id="underpressure-count" class="text-lg font-bold text-red-400"></div>
-                </div>
-                <div class="data-card rounded-lg p-4 text-center">
-                    <div class="text-xs text-slate-400 mb-1"></div>
-                    <div id="overpressure-count" class="text-lg font-bold text-green-400"></div>
-                </div>
-                <div class="data-card rounded-lg p-4 text-center">
-                    <div class="text-xs text-slate-400 mb-1"></div>
-                    <div id="total-points" class="text-lg font-bold text-blue-400"></div>
-                </div>
-                <div class="data-card rounded-lg p-4 text-center">
-                    <div class="text-xs text-slate-400 mb-1"></div>
-                    <div id="n50-display" class="text-lg font-bold text-rose-400"></div>
-                </div>
+            <div class="chart-placeholder" id="chart-container"
+                style="width: 100%; height: 100%; background: #f8fafc; border-radius: 12px; padding: 0px; margin: 0px 0; border: 0.5px dashed #cbd5e1;">
+                <h3 class="text-2xl font-bold text-slate-200 mb-2">📈  Druckverlauf-Diagramm nach ISO 9972:2018-12</h3>
             </div>
         </div>
 
-
         <div class="measurement-controls">
+            <button onclick="testVisualChart()" class="control-card btn-enhanced">
+                <h4>Diagramm</h4>
+                <span>🧪</span>
+                <h4>[create]</h4>
+
+            </button>
             <div class="control-card">
-                <h4>n₅₀-Wert [1/h]</h4>
+                <h4>n₅₀-Wert</h4>
                 <div class="control-value" data-transfer="n50">1.5</div>
+                <h4>[1/h]</h4>
+
             </div>
             <div class="control-card">
-                <h4>Gebäudevolumen [m³]</h4>
+                <h4>Gebäudevolumen</h4>
                 <div class="control-value" data-transfer="volume">100</div>
+                <h4>[m³]</h4>
+
             </div>
             <div class="control-card">
-                <h4>Max. Druck [Pa]</h4>
+                <h4>Max. Druck</h4>
                 <div class="control-value" data-transfer="pressure">200</div>
+                <h4>[Pa]</h4>
+
             </div>
+
         </div>
 
-        <div class="measurement-controls">
-
-            <div class="control-card flex-layout">
-
-                <div class="btn-chart-enhanced">
-                    <button onclick="testVisualChart()" class="btn-enhanced btn-gray">
-                        <span>🧪 Test-Diagramm</span>
-                    </button>
-
-                    <button onclick="clearChart()" class="btn-enhanced btn-gray">
-                        <span>🗑️ Diagramm leeren</span>
-                    </button>
-
-                    <button onclick="exportChart()" class="btn-enhanced btn-gray">
-                        <span>💾 Als Bild speichern</span>
-                    </button>
-                </div>
+                <div class="footer">
+            <div class="footer-logo">FLIB</div>
+            <div>
+                <div>Prüfergebnis:</div>
+                <div>gemessen am: </div>
             </div>
+            <div>
+                <div><strong>Bestanden</strong></div>
+                <div><strong>November 2025</strong></div>
+            </div>
+            <div style="font-size: 14px;">Seite 5 von 6</div>
         </div>
-
+    </div>
     </div>
 
 

@@ -3,6 +3,7 @@
  * ERWEITERTE TRANSFER-SYSTEM - KOMPLETT MIT TABELLEN UND DIAGRAMM
  * Überträgt alle Daten zwischen index.html und protocol.html
  * ANGEPASST: Transparenter Hintergrund und dunkelgrüne Schriftfarbe
+ * OPTIMIERT: Chart-Skalierung für Seite 5 Container
  */
 
 console.log("🚀 ERWEITERTE TRANSFER-SYSTEM STARTET");
@@ -786,28 +787,716 @@ class CompleteTransferSystem {
         }
     }
     
-    this.updateChartDisplay = function(chartData) {
-        console.log("📈 Protocol-Seite: Aktualisiere Diagramm mit Chart.js...");
-
-        const transferData = JSON.parse(sessionStorage.getItem('blowerDoorTransfer') || '{}');
-        const measurements = transferData.measurements || { underpressure: [], overpressure: [], combined: [] };
-
-        // Update UI elements (status, summary, parameters)
-        this.updateChartStatus('Erstelle...', 'blue');
-        this.updateDataSummary(measurements);
-        this.updateParameters(chartData);
-
-        // Hide status banner
-        const statusBanner = document.getElementById('chart-status');
-        if (statusBanner) {
-            statusBanner.style.display = 'none';
+    // NEUE FUNKTION: Aktualisiere Diagramm-Anzeige
+    updateChartDisplay(chartData) {
+        console.log("📈 Aktualisiere Diagramm-Anzeige...");
+        
+        // Aktualisiere Chart-Platzhalter
+        const chartPlaceholder = document.querySelector('.chart-placeholder div');
+        if (chartPlaceholder) {
+            const options = chartData.options;
+            const values = chartData.calculatedValues;
+            
+            chartPlaceholder.innerHTML = `
+                <div style="text-align: center; padding: 20px; background: rgba(240, 249, 255, 0.5); border-radius: 12px; border: 3px solid #3b82f6; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);">
+                    <div style="font-size: 20px; font-weight: bold; color: #064e3b; margin-bottom: 20px;">
+                        📊 Übertragenes Diagramm-Setup
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div style="background: rgba(255, 255, 255, 0.3); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <strong style="color: #064e3b; font-size: 16px;">🎛️ Aktivierte Kurven:</strong><br><br>
+                            ${options.showTheoretical ? '✅ <span style="color: #064e3b;">Theoretisch</span>' : '❌ <span style="color: #ef4444;">Theoretisch</span>'}<br>
+                            ${options.showReal ? '✅ <span style="color: #064e3b;">Real</span>' : '❌ <span style="color: #ef4444;">Real</span>'}<br>
+                            ${options.showUnderpressure ? '✅ <span style="color: #064e3b;">Unterdruck</span>' : '❌ <span style="color: #ef4444;">Unterdruck</span>'}<br>
+                            ${options.showOverpressure ? '✅ <span style="color: #064e3b;">Überdruck</span>' : '❌ <span style="color: #ef4444;">Überdruck</span>'}
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.3); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <strong style="color: #064e3b; font-size: 16px;">📐 Berechnete Werte:</strong><br><br>
+                            n₅₀: <span style="color: #064e3b; font-weight: bold; font-size: 18px;">${values.n50}</span><br>
+                            q₅₀: <span style="color: #064e3b; font-weight: bold; font-size: 18px;">${values.q50}</span><br>
+                            V₅₀: <span style="color: #064e3b; font-weight: bold; font-size: 18px;">${values.v50}</span>
+                        </div>
+                    </div>
+                    <div style="background: rgba(31, 41, 55, 0.8); color: white; padding: 12px; border-radius: 6px; font-size: 12px;">
+                        📅 Übertragen am: ${new Date().toLocaleString('de-DE')}<br>
+                        ⚙️ Parameter: n₅₀=${chartData.parameters.n50}, Vol=${chartData.parameters.volume}m³, p=${chartData.parameters.pressure}Pa
+                    </div>
+                </div>
+            `;
+            
+            console.log("✅ Chart-Platzhalter aktualisiert");
         }
+        
+        // Aktualisiere Result-Cards falls vorhanden
+        this.updateResultCards(chartData.calculatedValues, chartData.parameters);
+    }
+    
+    // ERWEITERTE FUNKTION: Aktualisiere Result-Cards
+    updateResultCards(calculatedValues, parameters) {
+        console.log("🎯 Aktualisiere Result-Cards...");
+        
+        // Suche nach Result-Cards
+        const resultCards = document.querySelectorAll('.result-card .value');
+        
+        if (resultCards.length >= 3) {
+            // n50-Wert
+            if (calculatedValues.n50 && calculatedValues.n50 !== 'N/A') {
+                resultCards[0].textContent = calculatedValues.n50;
+                // ANGEPASST: Transparenter Hintergrund und dunkelgrüne Schriftfarbe
+                resultCards[0].style.backgroundColor = 'transparent';
+                resultCards[0].style.color = '#064e3b';
+                resultCards[0].style.fontWeight = 'bold';
+                resultCards[0].style.border = '2px solid #10b981';
+                resultCards[0].style.borderRadius = '6px';
+                resultCards[0].style.padding = '4px 8px';
+            } else if (parameters.n50) {
+                resultCards[0].textContent = parameters.n50;
+                resultCards[0].style.backgroundColor = 'transparent';
+                resultCards[0].style.color = '#064e3b';
+                resultCards[0].style.fontWeight = 'bold';
+                resultCards[0].style.border = '2px solid #f59e0b';
+                resultCards[0].style.borderRadius = '6px';
+                resultCards[0].style.padding = '4px 8px';
+            }
+            
+            // q50-Wert  
+            if (calculatedValues.q50 && calculatedValues.q50 !== 'N/A') {
+                resultCards[1].textContent = calculatedValues.q50;
+                resultCards[1].style.backgroundColor = 'transparent';
+                resultCards[1].style.color = '#064e3b';
+                resultCards[1].style.fontWeight = 'bold';
+                resultCards[1].style.border = '2px solid #10b981';
+                resultCards[1].style.borderRadius = '6px';
+                resultCards[1].style.padding = '4px 8px';
+            } else if (parameters.n50 && parameters.volume) {
+                // Berechne q50
+                const q50 = (parseFloat(parameters.n50) * 2.68).toFixed(2);
+                resultCards[1].textContent = q50;
+                resultCards[1].style.backgroundColor = 'transparent';
+                resultCards[1].style.color = '#064e3b';
+                resultCards[1].style.fontWeight = 'bold';
+                resultCards[1].style.border = '2px solid #f59e0b';
+                resultCards[1].style.borderRadius = '6px';
+                resultCards[1].style.padding = '4px 8px';
+            }
+            
+            // V50-Wert
+            if (calculatedValues.v50 && calculatedValues.v50 !== 'N/A') {
+                resultCards[2].textContent = calculatedValues.v50;
+                resultCards[2].style.backgroundColor = 'transparent';
+                resultCards[2].style.color = '#064e3b';
+                resultCards[2].style.fontWeight = 'bold';
+                resultCards[2].style.border = '2px solid #10b981';
+                resultCards[2].style.borderRadius = '6px';
+                resultCards[2].style.padding = '4px 8px';
+            } else if (parameters.n50 && parameters.volume) {
+                // Berechne V50
+                const v50 = (parseFloat(parameters.n50) * parseFloat(parameters.volume)).toFixed(0);
+                resultCards[2].textContent = v50;
+                resultCards[2].style.backgroundColor = 'transparent';
+                resultCards[2].style.color = '#064e3b';
+                resultCards[2].style.fontWeight = 'bold';
+                resultCards[2].style.border = '2px solid #f59e0b';
+                resultCards[2].style.borderRadius = '6px';
+                resultCards[2].style.padding = '4px 8px';
+            }
+            
+            console.log("✅ Result-Cards aktualisiert");
+        }
+    }
 
-        // Get the canvas element
-        const chartAreaDiv = document.getElementById('chart-area');
-        if (!chartAreaDiv) {
-            console.error("❌ Chart-Area Div nicht gefunden!");
+    // Neue Funktion für Result Elements
+    updateResultElements(data) {
+        console.log("🎯 Aktualisiere Result-Elemente...");
+        
+        // Suche nach Elementen mit data-transfer Attributen
+        const elements = document.querySelectorAll('[data-transfer]');
+        
+        elements.forEach(element => {
+            const transferKey = element.getAttribute('data-transfer');
+            let value = null;
+            
+            // Zuordnung der Werte
+            switch(transferKey) {
+                case 'n50':
+                    value = data.building['n50'];
+                    break;
+                case 'volume':
+                    value = data.building['volume'];
+                    break;
+                case 'pressure':
+                    value = data.building['pressure'];
+                    break;
+                case 'q50':
+                    // Berechne q50 falls n50 und volume vorhanden
+                    if (data.building['n50'] && data.building['volume']) {
+                        const n50 = parseFloat(data.building['n50']);
+                        const volume = parseFloat(data.building['volume']);
+                        // Beispielberechnung für q50 (vereinfacht)
+                        value = (n50 * 2.68).toFixed(2);
+                    }
+                    break;
+                case 'v50':
+                    // Berechne v50 falls n50 und volume vorhanden
+                    if (data.building['n50'] && data.building['volume']) {
+                        const n50 = parseFloat(data.building['n50']);
+                        const volume = parseFloat(data.building['volume']);
+                        value = (n50 * volume).toFixed(0);
+                    }
+                    break;
+            }
+            
+            if (value) {
+                element.textContent = value;
+                // ANGEPASST: Transparenter Hintergrund und dunkelgrüne Schriftfarbe
+                element.style.backgroundColor = 'transparent';
+                element.style.color = '#064e3b';
+                element.style.fontWeight = 'bold';
+                element.style.border = '2px solid #10b981';
+                element.style.borderRadius = '4px';
+                element.style.padding = '2px 4px';
+                console.log(`✅ ${transferKey}: ${value}`);
+            }
+        });
+    }
+
+    showSuccessMessage(message) {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 18px 28px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            font-weight: 600;
+            font-size: 16px;
+            max-width: 350px;
+            animation: slideIn 0.5s ease-out;
+        `;
+        notification.innerHTML = `
+            <div style="font-size: 18px; margin-bottom: 5px;">🎉 Transfer erfolgreich!</div>
+            <div style="font-size: 14px; opacity: 0.9;">${message}</div>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+    }
+}
+
+// =============================================================================
+// GLOBALE INITIALISIERUNG
+// =============================================================================
+
+// Erstelle globale Instanz
+let completeTransferSystem;
+
+// Initialisiere beim Laden
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        completeTransferSystem = new CompleteTransferSystem();
+    });
+} else {
+    completeTransferSystem = new CompleteTransferSystem();
+}
+
+// Globale Funktionen für Rückwärtskompatibilität
+window.transferAllData = function() {
+    return completeTransferSystem?.transferAllData();
+};
+
+window.transferWeatherToProtocol = function() {
+    return completeTransferSystem?.transferAllData();
+};
+
+window.transferMeasurementToProtocol = function() {
+    return completeTransferSystem?.transferAllData();
+};
+
+// Debug-Funktionen
+window.debugTransferData = function() {
+    if (completeTransferSystem && completeTransferSystem.pageType === 'index') {
+        const data = completeTransferSystem.collectAllData();
+        console.log("🔍 Debug-Daten:", data);
+        return data;
+    }
+};
+
+window.testCompleteTransfer = function() {
+    return completeTransferSystem?.transferAllData();
+};
+
+// CSS für Animationen
+const styles = document.createElement('style');
+styles.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%) scale(0.8); opacity: 0; }
+        to { transform: translateX(0) scale(1); opacity: 1; }
+    }
+    
+    @keyframes slideOut {
+        from { transform: translateX(0) scale(1); opacity: 1; }
+        to { transform: translateX(100%) scale(0.8); opacity: 0; }
+    }
+    
+    .data-table {
+        transition: all 0.5s ease;
+    }
+    
+    .data-table tbody tr {
+        transition: background-color 0.3s ease;
+    }
+    
+    .data-table tbody tr:hover {
+        background-color: rgba(248, 250, 252, 0.5);
+    }
+`;
+
+document.head.appendChild(styles);
+
+console.log("✅ Vollständiges Transfer-System geladen und bereit!");
+console.log("🎯 Neue Funktionen: Tabellen + Diagramm + erweiterte Visualisierung");
+console.log("🚀 Verwenden Sie den Button 'VOLLSTÄNDIGER TRANSFER' zum Testen");
+console.log("🎨 ANGEPASST: Transparenter Hintergrund und dunkelgrüne Schriftfarbe (#064e3b)");
+
+/**
+ * OPTIMIERTE VERSION - VISUELLES DIAGRAMM-TRANSFER
+ * ANGEPASSTE SKALIERUNG für Seite 5 Container (450px Höhe)
+ */
+
+// Erweitere das Transfer-System um visuelles Diagramm
+function enhanceWithVisualChart() {
+    
+    // NEUE FUNKTION: Übertrage visuelles Diagramm
+    function transferVisualChart(chartData, measurements) {
+        console.log("🎨 Übertrage visuelles Diagramm zur Protocol-Seite...");
+        
+        const chartContainer = findChartContainer();
+        if (!chartContainer) {
+            console.log("❌ Chart-Container nicht gefunden");
             return;
         }
+        
+        // Erstelle visuelles Diagramm basierend auf bestehender Analyse-Seite
+        createVisualChart(chartContainer, chartData, measurements);
+    }
+    
+    // FUNKTION: Finde Chart-Container auf Seite 5
+    function findChartContainer() {
+        // Suche nach verschiedenen Chart-Container Möglichkeiten
+        return document.querySelector('.chart-placeholder') || 
+               document.querySelector('#chart-container') ||
+               document.querySelector('#chart') ||
+               createChartContainer();
+    }
+    
+    // FUNKTION: Erstelle Chart-Container falls nicht vorhanden
+    function createChartContainer() {
+        const diagramSection = findDiagramSection();
+        if (!diagramSection) return null;
+        
+        const container = document.createElement('div');
+        container.className = 'chart-placeholder';
+        container.style.cssText = `
+            width: 100%;
+            margin: 3px 0;
+            background: rgba(15, 23, 42, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+        `;
+        
+        diagramSection.appendChild(container);
+        return container;
+    }
+    
+    // FUNKTION: Finde Diagramm-Sektion
+    function findDiagramSection() {
+        // Suche nach "Diagramm" Überschrift
+        const headings = document.querySelectorAll('.section-title, h3, h4');
+        for (let heading of headings) {
+            if (heading.textContent.toLowerCase().includes('diagramm')) {
+                return heading.parentElement;
+            }
+        }
+        
+        // Fallback: Seite 5
+        const pages = document.querySelectorAll('.page');
+        return pages[4]; // Index 4 = Seite 5
+    }
+    
+    // HAUPTFUNKTION: Erstelle visuelles Diagramm - OPTIMIERT FÜR SEITE 5
+    function createVisualChart(container, chartData, measurements) {
+        console.log("🎨 Erstelle visuelles Canvas-Diagramm (optimiert für Seite 5)...");
+        
+        // Canvas erstellen - KOMPAKT FÜR A4-Seite mit 270° ROTATION
+        const canvas = document.createElement('canvas');
+        canvas.id = 'protocol-chart';
+        canvas.width = 400;  // Kompakter für A4
+        canvas.height = 600; // Angepasst für 270° Rotation
+        canvas.style.cssText = `
+            display: block;
+            box-sizing: border-box;
+            height: 380px;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(30, 41, 59, 0.1);
+            border-radius: 8px;
+            transform: rotate(270deg);
+            transform-origin: center;
+        `;
+        
+        // Chart-Info Container - KOMPAKTER
+        const chartWrapper = document.createElement('div');
+        chartWrapper.style.cssText = `
+            background: rgba(15, 23, 42, 0.1);
+            border-radius: 12px;
+            padding: 5px;
+            border: 1px solid #334155;
+            height: 450px;
+            overflow: hidden;
+        `;
+        
+        const chartTitle = document.createElement('div');
+        chartTitle.style.cssText = `
+            color: #064e3b;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 3px;
+            text-align: center;
+        `;
+        chartTitle.innerHTML = '📊 Blower-Door Messung - Druckverlauf';
+        
+        chartWrapper.appendChild(chartTitle);
+        chartWrapper.appendChild(canvas);
+        
+        // Füge Chart-Informationen hinzu
+        const chartInfo = createChartInfo(chartData, measurements);
+        chartWrapper.appendChild(chartInfo);
+        
+        // Ersetze Container-Inhalt
+        container.innerHTML = '';
+        container.appendChild(chartWrapper);
+        
+        // Zeichne das Diagramm
+        drawChart(canvas, chartData, measurements);
+    }
+    
+    // FUNKTION: Zeichne Chart auf Canvas
+    function drawChart(canvas, chartData, measurements) {
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        
+        // Hintergrund
+        ctx.fillStyle = 'rgba(30, 41, 59, 0.1)';
+        ctx.fillRect(0, 0, width, height);
+        
+        // Chart-Bereich definieren - ANGEPASST für Querformat
+        const chartArea = {
+            x: 80,           // Mehr Platz links für Y-Achse
+            y: 50,           // Etwas mehr Platz oben
+            width: width - 200,  // Mehr Rand rechts für Legende
+            height: height - 100 // Platz für X-Achse unten
+        };
+        
+        // Bestimme Datenbereich
+        const allPoints = [
+            ...(measurements.underpressure || []),
+            ...(measurements.overpressure || [])
+        ];
+        
+        if (allPoints.length === 0) {
+            drawEmptyChart(ctx, chartArea);
+            return;
+        }
+        
+        const maxPressure = Math.max(...allPoints.map(p => Math.abs(p.pressure)), 50);
+        const maxVolume = Math.max(...allPoints.map(p => p.volume), 2000);
+        
+        // Zeichne Achsen
+        drawAxes(ctx, chartArea, maxPressure, maxVolume);
+        
+        // Zeichne Theoretische Kurve (falls aktiviert)
+        if (chartData.options.showTheoretical && chartData.parameters.n50 && chartData.parameters.volume) {
+            drawTheoreticalCurve(ctx, chartArea, chartData.parameters, maxPressure, maxVolume);
+        }
+        
+        // Zeichne Messpunkte
+        if (chartData.options.showUnderpressure && measurements.underpressure) {
+            drawMeasurementPoints(ctx, chartArea, measurements.underpressure, '#ef4444', maxPressure, maxVolume, true);
+        }
+        
+        if (chartData.options.showOverpressure && measurements.overpressure) {
+            drawMeasurementPoints(ctx, chartArea, measurements.overpressure, '#10b981', maxPressure, maxVolume, false);
+        }
+        
+        // Zeichne Legende
+        drawLegend(ctx, chartData.options, width);
+        
+        console.log("✅ Visuelles Diagramm gezeichnet (optimiert)");
+    }
+    
+    // FUNKTION: Zeichne leeres Diagramm
+    function drawEmptyChart(ctx, chartArea) {
+        ctx.fillStyle = '#064e3b';
+        ctx.font = '16px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Keine Messdaten vorhanden', chartArea.x + chartArea.width / 2, chartArea.y + chartArea.height / 2);
+    }
+    
+    // FUNKTION: Zeichne Achsen - OPTIMIERT
+    function drawAxes(ctx, chartArea, maxPressure, maxVolume) {
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 2;
+        
+        // X-Achse
+        ctx.beginPath();
+        ctx.moveTo(chartArea.x, chartArea.y + chartArea.height);
+        ctx.lineTo(chartArea.x + chartArea.width, chartArea.y + chartArea.height);
+        ctx.stroke();
+        
+        // Y-Achse
+        ctx.beginPath();
+        ctx.moveTo(chartArea.x, chartArea.y);
+        ctx.lineTo(chartArea.x, chartArea.y + chartArea.height);
+        ctx.stroke();
+        
+        // Achsenbeschriftungen - QUERFORMAT
+        ctx.fillStyle = '#064e3b';
+        ctx.font = '11px Arial'; // Etwas größer bei mehr Platz
+        ctx.textAlign = 'center';
+        
+        // X-Achse Beschriftung - mehr Werte bei breiterem Chart
+        for (let i = 0; i <= 8; i++) {
+            const x = chartArea.x + (i / 8) * chartArea.width;
+            const value = (i / 8) * maxPressure;
+            ctx.fillText(value.toFixed(0), x, chartArea.y + chartArea.height + 18);
+        }
+        
+        // Y-Achse Beschriftung
+        ctx.textAlign = 'right';
+        for (let i = 0; i <= 6; i++) {
+            const y = chartArea.y + chartArea.height - (i / 6) * chartArea.height;
+            const value = (i / 6) * maxVolume;
+            ctx.fillText(value.toFixed(0), chartArea.x - 10, y + 4);
+        }
+        
+        // Achsentitel - QUERFORMAT
+        ctx.font = 'bold 12px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Druckdifferenz [Pa]', chartArea.x + chartArea.width / 2, chartArea.y + chartArea.height + 45);
+        
+        ctx.save();
+        ctx.translate(25, chartArea.y + chartArea.height / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText('Volumenstrom [m³/h]', 0, 0);
+        ctx.restore();
+    }
+    
+    // FUNKTION: Zeichne theoretische Kurve
+    function drawTheoreticalCurve(ctx, chartArea, parameters, maxPressure, maxVolume) {
+        const n50 = parseFloat(parameters.n50);
+        const volume = parseFloat(parameters.volume);
+        
+        if (!n50 || !volume) return;
+        
+        ctx.strokeStyle = '#3b82f6';
+        ctx.setLineDash([5, 5]);
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        
+        let firstPoint = true;
+        for (let pressure = 5; pressure <= maxPressure; pressure += 1) {
+            const flow = n50 * volume * Math.pow(pressure / 50, 0.65);
+            const x = chartArea.x + (pressure / maxPressure) * chartArea.width;
+            const y = chartArea.y + chartArea.height - (flow / maxVolume) * chartArea.height;
+            
+            if (firstPoint) {
+                ctx.moveTo(x, y);
+                firstPoint = false;
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+    
+    // FUNKTION: Zeichne Messpunkte - OPTIMIERT
+    function drawMeasurementPoints(ctx, chartArea, points, color, maxPressure, maxVolume, isUnderpressure) {
+        ctx.fillStyle = color;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        
+        // Verbindungslinie
+        if (points.length > 1) {
+            ctx.globalAlpha = 0.6;
+            ctx.beginPath();
+            
+            points.forEach((point, index) => {
+                const pressure = isUnderpressure ? Math.abs(point.pressure) : point.pressure;
+                const x = chartArea.x + (pressure / maxPressure) * chartArea.width;
+                const y = chartArea.y + chartArea.height - (point.volume / maxVolume) * chartArea.height;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+        
+        // Punkte - QUERFORMAT (etwas größer)
+        points.forEach(point => {
+            const pressure = isUnderpressure ? Math.abs(point.pressure) : point.pressure;
+            const x = chartArea.x + (pressure / maxPressure) * chartArea.width;
+            const y = chartArea.y + chartArea.height - (point.volume / maxVolume) * chartArea.height;
+            
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, 2 * Math.PI); // Größer: von 4 auf 5
+            ctx.fill();
+            
+            // Weißer Rand
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2; // Wieder etwas dicker
+            ctx.stroke();
+            ctx.strokeStyle = color;
+        });
+    }
+    
+    // OPTIMIERTE FUNKTION: Zeichne Legende - QUERFORMAT
+    function drawLegend(ctx, options, width) {
+        let legendY = 20; 
+        let legendX = width - 180; // Mehr Platz bei breiterem Canvas
+        
+        ctx.font = '12px Arial'; // Etwas größere Schrift bei mehr Platz
+        ctx.textAlign = 'left';
+        
+        if (options.showUnderpressure) {
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(legendX, legendY, 12, 12);
+            ctx.fillStyle = '#064e3b';
+            ctx.fillText('Unterdruck', legendX + 18, legendY + 10);
+            legendY += 20; 
+        }
+        
+        if (options.showOverpressure) {
+            ctx.fillStyle = '#10b981';
+            ctx.fillRect(legendX, legendY, 12, 12);
+            ctx.fillStyle = '#064e3b';
+            ctx.fillText('Überdruck', legendX + 18, legendY + 10);
+            legendY += 20; 
+        }
+        
+        if (options.showTheoretical) {
+            ctx.strokeStyle = '#3b82f6';
+            ctx.setLineDash([5, 5]);
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(legendX, legendY + 6);
+            ctx.lineTo(legendX + 12, legendY + 6);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = '#064e3b';
+            ctx.fillText('Theoretisch', legendX + 18, legendY + 10);
+        }
+    }
+    
+    // FUNKTION: Erstelle Chart-Informationen - KOMPAKT (OHNE Statistiken)
+    function createChartInfo(chartData, measurements) {
+        const infoDiv = document.createElement('div');
+        infoDiv.style.cssText = `
+            margin-top: 3px;
+            padding: 12px;
+            background: rgba(51, 65, 85, 0.3);
+            border-radius: 8px;
+            color: #064e3b;
+            font-size: 12px;
+        `;
+        
+        // Nur Parameter-Info, keine Statistiken
+        infoDiv.innerHTML = `
+            <div style="margin-top: 3px; text-align: center; font-size: 10px; opacity: 0.7; color: #064e3b;">
+                n₅₀: ${chartData.parameters.n50 || 'N/A'} [1/h] • Vol: ${chartData.parameters.volume || 'N/A'} [m³] • ${new Date().toLocaleString('de-DE')}
+            </div>
+        `;
+        
+        return infoDiv;
+    }
+    
+    // ERWEITERE DIE BESTEHENDE updateChartDisplay FUNKTION
+    if (window.completeTransferSystem) {
+        const originalUpdateChart = window.completeTransferSystem.updateChartDisplay;
+        
+        window.completeTransferSystem.updateChartDisplay = function(chartData) {
+            console.log("🎨 Erstelle visuelles Diagramm (optimiert für Seite 5)...");
+            
+            // Sammle Messdaten aus dem Transfer
+            const transferData = JSON.parse(sessionStorage.getItem('blowerDoorTransfer') || '{}');
+            const measurements = transferData.measurements || { underpressure: [], overpressure: [], combined: [] };
+            
+            // Erstelle visuelles Diagramm
+            setTimeout(() => {
+                transferVisualChart(chartData, measurements);
+            }, 500);
+        };
+        
+        console.log("✅ Transfer-System mit optimiertem visuellem Diagramm erweitert");
+    }
+    
+    // GLOBALE TEST-FUNKTION
+    window.testVisualChart = function() {
+        console.log("🧪 Teste optimiertes visuelles Diagramm...");
+        
+        const testChartData = {
+            options: {
+                showTheoretical: true,
+                showUnderpressure: true,
+                showOverpressure: true
+            },
+            parameters: {
+                n50: '2.1',
+                volume: '350',
+                pressure: '75'
+            }
+        };
+        
+        const testMeasurements = {
+            underpressure: [
+                {pressure: -10, volume: 850},
+                {pressure: -20, volume: 1200},
+                {pressure: -30, volume: 1480},
+                {pressure: -40, volume: 1720},
+                {pressure: -50, volume: 1950}
+            ],
+            overpressure: [
+                {pressure: 10, volume: 820},
+                {pressure: 20, volume: 1150},
+                {pressure: 30, volume: 1420},
+                {pressure: 40, volume: 1680},
+                {pressure: 50, volume: 1920}
+            ]
+        };
+        
+        transferVisualChart(testChartData, testMeasurements);
+    };
+}
 
-        // Clear previous content
+// Initialisiere visuelle Chart-Erweiterung
+enhanceWithVisualChart();
+
+console.log("🎨 OPTIMIERTES visuelles Diagramm-System geladen!");
+console.log("📐 Skalierung angepasst für Seite 5 Container (450px Höhe)");
+console.log("🧪 Test-Befehl: testVisualChart()");
+console.log("✅ Styling optimiert - Transparenter Hintergrund und dunkelgrüne Schriftfarbe!");

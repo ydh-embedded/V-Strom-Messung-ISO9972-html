@@ -3,6 +3,7 @@
  * ERWEITERTE TRANSFER-SYSTEM - KOMPLETT MIT TABELLEN UND DIAGRAMM
  * Überträgt alle Daten zwischen index.html und protocol.html
  * ANGEPASST: Transparenter Hintergrund und dunkelgrüne Schriftfarbe
+ * OPTIMIERT: Chart-Skalierung für Seite 5 Container
  */
 
 console.log("🚀 ERWEITERTE TRANSFER-SYSTEM STARTET");
@@ -1056,8 +1057,6 @@ styles.textContent = `
     }
 `;
 
-
-
 document.head.appendChild(styles);
 
 console.log("✅ Vollständiges Transfer-System geladen und bereit!");
@@ -1065,12 +1064,10 @@ console.log("🎯 Neue Funktionen: Tabellen + Diagramm + erweiterte Visualisieru
 console.log("🚀 Verwenden Sie den Button 'VOLLSTÄNDIGER TRANSFER' zum Testen");
 console.log("🎨 ANGEPASST: Transparenter Hintergrund und dunkelgrüne Schriftfarbe (#064e3b)");
 
-
 /**
- * KORRIGIERTE VERSION - VISUELLES DIAGRAMM-TRANSFER
- * Behebt den "Assignment to constant variable" Fehler
+ * OPTIMIERTE VERSION - VISUELLES DIAGRAMM-TRANSFER
+ * ANGEPASSTE SKALIERUNG für Seite 5 Container (450px Höhe)
  */
-
 
 // Erweitere das Transfer-System um visuelles Diagramm
 function enhanceWithVisualChart() {
@@ -1107,7 +1104,7 @@ function enhanceWithVisualChart() {
         container.className = 'chart-placeholder';
         container.style.cssText = `
             width: 100%;
-            margin: 20px 0;
+            margin: 3px 0;
             background: rgba(15, 23, 42, 0.1);
             border-radius: 12px;
             padding: 20px;
@@ -1133,39 +1130,43 @@ function enhanceWithVisualChart() {
         return pages[4]; // Index 4 = Seite 5
     }
     
-    // HAUPTFUNKTION: Erstelle visuelles Diagramm
+    // HAUPTFUNKTION: Erstelle visuelles Diagramm - OPTIMIERT FÜR SEITE 5
     function createVisualChart(container, chartData, measurements) {
-        console.log("🎨 Erstelle visuelles Canvas-Diagramm...");
+        console.log("🎨 Erstelle visuelles Canvas-Diagramm (optimiert für Seite 5)...");
         
-        // Canvas erstellen
+        // Canvas erstellen - ANGEPASSTE GRÖSSE für Seite 5 Container
         const canvas = document.createElement('canvas');
         canvas.id = 'protocol-chart';
-        canvas.width = 855;
-        canvas.height = 320;
+        canvas.width = 800;  // Reduziert von 855
+        canvas.height = 280; // Reduziert von 320
         canvas.style.cssText = `
             display: block;
             box-sizing: border-box;
-            height: 400px;
+            height: 280px;
             width: 100%;
+            max-width: 800px;
+            margin: 3px auto;
             background: rgba(30, 41, 59, 0.1);
             border-radius: 8px;
         `;
         
-        // Chart-Info Container
+        // Chart-Info Container - KOMPAKTER
         const chartWrapper = document.createElement('div');
         chartWrapper.style.cssText = `
             background: rgba(15, 23, 42, 0.1);
             border-radius: 12px;
-            padding: 20px;
+            padding: 15px;
             border: 1px solid #334155;
+            height: 450px;
+            overflow: hidden;
         `;
         
         const chartTitle = document.createElement('div');
         chartTitle.style.cssText = `
             color: #064e3b;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 3px;
             text-align: center;
         `;
         chartTitle.innerHTML = '📊 Blower-Door Messung - Druckverlauf';
@@ -1195,12 +1196,12 @@ function enhanceWithVisualChart() {
         ctx.fillStyle = 'rgba(30, 41, 59, 0.1)';
         ctx.fillRect(0, 0, width, height);
         
-        // Chart-Bereich definieren
+        // Chart-Bereich definieren - ANGEPASST für kleinere Canvas
         const chartArea = {
-            x: 80,
-            y: 60,
-            width: width - 160,
-            height: height - 120
+            x: 60,           // Reduziert von 80
+            y: 40,           // Reduziert von 60  
+            width: width - 120,  // Reduziert von 160
+            height: height - 80  // Reduziert von 120
         };
         
         // Bestimme Datenbereich
@@ -1237,7 +1238,7 @@ function enhanceWithVisualChart() {
         // Zeichne Legende
         drawLegend(ctx, chartData.options, width);
         
-        console.log("✅ Visuelles Diagramm gezeichnet");
+        console.log("✅ Visuelles Diagramm gezeichnet (optimiert)");
     }
     
     // FUNKTION: Zeichne leeres Diagramm
@@ -1248,7 +1249,7 @@ function enhanceWithVisualChart() {
         ctx.fillText('Keine Messdaten vorhanden', chartArea.x + chartArea.width / 2, chartArea.y + chartArea.height / 2);
     }
     
-    // FUNKTION: Zeichne Achsen
+    // FUNKTION: Zeichne Achsen - OPTIMIERT
     function drawAxes(ctx, chartArea, maxPressure, maxVolume) {
         ctx.strokeStyle = '#64748b';
         ctx.lineWidth = 2;
@@ -1265,16 +1266,16 @@ function enhanceWithVisualChart() {
         ctx.lineTo(chartArea.x, chartArea.y + chartArea.height);
         ctx.stroke();
         
-        // Achsenbeschriftungen
+        // Achsenbeschriftungen - ANGEPASSTE SCHRIFTGRÖSSEN
         ctx.fillStyle = '#064e3b';
-        ctx.font = '12px Arial';
+        ctx.font = '10px Arial';
         ctx.textAlign = 'center';
         
         // X-Achse Beschriftung
         for (let i = 0; i <= 5; i++) {
             const x = chartArea.x + (i / 5) * chartArea.width;
             const value = (i / 5) * maxPressure;
-            ctx.fillText(value.toFixed(0), x, chartArea.y + chartArea.height + 20);
+            ctx.fillText(value.toFixed(0), x, chartArea.y + chartArea.height + 15);
         }
         
         // Y-Achse Beschriftung
@@ -1282,16 +1283,16 @@ function enhanceWithVisualChart() {
         for (let i = 0; i <= 5; i++) {
             const y = chartArea.y + chartArea.height - (i / 5) * chartArea.height;
             const value = (i / 5) * maxVolume;
-            ctx.fillText(value.toFixed(0), chartArea.x - 10, y + 4);
+            ctx.fillText(value.toFixed(0), chartArea.x - 8, y + 3);
         }
         
-        // Achsentitel
-        ctx.font = 'bold 14px Arial';
+        // Achsentitel - KOMPAKTER
+        ctx.font = 'bold 11px Arial';
         ctx.textAlign = 'center';
-        ctx.fillText('Druckdifferenz [Pa]', chartArea.x + chartArea.width / 2, chartArea.y + chartArea.height + 50);
+        ctx.fillText('Druckdifferenz [Pa]', chartArea.x + chartArea.width / 2, chartArea.y + chartArea.height + 35);
         
         ctx.save();
-        ctx.translate(20, chartArea.y + chartArea.height / 2);
+        ctx.translate(15, chartArea.y + chartArea.height / 2);
         ctx.rotate(-Math.PI / 2);
         ctx.fillText('Volumenstrom [m³/h]', 0, 0);
         ctx.restore();
@@ -1327,7 +1328,7 @@ function enhanceWithVisualChart() {
         ctx.setLineDash([]);
     }
     
-    // FUNKTION: Zeichne Messpunkte
+    // FUNKTION: Zeichne Messpunkte - OPTIMIERT
     function drawMeasurementPoints(ctx, chartArea, points, color, maxPressure, maxVolume, isUnderpressure) {
         ctx.fillStyle = color;
         ctx.strokeStyle = color;
@@ -1354,46 +1355,46 @@ function enhanceWithVisualChart() {
             ctx.globalAlpha = 1;
         }
         
-        // Punkte
+        // Punkte - ANGEPASSTE GRÖSSE
         points.forEach(point => {
             const pressure = isUnderpressure ? Math.abs(point.pressure) : point.pressure;
             const x = chartArea.x + (pressure / maxPressure) * chartArea.width;
             const y = chartArea.y + chartArea.height - (point.volume / maxVolume) * chartArea.height;
             
             ctx.beginPath();
-            ctx.arc(x, y, 6, 0, 2 * Math.PI);
+            ctx.arc(x, y, 4, 0, 2 * Math.PI); // Reduziert von 6 auf 4
             ctx.fill();
             
             // Weißer Rand
             ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 1.5; // Reduziert von 2
             ctx.stroke();
             ctx.strokeStyle = color;
         });
     }
     
-    // KORRIGIERTE FUNKTION: Zeichne Legende
+    // OPTIMIERTE FUNKTION: Zeichne Legende - KOMPAKT
     function drawLegend(ctx, options, width) {
-        let legendY = 20; // ← GEÄNDERT: let statt const
-        let legendX = width - 200;
+        let legendY = 15; // ← ANGEPASST für kleinere Canvas
+        let legendX = width - 160;
         
-        ctx.font = '12px Arial';
+        ctx.font = '10px Arial';
         ctx.textAlign = 'left';
         
         if (options.showUnderpressure) {
             ctx.fillStyle = '#ef4444';
-            ctx.fillRect(legendX, legendY, 12, 12);
+            ctx.fillRect(legendX, legendY, 10, 10);
             ctx.fillStyle = '#064e3b';
-            ctx.fillText('Unterdruck', legendX + 20, legendY + 10);
-            legendY += 20; // ← Jetzt funktioniert das!
+            ctx.fillText('Unterdruck', legendX + 15, legendY + 8);
+            legendY += 15; // ← Kompakter Abstand
         }
         
         if (options.showOverpressure) {
             ctx.fillStyle = '#10b981';
-            ctx.fillRect(legendX, legendY, 12, 12);
+            ctx.fillRect(legendX, legendY, 10, 10);
             ctx.fillStyle = '#064e3b';
-            ctx.fillText('Überdruck', legendX + 20, legendY + 10);
-            legendY += 20; // ← Und das auch!
+            ctx.fillText('Überdruck', legendX + 15, legendY + 8);
+            legendY += 15; // ← Kompakter Abstand
         }
         
         if (options.showTheoretical) {
@@ -1401,52 +1402,31 @@ function enhanceWithVisualChart() {
             ctx.setLineDash([5, 5]);
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(legendX, legendY + 6);
-            ctx.lineTo(legendX + 12, legendY + 6);
+            ctx.moveTo(legendX, legendY + 5);
+            ctx.lineTo(legendX + 10, legendY + 5);
             ctx.stroke();
             ctx.setLineDash([]);
             ctx.fillStyle = '#064e3b';
-            ctx.fillText('Theoretisch', legendX + 20, legendY + 10);
+            ctx.fillText('Theoretisch', legendX + 15, legendY + 8);
         }
     }
     
-    // FUNKTION: Erstelle Chart-Informationen
+    // FUNKTION: Erstelle Chart-Informationen - KOMPAKT (OHNE Statistiken)
     function createChartInfo(chartData, measurements) {
         const infoDiv = document.createElement('div');
         infoDiv.style.cssText = `
-            margin-top: 20px;
-            padding: 20px;
+            margin-top: 3px;
+            padding: 12px;
             background: rgba(51, 65, 85, 0.3);
             border-radius: 8px;
             color: #064e3b;
+            font-size: 12px;
         `;
         
-        const totalUnder = measurements.underpressure?.length || 0;
-        const totalOver = measurements.overpressure?.length || 0;
-        const totalPoints = totalUnder + totalOver;
-        
+        // Nur Parameter-Info, keine Statistiken
         infoDiv.innerHTML = `
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: center;">
-                <div style="background: rgba(71, 85, 105, 0.3); padding: 15px; border-radius: 6px;">
-                    <div style="font-size: 24px; color: #ef4444; margin-bottom: 8px;">📉</div>
-                    <div style="font-size: 18px; font-weight: bold; color: #064e3b;">${totalUnder}</div>
-                    <div style="font-size: 12px; opacity: 0.8; color: #064e3b;">Unterdruckmessungen</div>
-                </div>
-                <div style="background: rgba(71, 85, 105, 0.3); padding: 15px; border-radius: 6px;">
-                    <div style="font-size: 24px; color: #10b981; margin-bottom: 8px;">📈</div>
-                    <div style="font-size: 18px; font-weight: bold; color: #064e3b;">${totalOver}</div>
-                    <div style="font-size: 12px; opacity: 0.8; color: #064e3b;">Überdruckmessungen</div>
-                </div>
-                <div style="background: rgba(71, 85, 105, 0.3); padding: 15px; border-radius: 6px;">
-                    <div style="font-size: 24px; color: #3b82f6; margin-bottom: 8px;">📊</div>
-                    <div style="font-size: 18px; font-weight: bold; color: #064e3b;">${totalPoints}</div>
-                    <div style="font-size: 12px; opacity: 0.8; color: #064e3b;">Gesamt-Messpunkte</div>
-                </div>
-            </div>
-            <div style="margin-top: 15px; text-align: center; font-size: 12px; opacity: 0.7; color: #064e3b;">
-                n₅₀: ${chartData.parameters.n50 || 'N/A'} [1/h] • 
-                Volumen: ${chartData.parameters.volume || 'N/A'} [m³] • 
-                erstellt: ${new Date().toLocaleString('de-DE')}
+            <div style="margin-top: 3px; text-align: center; font-size: 10px; opacity: 0.7; color: #064e3b;">
+                n₅₀: ${chartData.parameters.n50 || 'N/A'} [1/h] • Vol: ${chartData.parameters.volume || 'N/A'} [m³] • ${new Date().toLocaleString('de-DE')}
             </div>
         `;
         
@@ -1458,7 +1438,7 @@ function enhanceWithVisualChart() {
         const originalUpdateChart = window.completeTransferSystem.updateChartDisplay;
         
         window.completeTransferSystem.updateChartDisplay = function(chartData) {
-            console.log("🎨 Erstelle visuelles Diagramm (wie Analyse-Seite)...");
+            console.log("🎨 Erstelle visuelles Diagramm (optimiert für Seite 5)...");
             
             // Sammle Messdaten aus dem Transfer
             const transferData = JSON.parse(sessionStorage.getItem('blowerDoorTransfer') || '{}');
@@ -1470,12 +1450,12 @@ function enhanceWithVisualChart() {
             }, 500);
         };
         
-        console.log("✅ Transfer-System mit visuellem Diagramm erweitert");
+        console.log("✅ Transfer-System mit optimiertem visuellem Diagramm erweitert");
     }
     
     // GLOBALE TEST-FUNKTION
     window.testVisualChart = function() {
-        console.log("🧪 Teste visuelles Diagramm...");
+        console.log("🧪 Teste optimiertes visuelles Diagramm...");
         
         const testChartData = {
             options: {
@@ -1514,6 +1494,7 @@ function enhanceWithVisualChart() {
 // Initialisiere visuelle Chart-Erweiterung
 enhanceWithVisualChart();
 
-console.log("🎨 Angepasstes visuelles Diagramm-System geladen!");
+console.log("🎨 OPTIMIERTES visuelles Diagramm-System geladen!");
+console.log("📐 Skalierung angepasst für Seite 5 Container (450px Höhe)");
 console.log("🧪 Test-Befehl: testVisualChart()");
-console.log("✅ Styling angepasst - Transparenter Hintergrund und dunkelgrüne Schriftfarbe!");
+console.log("✅ Styling optimiert - Transparenter Hintergrund und dunkelgrüne Schriftfarbe!");
