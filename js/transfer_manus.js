@@ -1137,29 +1137,28 @@ function enhanceWithVisualChart() {
         // Canvas erstellen - KOMPAKT FÜR A4-Seite mit 270° ROTATION
         const canvas = document.createElement('canvas');
         canvas.id = 'protocol-chart';
-        canvas.width = 360;  // Kompakter für A4
-        canvas.height = 320; // Angepasst für 0° Rotation
+        canvas.width = 480;  // Kompakter für A4
+        canvas.height = 700; // Angepasst für 270° Rotation
         canvas.style.cssText = `
             display: block;
             box-sizing: border-box;
             height: 550px;
             width: 100%;
-            max-width: 900px;
+            max-width: 600px;
             margin: 0 auto;
-            background: none;
+            background: rgba(248, 250, 252, 0.8);
             border-radius: 8px;
-            transform: rotate(0deg);
+            transform: rotate(270deg);
             transform-origin: center;
-            border: none;
         `;
         
         // Chart-Info Container - KOMPAKTER
         const chartWrapper = document.createElement('div');
         chartWrapper.style.cssText = `
-            background: none ;
+            background: rgba(15, 23, 42, 0.1);
             border-radius: 12px;
             padding: 5px;
-            border: none;
+            border: 1px solid #334155;
             height: 450px;
             overflow: hidden;
         `;
@@ -1172,7 +1171,7 @@ function enhanceWithVisualChart() {
             margin-bottom: 3px;
             text-align: center;
         `;
-        chartTitle.innerHTML = '📊 Messung - Druckverlauf [pa] ';
+        chartTitle.innerHTML = '📊 Blower-Door Messung - Druckverlauf';
         
         chartWrapper.appendChild(chartTitle);
         chartWrapper.appendChild(canvas);

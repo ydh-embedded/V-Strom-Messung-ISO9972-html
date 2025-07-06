@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyboard Navigation Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1e293b;
+            color: #f1f5f9;
+        }
+        
+        .demo-section {
+            background: #334155;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #475569;
+        }
+        
+        .button-demo button {
+            background: linear-gradient(to right, #f43f5e, #ec4899);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .button-demo button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
+        }
+        
+        .input-demo input, .input-demo textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 2px solid #475569;
+            border-radius: 6px;
+            background: #1e293b;
+            color: #f1f5f9;
+            font-size: 16px;
+        }
+        
+        .input-demo input:focus, .input-demo textarea:focus {
+            outline: none;
+            border-color: #f43f5e;
+            box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.2);
+        }
+        
+        .instructions {
+            background: #0f172a;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid #f43f5e;
+            margin: 20px 0;
+        }
+        
+        .instructions h3 {
+            margin-top: 0;
+            color: #f43f5e;
+        }
+        
+        .instructions ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin: 8px 0;
+        }
+        
+        .status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(244, 63, 94, 0.9);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎹 Keyboard Navigation Demo</h1>
+    
+    <div class="instructions">
+        <h3>Anleitung:</h3>
+        <ul>
+            <li><strong>Leertaste:</strong> Aktiviert die Navigation und springt zum nächsten Element</li>
+            <li><strong>Enter:</strong> Aktiviert das aktuell hervorgehobene Element</li>
+            <li><strong>Escape:</strong> Beendet die Navigation</li>
+        </ul>
+        <p><strong>Hinweis:</strong> Die Navigation erkennt automatisch die Seitenart und navigiert entsprechend durch Buttons oder Input-Felder.</p>
+    </div>
+
+    <div class="demo-section button-demo">
+        <h2>Button Navigation (wie in index.html)</h2>
+        <p>Diese Seite simuliert die Button-Navigation der index.html:</p>
+        
+        <button onclick="alert('Start Button geklickt!')">🏠 Start</button>
+        <button onclick="alert('Wetter Button geklickt!')">🌤️ Wetter</button>
+        <button onclick="alert('Messung Button geklickt!')">📊 Messung</button>
+        <button onclick="alert('Analyse Button geklickt!')">📈 Analyse</button>
+        <button onclick="alert('Export Button geklickt!')">📤 Export</button>
+        
+        <br><br>
+        
+        <button onclick="alert('Datum Button geklickt!')">📅 Datum setzen</button>
+        <button onclick="alert('Wetterdaten Button geklickt!')">🌐 Wetterdaten laden</button>
+        <button onclick="alert('Zeile hinzufügen!')">➕ Zeile hinzufügen</button>
+        <button onclick="alert('Tabelle leeren!')">🗑️ Tabelle leeren</button>
+    </div>
+
+    <div class="demo-section input-demo">
+        <h2>Input Navigation (wie in protocol.html)</h2>
+        <p>Diese Felder simulieren die Input-Navigation der protocol.html:</p>
+        
+        <label for="objekt">Objekt:</label>
+        <input type="text" id="objekt" placeholder="Wohneinheit nach Sanierung">
+        
+        <label for="bauabschnitt">Bauabschnitt:</label>
+        <input type="text" id="bauabschnitt" placeholder="EG">
+        
+        <label for="adresse">Adresse:</label>
+        <input type="text" id="adresse" placeholder="Ernst-Thälmann-Straße 27">
+        
+        <label for="plz">PLZ/Ort:</label>
+        <input type="text" id="plz" placeholder="D-99423 Weimar">
+        
+        <label for="name">Name:</label>
+        <input type="text" id="name" placeholder="Sarah Bäumel">
+        
+        <label for="email">E-Mail:</label>
+        <input type="email" id="email" placeholder="christoph@immergo.de">
+        
+        <label for="telefon">Telefon:</label>
+        <input type="tel" id="telefon" placeholder="0162-9182524">
+        
+        <label for="bemerkungen">Bemerkungen:</label>
+        <textarea id="bemerkungen" rows="4" placeholder="Hier können Sie zusätzliche Bemerkungen eintragen..."></textarea>
+    </div>
+
+    <div class="demo-section">
+        <h2>Test-Funktionen</h2>
+        <button onclick="testNavigation()">🧪 Navigation testen</button>
+        <button onclick="showStatus()">📊 Status anzeigen</button>
+        <button onclick="resetDemo()">🔄 Demo zurücksetzen</button>
+    </div>
+
+    <div id="status" class="status" style="display: none;">
+        Navigation: Inaktiv
+    </div>
+
+    <!-- Keyboard Navigation Script -->
+    <script src="./js/keyboard-navigation.js"></script>
+    
+    <script>
+        // Demo-spezifische Funktionen
+        function testNavigation() {
+            if (window.keyboardNavigation) {
+                const status = window.keyboardNavigation.getStatus();
+                alert(`Navigation Status:
+                
+Aktiv: ${status.isActive ? 'Ja' : 'Nein'}
+Aktueller Index: ${status.currentIndex + 1}
+Gesamte Elemente: ${status.totalElements}
+Seitentyp: ${status.currentPage}
+
+Drücken Sie die Leertaste, um die Navigation zu starten!`);
+            } else {
+                alert('Keyboard Navigation nicht gefunden!');
+            }
+        }
+        
+        function showStatus() {
+            const statusDiv = document.getElementById('status');
+            if (window.keyboardNavigation) {
+                const status = window.keyboardNavigation.getStatus();
+                statusDiv.textContent = `Navigation: ${status.isActive ? 'Aktiv' : 'Inaktiv'} | Element: ${status.currentIndex + 1}/${status.totalElements}`;
+                statusDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        function resetDemo() {
+            // Alle Input-Felder leeren
+            document.querySelectorAll('input, textarea').forEach(input => {
+                input.value = '';
+            });
+            
+            // Navigation deaktivieren
+            if (window.keyboardNavigation) {
+                window.keyboardNavigation.deactivate();
+            }
+            
+            alert('Demo wurde zurückgesetzt!');
+        }
+        
+        // Event Listener für bessere Demo-Erfahrung
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🎯 Demo geladen - Drücken Sie die Leertaste für Navigation!');
+            
+            // Zeige kurze Anleitung
+            setTimeout(() => {
+                if (confirm('Möchten Sie eine kurze Einführung in die Tastaturnavigation sehen?')) {
+                    alert(`🎹 Tastaturnavigation Demo
+
+1. Drücken Sie die LEERTASTE, um die Navigation zu aktivieren
+2. Das erste Element wird hervorgehoben
+3. Drücken Sie erneut LEERTASTE, um zum nächsten Element zu springen
+4. Drücken Sie ENTER, um das aktuelle Element zu aktivieren
+5. Drücken Sie ESCAPE, um die Navigation zu beenden
+
+Die Navigation erkennt automatisch, ob Sie sich auf einer Button-Seite oder Input-Seite befinden!`);
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
+

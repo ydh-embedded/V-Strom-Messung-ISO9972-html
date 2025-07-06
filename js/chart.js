@@ -118,7 +118,7 @@ function createOrUpdateChart() {
                     label: 'Theoretische Kurve',
                     data: theoreticalCurve.map(p => ({ x: p.pressure, y: p.volume })),
                     borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    backgroundColor: 'rgb(255, 255, 255)',
                     type: 'line',
                     fill: false,
                     tension: 0.4,
