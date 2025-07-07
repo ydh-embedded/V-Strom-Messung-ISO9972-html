@@ -1,6 +1,6 @@
 /**
- * Keyboard Navigation Module
- * Implementiert Tastaturnavigation mit der Leertaste für Buttons und Input-Felder
+ * Keyboard Navigation Module - Sichere Minimal-Version
+ * Verhindert Aufhängen durch defensive Programmierung
  */
 
 class KeyboardNavigation {
@@ -9,58 +9,83 @@ class KeyboardNavigation {
         this.navigableElements = [];
         this.isActive = false;
         this.highlightClass = 'keyboard-nav-highlight';
+        this.isProcessing = false;
+        this.lastUpdate = 0;
+        this.emergencyStop = false;
         
         this.init();
     }
 
     init() {
-        this.createStyles();
-        this.bindEvents();
-        this.updateNavigableElements();
+        console.log('🎹 Keyboard Navigation wird initialisiert...');
         
-        console.log('🎹 Keyboard Navigation initialisiert');
-        console.log('💡 Drücken Sie die Leertaste, um durch die Elemente zu navigieren');
+        // Emergency Stop bei zu vielen Aufrufen
+        this.setupEmergencyStop();
+        
+        // Einfache Styles ohne Animationen
+        this.createSimpleStyles();
+        
+        // Nur Keyboard Events, keine Observer
+        this.bindKeyboardEvents();
+        
+        // Initiales Update
+        this.safeUpdate();
+        
+        console.log('✅ Keyboard Navigation initialisiert');
     }
 
-    createStyles() {
-        // Erstelle CSS-Styles für die Hervorhebung
+    setupEmergencyStop() {
+        this.callCount = 0;
+        this.lastCallTime = 0;
+        
+        setInterval(() => {
+            this.callCount = 0; // Reset alle Sekunde
+        }, 1000);
+    }
+
+    checkEmergencyStop(methodName) {
+        this.callCount++;
+        const now = Date.now();
+        
+        // Mehr als 10 Aufrufe pro Sekunde = Emergency Stop
+        if (this.callCount > 10) {
+            console.error(`🚨 EMERGENCY STOP: Zu viele ${methodName} Aufrufe!`);
+            this.emergencyStop = true;
+            this.deactivate();
+            return true;
+        }
+        
+        // Weniger als 50ms zwischen Aufrufen = verdächtig
+        if (now - this.lastCallTime < 50) {
+            console.warn(`⚠️ Schnelle ${methodName} Aufrufe erkannt`);
+        }
+        
+        this.lastCallTime = now;
+        return false;
+    }
+
+    createSimpleStyles() {
+        const existingStyle = document.getElementById('keyboard-nav-styles');
+        if (existingStyle) {
+            existingStyle.remove();
+        }
+        
         const style = document.createElement('style');
+        style.id = 'keyboard-nav-styles';
         style.textContent = `
             .keyboard-nav-highlight {
                 outline: 3px solid #f43f5e !important;
                 outline-offset: 2px !important;
-                box-shadow: 0 0 0 6px rgba(244, 63, 94, 0.2) !important;
+                box-shadow: 0 0 10px rgba(244, 63, 94, 0.5) !important;
                 background-color: rgba(244, 63, 94, 0.1) !important;
-                transition: all 0.2s ease !important;
-                position: relative !important;
                 z-index: 1000 !important;
-            }
-            
-            .keyboard-nav-highlight::before {
-                content: '🎯';
-                position: absolute;
-                top: -25px;
-                left: -5px;
-                background: #f43f5e;
-                color: white;
-                padding: 2px 6px;
-                border-radius: 4px;
-                font-size: 12px;
-                font-weight: bold;
-                z-index: 1001;
-                animation: pulse 1s infinite;
-            }
-            
-            @keyframes pulse {
-                0%, 100% { opacity: 1; }
-                50% { opacity: 0.7; }
             }
             
             .keyboard-nav-counter {
                 position: fixed;
                 top: 20px;
                 right: 20px;
-                background: rgba(244, 63, 94, 0.9);
+                background: #f43f5e;
                 color: white;
                 padding: 8px 12px;
                 border-radius: 8px;
@@ -68,8 +93,7 @@ class KeyboardNavigation {
                 font-size: 14px;
                 font-weight: bold;
                 z-index: 10000;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-                transition: all 0.3s ease;
+                pointer-events: none;
             }
             
             .keyboard-nav-info {
@@ -82,152 +106,157 @@ class KeyboardNavigation {
                 border-radius: 8px;
                 font-size: 13px;
                 z-index: 10000;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-                border: 1px solid rgba(244, 63, 94, 0.3);
                 max-width: 300px;
+                pointer-events: none;
             }
         `;
         document.head.appendChild(style);
     }
 
-    updateNavigableElements() {
-        // Bestimme die navigierbaren Elemente basierend auf der aktuellen Seite
-        const currentPage = this.getCurrentPage();
-        
-        if (currentPage === 'index') {
-            // Für index.html: alle Buttons
-            this.navigableElements = Array.from(document.querySelectorAll('button')).filter(btn => {
-                return this.isElementVisible(btn) && !btn.disabled;
-            });
-        } else if (currentPage === 'protocol') {
-            // Für protocol.html: alle Input-Felder
-            this.navigableElements = Array.from(document.querySelectorAll('input, textarea, select')).filter(input => {
-                return this.isElementVisible(input) && !input.disabled && !input.readOnly;
-            });
-        } else {
-            // Fallback: alle interaktiven Elemente
-            this.navigableElements = Array.from(document.querySelectorAll('button, input, textarea, select, [tabindex]')).filter(el => {
-                return this.isElementVisible(el) && !el.disabled;
-            });
-        }
-
-        console.log(`🔍 ${this.navigableElements.length} navigierbare Elemente gefunden auf ${currentPage}-Seite`);
-        
-        // Reset index wenn keine Elemente vorhanden
-        if (this.navigableElements.length === 0) {
-            this.currentIndex = 0;
-            this.isActive = false;
-        } else if (this.currentIndex >= this.navigableElements.length) {
-            this.currentIndex = 0;
-        }
-
-        this.updateUI();
-    }
-
-    getCurrentPage() {
-        // Bestimme die aktuelle Seite basierend auf der URL oder dem Dokumenttitel
-        const url = window.location.href;
-        const title = document.title;
-        
-        if (url.includes('protocol.html') || title.includes('Prüfverfahren')) {
-            return 'protocol';
-        } else if (url.includes('index.html') || title.includes('Blower Door Messprotokoll')) {
-            return 'index';
-        }
-        
-        // Fallback: prüfe sichtbare Elemente
-        const hasButtons = document.querySelectorAll('button').length > 0;
-        const hasInputs = document.querySelectorAll('input').length > 0;
-        
-        if (hasButtons && !hasInputs) return 'index';
-        if (hasInputs && !hasButtons) return 'protocol';
-        
-        return 'mixed';
-    }
-
-    isElementVisible(element) {
-        const rect = element.getBoundingClientRect();
-        const style = window.getComputedStyle(element);
-        
-        return (
-            rect.width > 0 &&
-            rect.height > 0 &&
-            style.display !== 'none' &&
-            style.visibility !== 'hidden' &&
-            style.opacity !== '0'
-        );
-    }
-
-    bindEvents() {
+    bindKeyboardEvents() {
+        // Nur ein einziger Event Listener
         document.addEventListener('keydown', (e) => {
-            // Leertaste für Navigation
+            if (this.emergencyStop) {
+                console.log('🚨 Emergency Stop aktiv - Events ignoriert');
+                return;
+            }
+            
+            if (this.isProcessing) {
+                console.log('⏳ Bereits am Verarbeiten - Event ignoriert');
+                return;
+            }
+            
+            this.handleKeyDown(e);
+        }, { passive: false });
+        
+        console.log('⌨️ Keyboard Events gebunden');
+    }
+
+    handleKeyDown(e) {
+        if (this.checkEmergencyStop('handleKeyDown')) return;
+        
+        try {
+            this.isProcessing = true;
+            
+            // Leertaste für Navigation (aber nicht in Inputs)
             if (e.code === 'Space' && !this.isInputFocused()) {
+                console.log('🔳 Leertaste gedrückt');
                 e.preventDefault();
                 this.handleSpacePress();
             }
             
-            // Escape zum Beenden der Navigation
-            if (e.code === 'Escape') {
+            // Escape zum Beenden
+            else if (e.code === 'Escape') {
+                console.log('⎋ Escape gedrückt');
                 this.deactivate();
             }
             
-            // Enter zum Aktivieren des aktuellen Elements
-            if (e.code === 'Enter' && this.isActive) {
+            // Enter zum Aktivieren
+            else if (e.code === 'Enter' && this.isActive) {
+                console.log('↵ Enter gedrückt');
                 e.preventDefault();
                 this.activateCurrentElement();
             }
-        });
-
-        // Aktualisiere Elemente bei Seitenänderungen
-        const observer = new MutationObserver(() => {
-            this.updateNavigableElements();
-        });
-        
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-            attributeFilter: ['style', 'class', 'hidden']
-        });
-
-        // Aktualisiere bei Scroll und Resize
-        window.addEventListener('scroll', () => this.updateNavigableElements());
-        window.addEventListener('resize', () => this.updateNavigableElements());
+            
+        } catch (error) {
+            console.error('❌ Fehler in handleKeyDown:', error);
+        } finally {
+            this.isProcessing = false;
+        }
     }
 
     isInputFocused() {
         const activeElement = document.activeElement;
-        return activeElement && (
+        const isInput = activeElement && (
             activeElement.tagName === 'INPUT' ||
             activeElement.tagName === 'TEXTAREA' ||
             activeElement.tagName === 'SELECT' ||
             activeElement.contentEditable === 'true'
         );
+        
+        if (isInput) {
+            console.log('📝 Input ist fokussiert:', activeElement.tagName);
+        }
+        
+        return isInput;
     }
 
     handleSpacePress() {
+        if (this.checkEmergencyStop('handleSpacePress')) return;
+        
+        console.log('🚀 handleSpacePress() gestartet');
+        
+        // Immer erst aktualisieren
+        this.safeUpdate();
+        
         if (this.navigableElements.length === 0) {
-            this.updateNavigableElements();
-            if (this.navigableElements.length === 0) {
-                console.log('⚠️ Keine navigierbaren Elemente gefunden');
-                return;
-            }
+            console.log('⚠️ Keine navigierbaren Elemente gefunden');
+            return;
         }
-
+        
         if (!this.isActive) {
+            console.log('▶️ Aktiviere Navigation');
             this.activate();
         } else {
+            console.log('➡️ Navigiere zum nächsten Element');
             this.navigateNext();
+        }
+        
+        console.log('✅ handleSpacePress() beendet');
+    }
+
+    safeUpdate() {
+        if (this.checkEmergencyStop('safeUpdate')) return;
+        
+        const now = Date.now();
+        
+        // Maximal alle 100ms aktualisieren
+        if (now - this.lastUpdate < 100) {
+            console.log('⏰ Update zu früh - übersprungen');
+            return;
+        }
+        
+        this.lastUpdate = now;
+        
+        try {
+            console.log('🔄 Aktualisiere navigierbare Elemente...');
+            
+            // Einfache Element-Sammlung ohne komplizierte Filter
+            const allButtons = Array.from(document.querySelectorAll('button'));
+            const allInputs = Array.from(document.querySelectorAll('input, textarea, select'));
+            
+            // Kombiniere alle Elemente
+            const allElements = [...allButtons, ...allInputs];
+            
+            // Sehr einfacher Sichtbarkeits-Check
+            this.navigableElements = allElements.filter(el => {
+                const rect = el.getBoundingClientRect();
+                return rect.width > 0 && rect.height > 0 && !el.disabled;
+            });
+            
+            console.log(`✅ ${this.navigableElements.length} navigierbare Elemente gefunden`);
+            
+            // Index prüfen
+            if (this.currentIndex >= this.navigableElements.length) {
+                this.currentIndex = 0;
+            }
+            
+        } catch (error) {
+            console.error('❌ Fehler in safeUpdate:', error);
+            this.navigableElements = [];
         }
     }
 
     activate() {
+        if (this.checkEmergencyStop('activate')) return;
+        
         this.isActive = true;
         this.currentIndex = 0;
+        
         this.highlightCurrentElement();
         this.showUI();
         
-        console.log('✅ Keyboard Navigation aktiviert');
+        console.log('✅ Navigation aktiviert');
     }
 
     deactivate() {
@@ -235,10 +264,12 @@ class KeyboardNavigation {
         this.removeHighlight();
         this.hideUI();
         
-        console.log('❌ Keyboard Navigation deaktiviert');
+        console.log('❌ Navigation deaktiviert');
     }
 
     navigateNext() {
+        if (this.checkEmergencyStop('navigateNext')) return;
+        
         this.removeHighlight();
         this.currentIndex = (this.currentIndex + 1) % this.navigableElements.length;
         this.highlightCurrentElement();
@@ -248,39 +279,55 @@ class KeyboardNavigation {
     }
 
     highlightCurrentElement() {
-        if (this.navigableElements.length > 0 && this.currentIndex < this.navigableElements.length) {
+        if (this.navigableElements.length === 0) return;
+        if (this.currentIndex >= this.navigableElements.length) return;
+        
+        try {
             const element = this.navigableElements[this.currentIndex];
             element.classList.add(this.highlightClass);
             
-            // Scrolle zum Element
+            // Einfaches Scrolling ohne Events
             element.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-                inline: 'center'
+                behavior: 'auto', // Kein smooth scrolling
+                block: 'nearest',
+                inline: 'nearest'
             });
             
-            // Fokussiere das Element
-            element.focus();
+            console.log('🎯 Element hervorgehoben:', element.tagName, element.textContent?.slice(0, 20));
+            
+        } catch (error) {
+            console.error('❌ Fehler beim Hervorheben:', error);
         }
     }
 
     removeHighlight() {
-        this.navigableElements.forEach(element => {
-            element.classList.remove(this.highlightClass);
-        });
+        try {
+            // Entferne Highlight von ALLEN Elementen, nicht nur den aktuellen
+            document.querySelectorAll(`.${this.highlightClass}`).forEach(el => {
+                el.classList.remove(this.highlightClass);
+            });
+        } catch (error) {
+            console.error('❌ Fehler beim Entfernen der Hervorhebung:', error);
+        }
     }
 
     activateCurrentElement() {
-        if (this.navigableElements.length > 0 && this.currentIndex < this.navigableElements.length) {
+        if (this.navigableElements.length === 0) return;
+        if (this.currentIndex >= this.navigableElements.length) return;
+        
+        try {
             const element = this.navigableElements[this.currentIndex];
             
             if (element.tagName === 'BUTTON') {
+                console.log('🖱️ Klicke Button:', element.textContent?.slice(0, 30));
                 element.click();
-                console.log('🖱️ Button geklickt:', element.textContent?.trim());
-            } else if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+            } else {
+                console.log('📝 Fokussiere Input:', element.name || element.placeholder);
                 element.focus();
-                console.log('📝 Input-Feld fokussiert:', element.placeholder || element.name);
             }
+            
+        } catch (error) {
+            console.error('❌ Fehler beim Aktivieren:', error);
         }
     }
 
@@ -314,9 +361,7 @@ class KeyboardNavigation {
 
     removeCounter() {
         const counter = document.getElementById('keyboard-nav-counter');
-        if (counter) {
-            counter.remove();
-        }
+        if (counter) counter.remove();
     }
 
     createInfo() {
@@ -325,14 +370,10 @@ class KeyboardNavigation {
         const info = document.createElement('div');
         info.id = 'keyboard-nav-info';
         info.className = 'keyboard-nav-info';
-        
-        const currentPage = this.getCurrentPage();
-        const elementType = currentPage === 'index' ? 'Buttons' : 'Input-Felder';
-        
         info.innerHTML = `
             <div style="font-weight: bold; margin-bottom: 4px;">🎹 Tastaturnavigation</div>
             <div style="font-size: 12px; opacity: 0.8;">
-                <div>Leertaste: Nächstes ${elementType}</div>
+                <div>Leertaste: Nächstes Element</div>
                 <div>Enter: Element aktivieren</div>
                 <div>Escape: Navigation beenden</div>
             </div>
@@ -343,54 +384,73 @@ class KeyboardNavigation {
 
     removeInfo() {
         const info = document.getElementById('keyboard-nav-info');
-        if (info) {
-            info.remove();
-        }
+        if (info) info.remove();
     }
 
-    updateUI() {
-        if (this.isActive) {
-            this.updateCounter();
-            this.createInfo(); // Info aktualisieren
-        }
+    // Emergency Reset
+    reset() {
+        console.log('🔄 RESET: Navigation wird zurückgesetzt');
+        
+        this.emergencyStop = false;
+        this.isProcessing = false;
+        this.isActive = false;
+        this.currentIndex = 0;
+        this.callCount = 0;
+        
+        this.removeHighlight();
+        this.hideUI();
+        
+        console.log('✅ Reset abgeschlossen');
     }
 
-    // Öffentliche Methoden für externe Steuerung
-    toggle() {
-        if (this.isActive) {
-            this.deactivate();
-        } else {
-            this.activate();
-        }
-    }
-
-    refresh() {
-        this.updateNavigableElements();
-    }
-
+    // Status für Debugging
     getStatus() {
         return {
             isActive: this.isActive,
             currentIndex: this.currentIndex,
             totalElements: this.navigableElements.length,
-            currentPage: this.getCurrentPage()
+            isProcessing: this.isProcessing,
+            emergencyStop: this.emergencyStop,
+            callCount: this.callCount
         };
     }
 }
 
-// Globale Instanz erstellen
+// Sichere Initialisierung
 let keyboardNavigation;
 
-// Initialisierung nach DOM-Load
-document.addEventListener('DOMContentLoaded', () => {
-    keyboardNavigation = new KeyboardNavigation();
-    
-    // Globale Referenz für Debugging
-    window.keyboardNavigation = keyboardNavigation;
-});
+function initKeyboardNavigation() {
+    try {
+        console.log('🚀 Initialisiere Keyboard Navigation...');
+        
+        // Cleanup alte Instanz
+        if (window.keyboardNavigation) {
+            window.keyboardNavigation.reset();
+        }
+        
+        keyboardNavigation = new KeyboardNavigation();
+        window.keyboardNavigation = keyboardNavigation;
+        
+        // Debug-Befehle für Konsole
+        window.debugNav = () => console.log(keyboardNavigation.getStatus());
+        window.resetNav = () => keyboardNavigation.reset();
+        
+        console.log('✅ Keyboard Navigation bereit!');
+        console.log('💡 Debug: debugNav() oder resetNav() in der Konsole');
+        
+    } catch (error) {
+        console.error('❌ Fehler beim Initialisieren:', error);
+    }
+}
 
-// Export für Module
+// Initialisierung
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initKeyboardNavigation);
+} else {
+    initKeyboardNavigation();
+}
+
+// Export
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = KeyboardNavigation;
 }
-

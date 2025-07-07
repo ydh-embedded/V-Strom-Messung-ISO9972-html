@@ -517,25 +517,7 @@ class BlowerDoorExporter {
                                     <strong>Protokoll öffnen</strong>
                                     <small>Öffnet protocol.html mit allen Daten</small>
                                 </span>
-                            </button>
-                            
-                            <button onclick="blowerDoorExporter.exportToJson(); this.closest('.export-dialog').remove();" 
-                                    class="export-btn json-btn">
-                                <span class="icon">💾</span>
-                                <span class="text">
-                                    <strong>JSON Download</strong>
-                                    <small>Speichert alle Daten als JSON-Datei</small>
-                                </span>
-                            </button>
-                            
-                            <button onclick="blowerDoorExporter.exportToPdf(); this.closest('.export-dialog').remove();" 
-                                    class="export-btn pdf-btn">
-                                <span class="icon">📄</span>
-                                <span class="text">
-                                    <strong>PDF erstellen</strong>
-                                    <small>Generiert einen PDF-Bericht</small>
-                                </span>
-                            </button>
+                            </button>                       
                         </div>
                     </div>
                 </div>
