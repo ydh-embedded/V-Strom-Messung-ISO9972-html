@@ -1,3 +1,10 @@
+## Live-Server
+
+```ps
+  python -m http.server 6000 --bind 0.0.0.0 & 
+sleep 2 && xdg-open http://localhost:6000
+```
+
 ##  technischer Datenfluss:
 
 - Daten-Sammlung: Alle Tabellendaten aus index.html werden gesammelt
